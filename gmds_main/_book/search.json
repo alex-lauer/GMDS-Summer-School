@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Longitudinal Data Modeling",
     "section": "",
-    "text": "Preface"
+    "text": "Preface\n\n\nThe following package(s) will be installed:\n- tidyverse [2.0.0]\nThese packages will be installed into \"~/GMDS-Summer-School/gmds_main/renv/library/R-4.3/x86_64-pc-linux-gnu\".\n\n# Installing packages --------------------------------------------------------\n- Installing tidyverse ...                      OK [linked from cache]\nSuccessfully installed 1 package in 15 milliseconds.\n\n\nThe following package(s) will be installed:\n- mmrm [0.3.7]\nThese packages will be installed into \"~/GMDS-Summer-School/gmds_main/renv/library/R-4.3/x86_64-pc-linux-gnu\".\n\n# Installing packages --------------------------------------------------------\n- Installing mmrm ...                           OK [linked from cache]\nSuccessfully installed 1 package in 14 milliseconds.\n\n\nThe following package(s) will be installed:\n- emmeans [1.9.0]\nThese packages will be installed into \"~/GMDS-Summer-School/gmds_main/renv/library/R-4.3/x86_64-pc-linux-gnu\".\n\n# Installing packages --------------------------------------------------------\n- Installing emmeans ...                        OK [linked from cache]\nSuccessfully installed 1 package in 14 milliseconds."
   },
   {
     "objectID": "intro.html",

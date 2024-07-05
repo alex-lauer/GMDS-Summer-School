@@ -1,3 +1,24 @@
 # Preface {.unnumbered}
 
+```{r}
+#| echo: false
+#| message: false
+renv::install("tidyverse")
+renv::install("mmrm")
+renv::install("emmeans")
+
+library(tidyverse)
+library(mmrm)
+library(emmeans)
+```
+
+
+
+```{r}
+#| echo: false
+df <- data.frame(
+  "subject" = 1:50,
+  "treatment" = c(2, 1, 2, 2, 1, 1, 2, 1, 1, 2, 2, 2, 1, 1,2, 1,2,1,1,2,2,2,2,1,1,2,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,1,2,1,2,2,1,1,2)
+  )
+```
 
