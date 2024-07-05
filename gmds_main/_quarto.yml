@@ -1,0 +1,31 @@
+project:
+  type: book
+
+book:
+  title: "Longitudinal Data Modeling"
+  author:
+    - name: Dr. Marietta Kirchner
+      affiliation: Institute of Medical Biometry and Informatics, Heidelberg University
+    - name: Dr. Alexandra Lauer
+      affiliation: Boehringer Ingelheim Pharma GmbH & Co. KG
+  date: "`r format(Sys.time(), '%d %B, %Y')`"
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - s1_visualization.qmd
+    - s2_missingness.qmd
+    - s3_inference_continuous.qmd
+    - s4_sensitivity_analyses.qmd
+    - s5_inferences_binary.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: scrreprt
+
+editor: visual
+
