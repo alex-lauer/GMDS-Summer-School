@@ -1,8 +1,14 @@
+---
+bibliography: references.bib
+---
+
 # Introduction
 
 ## Workshop Structure
 
 This class focuses on the longitudinal modeling of data from Patient Reported Outcomes (PROs). It is meant to be hands-on class with applications in R.
+
+Content and structure follow the book by [@mallinckrodt2016]. We would like to extend our warmest gratitude towards Dr. Mallinckrodt for providing the example data for the workshop.
 
 The following topics will be covered:
 

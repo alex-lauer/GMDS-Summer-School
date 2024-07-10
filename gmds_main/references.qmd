@@ -1,4 +1,12 @@
+---
+bibliography: references.bib
+---
+
 # References {.unnumbered}
 
 ::: {#refs}
 :::
+
+[@little2019]
+
+[@mallinckrodt2020]
