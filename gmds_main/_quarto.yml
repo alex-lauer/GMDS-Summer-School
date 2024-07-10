@@ -8,7 +8,8 @@ book:
       affiliation: Institute of Medical Biometry and Informatics, Heidelberg University
     - name: Dr. Alexandra Lauer
       affiliation: Boehringer Ingelheim Pharma GmbH & Co. KG
-  date: "`r format(Sys.time(), '%d %B, %Y')`"
+  date: "09/24/2024"
+  date-format: long
   chapters:
     - index.qmd
     - intro.qmd

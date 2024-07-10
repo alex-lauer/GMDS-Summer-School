@@ -4,62 +4,6 @@
     "href": "index.html",
     "title": "Longitudinal Data Modeling",
     "section": "",
-    "text": "Preface\n\n\nThe following package(s) will be installed:\n- tidyverse [2.0.0]\nThese packages will be installed into \"~/GMDS-Summer-School/gmds_main/renv/library/R-4.3/x86_64-pc-linux-gnu\".\n\n# Installing packages --------------------------------------------------------\n- Installing tidyverse ...                      OK [linked from cache]\nSuccessfully installed 1 package in 9.4 milliseconds.\n\n\nThe following package(s) will be installed:\n- mmrm [0.3.7]\nThese packages will be installed into \"~/GMDS-Summer-School/gmds_main/renv/library/R-4.3/x86_64-pc-linux-gnu\".\n\n# Installing packages --------------------------------------------------------\n- Installing mmrm ...                           OK [linked from cache]\nSuccessfully installed 1 package in 8.7 milliseconds.\n\n\nThe following package(s) will be installed:\n- emmeans [1.9.0]\nThese packages will be installed into \"~/GMDS-Summer-School/gmds_main/renv/library/R-4.3/x86_64-pc-linux-gnu\".\n\n# Installing packages --------------------------------------------------------\n- Installing emmeans ...                        OK [linked from cache]\nSuccessfully installed 1 package in 8.3 milliseconds."
-  },
-  {
-    "objectID": "intro.html",
-    "href": "intro.html",
-    "title": "1  Introduction",
-    "section": "",
-    "text": "This is a book created from markdown and executable code.\nSee Knuth (1984) for additional discussion of literate programming.\n\n1 + 1\n\n[1] 2\n\n\n\n\n\n\nKnuth, Donald E. 1984. “Literate Programming.” Comput. J. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97."
-  },
-  {
-    "objectID": "summary.html",
-    "href": "summary.html",
-    "title": "2  Summary",
-    "section": "",
-    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2"
-  },
-  {
-    "objectID": "references.html",
-    "href": "references.html",
-    "title": "References",
-    "section": "",
-    "text": "Knuth, Donald E. 1984. “Literate Programming.” Comput.\nJ. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97."
-  },
-  {
-    "objectID": "intro.html#workshop-structure",
-    "href": "intro.html#workshop-structure",
-    "title": "1  Introduction",
-    "section": "1.1 Workshop Structure",
-    "text": "1.1 Workshop Structure\nThis class focuses on the longitudinal modeling of data from Patient Reported Outcomes (PROs). It is meant to be hands-on class with applications in R.\nThe following topics will be covered:\n\nExploration and visualization of longitudinal data (WS session 1)\nAssessment of missingness patterns (WS session 2)\nInferences from longitudinal data (WS session 4 + 5)\nSensitivity analyses to assess the impact of missingness (WS session 6)\nAnnex: Inferences from longitudinal binary data (WS session 7)"
-  },
-  {
-    "objectID": "intro.html#longitudinal-data",
-    "href": "intro.html#longitudinal-data",
-    "title": "1  Introduction",
-    "section": "1.2 Longitudinal Data",
-    "text": "1.2 Longitudinal Data\nThis workshop focuses on the analysis of data observed in randomized clinical trials (RCTs). Here, patients have assessments taken at the start of their treatment and then subsequently throughout the course of the trial based on a pre-specified schedule of assessments. The measurement at the start of the treatment is usually referred to as the baseline.\nResearchers can be interested in\n\nthe occurrence of a certain event during the course of the trial, e.g. death or a cardiac event, or the time to the occurrence of such an event, or\nthe longitudinal profile from multiple repeated measurements taken, with a focus on either estimates at a landmark visit or across several time points.\n\nThe outcomes under point 1. can be handled via a comparison of the percentages of patients with events between treatment arms, or a time-to-event analysis. Both are out of scope of this workshop."
-  },
-  {
-    "objectID": "intro.html#basics-about-rstudio-pre-read",
-    "href": "intro.html#basics-about-rstudio-pre-read",
-    "title": "1  Introduction",
-    "section": "1.3 Basics about RStudio (pre-read)",
-    "text": "1.3 Basics about RStudio (pre-read)\nAlex to add pre-read (YouTube + Cheat Sheets)"
-  },
-  {
-    "objectID": "intro.html#example-data",
-    "href": "intro.html#example-data",
-    "title": "1  Introduction",
-    "section": "1.4 Example data",
-    "text": "1.4 Example data"
-  },
-  {
-    "objectID": "s1_visualization.html",
-    "href": "s1_visualization.html",
-    "title": "2  Longitudinal Data Exploration and Visualization",
-    "section": "",
-    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2"
+    "text": "Preface"
   }
 ]
