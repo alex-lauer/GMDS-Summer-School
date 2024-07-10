@@ -1,6 +1,33 @@
 # Longitudinal Data Exploration and Visualization
 
-In summary, this book has no content whatsoever.
+- Data on individuals followed over time with information collected at several time points
+- Clusters are the individuals who are followed over time
+- Repeated observations are taken at regular times (balanced, fixed occasions, do not differ between subjects) 
+- Change from baseline or acutal value at a specific timepoint
+
+Datasets used in this course:
+- all2 Data on ...
+- drop2 Data on ...
+- 
+
+## Dataset all2
+- Are the data balanced and equally spaced?
+- Number of observations
+- Plot trajectories, different colors for each treatment group (or panels), add mean to your plot
+- Generate and interpret the group-wise boxplots of the change
+- Plot trajectories separaetly by gender. Comment on the plots
+
+## Correlation structure, covariance matrices
+Regular observation times, structured correlation matrix
+- Variance components (VC) independence structure
+- Compound symmetry (CS) also known as exchangeable
+- Toeplitz (TOEP)
+- First order auto regressive (AR(1))
+- Unstructured (UN)
+
+UN is the most flexible. Choose a reasonable covaraiance structure which is the best compromise between model fit and complexity. E.g. use AIC as it penalises more complex models.
+
+Compute the empirical correlations between measurement timepoints. Looking at these correlations, comment on the suitability of the correlation structures VC, CS, UN.
 
 ```{r}
 1 + 1
