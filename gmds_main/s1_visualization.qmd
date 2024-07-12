@@ -1,21 +1,22 @@
 # Longitudinal Data Exploration and Visualization
 
-- Data on individuals followed over time with information collected at several time points
-- Clusters are the individuals who are followed over time
-- Repeated observations are taken at regular times (balanced, fixed occasions, do not differ between subjects) 
-- Change from baseline or acutal value at a specific timepoint
+- Data on individuals followed over time with information collected at several time points.
+- Clusters are the individuals who are followed over time.
+- Repeated observations are taken at regular times (balanced, fixed occasions, do not differ between subjects). 
+- Change from baseline or acutal value at a specific timepoint.
 
 Datasets used in this course:
-- all2 Data on ...
-- drop2 Data on ...
-- test
+Data on 
+- all2 Subsample of the large dataset with n=50, visits: weeks 2, 4, 8
+- high2 Large dataset with
+- low2 Large datasset
 
 ## Dataset all2
 - Are the data balanced and equally spaced?
 - Number of observations
 - Plot trajectories, different colors for each treatment group (or panels), add mean to your plot
 - Generate and interpret the group-wise boxplots of the change
-- Plot trajectories separaetly by gender. Comment on the plots
+- Plot trajectories separately by gender. Comment on the plots
 
 ## Correlation structure, covariance matrices
 Regular observation times, structured correlation matrix
