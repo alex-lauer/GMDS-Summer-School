@@ -1,41 +1,73 @@
 # Longitudinal Data Exploration and Visualization
 
+## Introduction
 - Data on individuals followed over time with information collected at several time points.
 - Clusters are the individuals who are followed over time.
-- Repeated observations are taken at regular times (balanced, fixed occasions, do not differ between subjects). 
-- Change from baseline or acutal value at a specific timepoint.
+- Repeated observations may or may not be taken at regular times (balanced, fixed occasions, do not differ between subjects). 
+- Our interest is in the change from baseline.
 
 Datasets used in this course:
-Example data is taken from Mallinckrodt. Contain data on the HAMD17 (Hamilton 17-item rating scale for depression). 
+Example data is taken from [@mallinckrodt2016]. Contain data on the HAMD17 (Hamilton 17-item rating scale for depression). 
 Two treatement arms are included: drug vs. placebo.
 Assessments were taken at baseline and weeks 1, 2, 4, 6, and 8
 
 There are 3 data sets created from the original data:
-- all2 Subsample of the large dataset with n=50, visits: weeks 2, 4, 8
-- high2 Large dataset with n=100, high dropout = 70% (drug), 60% (placebo)
-- low2 Large dataset with n=100, low dropout = 18%
+- *all2* Subsample of the large dataset with n=50, visits: weeks 2, 4, 8
+- *high2* Large dataset with n=100, high dropout = 70% (drug), 60% (placebo)
+- *low2* Large dataset with n=100, low dropout = 18%
 
-## Dataset all2
+## Task 1 - Exploration of dataset all2 - 15 Minutes working time
 - Are the data balanced and equally spaced?
-- Number of observations by week
-- Plot trajectories, different colors for each treatment group (or panels), add mean to your plot
-- Generate and interpret the group-wise boxplots of the change
-- Plot trajectories separately by gender. Comment on the plots
+- Number of observations by week?
+- Summary statistics for HAMD17 (change from baseline) by week.
+- Plot trajectories for each individual, different colors for each treatment group (or panels). Add mean to your plot. ODER Mean plot separat evtl. mit CI
+- Generate and interpret the group-wise boxplots of the change from baseline.
+- Plot trajectories separately by gender. Comment on the plots.
 
-## Correlation structure, covariance matrices
-Regular observation times, structured correlation matrix
+### Task 1 Discussion, possible solution
+TO DO: Datensatz aufbereiten, Label, Time=Faktor (t)
+Alex: library gtsummary okay? Oder sollen wir es anders machen
+
+Table: Summary statistics for HAMD17 by treatment and week in the all2 dataset
+
+```{r}
+all2 %>% mutate(
+  t = as.factor(TIME),
+  group = factor(trt, levels = 1:2, labels = c("C","I")),
+  visit = factor(t,levels=1:3, labels = c("T1", "T2", "T3"))
+) -> all2
+
+all2 %>%
+  select(change, group, visit) %>%
+  tbl_strata(strata=group, 
+             ~.x %>% 
+               tbl_summary(by = visit) )
+```
+
+Figure: trajectories
+
+```{r}
+#| label: fig-traj
+#| fig-cap: "Individual trajectories of HAMD17 by treatment group"
+ggplot(data = all2, aes(x = visit, y = change, group=subject)) +
+geom_point() + geom_line() + facet_grid(.~group)
+```
+
+
+# Correlation structure, covariance matrices
+- model within-subject error correlation
+- different residual covariance structures can be implemented
+
+## Overview - different covariance matrices
 - Variance components (VC) independence structure
 - Compound symmetry (CS) also known as exchangeable
 - Toeplitz (TOEP)
 - First order auto regressive (AR(1))
 - Unstructured (UN)
 
-- model within-subject error correlation
-- many residual covariance structures can be implemented
+Selected covariance structures for data with three assessment times are shown below. Note that with three assessment times, the number of parameters estimated for the various structures did not differ as much as would be the case with more assessment times. Thus, results from different covariance structures are more similar than would be the case with more assessment times.
 
-Selected covariance structures for data with three assessment times. Note that with three assessment times, the number of parameters estimated for the various structures did not differ as much as would be the case with more assessment times. Thus, results from different covariance structures are more similar than would be the case with more assessment times.
-
-# Independence structure (VC)
+### Independence structure (VC)
 Constant variance. It is assumed to be no correlation between assessments.
 $$ \begin{bmatrix}
    \sigma^2   & 0  & 0  \\
@@ -43,7 +75,7 @@ $$ \begin{bmatrix}
    0  & 0  & \sigma^2
    \end{bmatrix}$$
 
-# Compound symmetry (CS)
+### Compound symmetry (CS)
 Constant variance and constant covariance across all assessments. Also known as exchangeable.
 
 $$ \begin{bmatrix}
@@ -53,7 +85,7 @@ $$ \begin{bmatrix}
    \end{bmatrix}$$
    
    
-# Unstructured (UN)
+### Unstructured (UN)
 This is the most general (saturated) model
 
 $$ \begin{bmatrix}
@@ -62,7 +94,7 @@ $$ \begin{bmatrix}
    \sigma_{31}  & \sigma_{32}  & \sigma_3^2
    \end{bmatrix}$$
    
-# Toeplitz structure (TOEP)
+### Toeplitz structure (TOEP)
 Homogenous variances and heterogenous correlations. Same correlation value is used whenever the degree of adjacency is the same e.g. correlation between times 1 and 2 = correlation between times 2 and 3.
 
 $$ \begin{bmatrix}
@@ -71,8 +103,7 @@ $$ \begin{bmatrix}
    \sigma^2 \rho_2  & \sigma^2 \rho_1  & \sigma^2 
    \end{bmatrix}$$
 
-
-# Autoregressive structure (AR(1))
+### Autoregressive structure (AR(1))
 Correlation decreases as time between observations increases.
 
 $$ \begin{bmatrix}
@@ -81,21 +112,23 @@ $$ \begin{bmatrix}
   \sigma^2 \rho^2  & \sigma^2 \rho  & \sigma^2 
    \end{bmatrix}$$
 
-# Spatial 
-Spatial covariance structures, unlike other covariance structures, does not require that the timepoints are consistent between subjects. Instead, as long as the distance between visits can be quantified in terms of time and/or other coordinates, the spatial covariance structure can be applied.
+### Spatial (SP)
+Spatial covariance structures does not require that the timepoints are consistent between subjects. Instead, as long as the distance between visits can be quantified in terms of time and/or other coordinates, the spatial covariance structure can be applied.
+
 For spatial exponential, the covariance structure is defined as follows:
 $$ \rho_{ij}=\rho^{d_{ij}} $$
 where $$d_{ij} $$ is the distance between time point i and time point j.
 
-# Selecting the covariance structure
+## Selecting the covariance structure
 There are a variety of considerations when selecting the covariance structure:
 - number of parameters
 - interpretation of the structure
 - model fit
 UN is the most flexible. Choose a reasonable covaraiance structure which is the best compromise between model fit and complexity. E.g. use AIC as it penalises more complex models.
 
-
-Compute the empirical correlations between measurement timepoints. Looking at these correlations, comment on the suitability of the correlation structures VC, CS, UN.
+## Task - Exploration of correlation in the data
+- Compute the empirical correlations between measurement timepoints (e.g. correlation between baseline and post-baseline changes). 
+- Looking at these correlations, comment on the suitability of the correlation structures VC, CS, UN, AR(1).
 
 ```{r}
 1 + 1
