@@ -14,8 +14,8 @@ book:
     - index.qmd
     - intro.qmd
     - s1_visualization.qmd
-    - s2_missingness.qmd
-    - s3_inference_continuous.qmd
+    - s2_inference_continuous.qmd
+    - s3_missingness.qmd
     - s4_sensitivity_analyses.qmd
     - s5_inferences_binary.qmd
     - references.qmd
