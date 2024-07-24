@@ -1,1 +1,56 @@
 # Inference from Longitudinal Data
+
+Continuous endpoints
+
+## Categorical Time
+
+```{r}
+fit_cat_time <- mmrm::mmrm(
+  formula = change ~ basval*week + trt*week + us(week | subject),
+  data = all,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+```
+
+## Continuous Time
+
+Linear time trend
+
+```{r}
+fit_cont_time <- mmrm::mmrm(
+  formula = change ~ basval*time + trt*time + us(week | subject),
+  weights = all$time,
+  data = all,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+```
+
+Quadratic trend
+
+```{r}
+all$timesq <- all$time^2
+
+fit_cont_timesq <- mmrm::mmrm(
+  formula = change ~ basval*timesq + trt*timesq + us(week | subject),
+  weights = all$time,
+  data = all,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+```
+
+
+model checks - residuals per time point
+
+## Accounting for Covariates
+
+
+
+### Continuous Covariates
+
+### Categorical Covariates
+
+### Adjustment of LS Means Calculations
+
+observed vs. balanced margins -> interpretation

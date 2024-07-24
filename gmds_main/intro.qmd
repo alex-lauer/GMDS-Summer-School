@@ -12,11 +12,13 @@ Content and structure follow the book by [@mallinckrodt2016]. We would like to e
 
 The following topics will be covered:
 
--   Exploration and visualization of longitudinal data (WS session 1)
+-   Welcome and Introduction (WS session 1)
 
--   Assessment of missingness patterns (WS session 2)
+-   Exploration and visualization of longitudinal data (WS session 1/2)
 
--   Inferences from longitudinal data (WS session 4 + 5)
+-   Inferences from longitudinal data (WS session 3 + 4)
+
+-   Assessment of missingness patterns (WS session 5)
 
 -   Sensitivity analyses to assess the impact of missingness (WS session 6)
 
