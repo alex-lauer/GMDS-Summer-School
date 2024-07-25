@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Longitudinal Data Modeling - 3&nbsp; Missing Data</title>
+<title>Longitudinal Data Modeling - 3&nbsp; Inference from Longitudinal Data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -30,7 +64,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./s3_inference_continuous.html" rel="next">
+<link href="./s3_missingness.html" rel="next">
 <link href="./s1_visualization.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -74,7 +108,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./s2_missingness.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Missing Data</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./s2_inference_continuous.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inference from Longitudinal Data</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -114,19 +148,19 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./s1_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Longitudinal Data Exploration and Visualization</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./s2_missingness.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
+  <a href="./s2_inference_continuous.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inference from Longitudinal Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./s3_inference_continuous.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inference from Longitudinal Data</span></span></a>
+  <a href="./s3_missingness.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -153,14 +187,26 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#categorical-time" id="toc-categorical-time" class="nav-link active" data-scroll-target="#categorical-time"><span class="header-section-number">3.1</span> Categorical Time</a></li>
+  <li><a href="#continuous-time" id="toc-continuous-time" class="nav-link" data-scroll-target="#continuous-time"><span class="header-section-number">3.2</span> Continuous Time</a></li>
+  <li><a href="#baseline-as-a-response-clda-lda" id="toc-baseline-as-a-response-clda-lda" class="nav-link" data-scroll-target="#baseline-as-a-response-clda-lda"><span class="header-section-number">3.3</span> Baseline as a Response (cLDA + LDA)</a>
+  <ul class="collapse">
+  <li><a href="#adjustment-of-ls-means-calculations" id="toc-adjustment-of-ls-means-calculations" class="nav-link" data-scroll-target="#adjustment-of-ls-means-calculations"><span class="header-section-number">3.3.1</span> Adjustment of LS Means Calculations</a></li>
+  <li><a href="#addendum-on-rsi-models" id="toc-addendum-on-rsi-models" class="nav-link" data-scroll-target="#addendum-on-rsi-models"><span class="header-section-number">3.3.2</span> Addendum on RS&amp;I Models</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Missing Data</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inference from Longitudinal Data</span></h1>
 </div>
 
 
@@ -175,8 +221,106 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<p>Continuous endpoints</p>
+<section id="categorical-time" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="categorical-time"><span class="header-section-number">3.1</span> Categorical Time</h2>
+<p>avisit with three distinct values -&gt; 2 df</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>?mmrm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>fit_cat_time <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>avisit <span class="sc">+</span> trt<span class="sc">*</span>avisit <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all2,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cat_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mmrm fit
+
+Formula:     change ~ basval * avisit + trt * avisit + us(avisit | subject)
+Data:        all2 (used 150 observations from 50 subjects with maximum 3 
+timepoints)
+Covariance:  unstructured (6 variance parameters)
+Method:      Kenward-Roger
+Vcov Method: Kenward-Roger
+Inference:   REML
+
+Model selection criteria:
+     AIC      BIC   logLik deviance 
+   822.4    833.9   -405.2    810.4 
+
+Coefficients: 
+                     Estimate Std. Error        df t value Pr(&gt;|t|)   
+(Intercept)           1.98452    3.27479  47.00000   0.606  0.54743   
+basval               -0.31235    0.15905  47.00000  -1.964  0.05548 . 
+avisitWeek 4         -0.90862    2.39866  47.00000  -0.379  0.70654   
+avisitWeek 8        -10.58630    3.45922  47.00000  -3.060  0.00365 **
+trt2                 -1.18993    1.27265  47.00000  -0.935  0.35457   
+basval:avisitWeek 4  -0.08542    0.11650  47.00000  -0.733  0.46704   
+basval:avisitWeek 8   0.24779    0.16801  47.00000   1.475  0.14691   
+avisitWeek 4:trt2    -0.80100    0.93217  47.00000  -0.859  0.39454   
+avisitWeek 8:trt2    -2.20106    1.34432  47.00000  -1.637  0.10825   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Covariance estimate:
+        Week 2  Week 4  Week 8
+Week 2 20.6112 15.3034 12.2766
+Week 4 15.3034 21.3565 17.6648
+Week 8 12.2766 17.6648 27.6127</code></pre>
+</div>
+</div>
+<p>Can extract covariance matrix via</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cat_time)<span class="sc">$</span>varcor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Week 2   Week 4   Week 8
+Week 2 20.61117 15.30339 12.27661
+Week 4 15.30339 21.35648 17.66478
+Week 8 12.27661 17.66478 27.61271</code></pre>
+</div>
+</div>
+</section>
+<section id="continuous-time" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="continuous-time"><span class="header-section-number">3.2</span> Continuous Time</h2>
+<p>Time as continuous effect -&gt; single df for time and trt-by-time interaction</p>
+<p>Modeling: - Need avisit for structure of covariance matrix - Implicit assumption is for the covariance between values for two timepoints to be equal, regardless of the specific timing</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fit_cont_time <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>time <span class="sc">+</span> trt<span class="sc">*</span>time <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> all2<span class="sc">$</span>time,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all2,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Quadratic trend</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>all2<span class="sc">$</span>timesq <span class="ot">&lt;-</span> all2<span class="sc">$</span>time<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>fit_cont_timesq <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>timesq <span class="sc">+</span> trt<span class="sc">*</span>timesq <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> all2<span class="sc">$</span>time,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all2,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>model checks - residuals per time point</p>
+</section>
+<section id="baseline-as-a-response-clda-lda" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="baseline-as-a-response-clda-lda"><span class="header-section-number">3.3</span> Baseline as a Response (cLDA + LDA)</h2>
+<section id="adjustment-of-ls-means-calculations" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="adjustment-of-ls-means-calculations"><span class="header-section-number">3.3.1</span> Adjustment of LS Means Calculations</h3>
+<p>observed vs.&nbsp;balanced margins -&gt; interpretation comparison to arithmetic (observed means)</p>
+</section>
+<section id="addendum-on-rsi-models" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="addendum-on-rsi-models"><span class="header-section-number">3.3.2</span> Addendum on RS&amp;I Models</h3>
+<p>Different dosing/ assessment frequency between treatment arms in parallel design -&gt; oncology (chemo with fixed cycles vs immune-therapy)</p>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -415,12 +559,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./s1_visualization.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Longitudinal Data Exploration and Visualization</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./s3_inference_continuous.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inference from Longitudinal Data</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./s3_missingness.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Missing Data</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

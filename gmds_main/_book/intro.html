@@ -20,7 +20,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -114,19 +133,19 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./s1_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Longitudinal Data Exploration and Visualization</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./s2_missingness.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
+  <a href="./s2_inference_continuous.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inference from Longitudinal Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./s3_inference_continuous.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inference from Longitudinal Data</span></span></a>
+  <a href="./s3_missingness.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -187,11 +206,13 @@ ul.task-list li input[type="checkbox"] {
 <section id="workshop-structure" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="workshop-structure"><span class="header-section-number">1.1</span> Workshop Structure</h2>
 <p>This class focuses on the longitudinal modeling of data from Patient Reported Outcomes (PROs). It is meant to be hands-on class with applications in R.</p>
+<p>Content and structure follow the book by <span class="citation" data-cites="mallinckrodt2016">(<a href="references.html#ref-mallinckrodt2016" role="doc-biblioref">Mallinckrodt 2016</a>)</span>. We would like to extend our warmest gratitude towards Dr.&nbsp;Mallinckrodt for providing the example data for the workshop.</p>
 <p>The following topics will be covered:</p>
 <ul>
-<li><p>Exploration and visualization of longitudinal data (WS session 1)</p></li>
-<li><p>Assessment of missingness patterns (WS session 2)</p></li>
-<li><p>Inferences from longitudinal data (WS session 4 + 5)</p></li>
+<li><p>Welcome and Introduction (WS session 1)</p></li>
+<li><p>Exploration and visualization of longitudinal data (WS session 1/2)</p></li>
+<li><p>Inferences from longitudinal data (WS session 3 + 4)</p></li>
+<li><p>Assessment of missingness patterns (WS session 5)</p></li>
 <li><p>Sensitivity analyses to assess the impact of missingness (WS session 6)</p></li>
 <li><p>Annex: Inferences from longitudinal binary data (WS session 7)</p></li>
 </ul>
@@ -214,6 +235,11 @@ ul.task-list li input[type="checkbox"] {
 <h2 data-number="1.4" class="anchored" data-anchor-id="example-data"><span class="header-section-number">1.4</span> Example data</h2>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-mallinckrodt2016" class="csl-entry" role="listitem">
+Mallinckrodt, Craig. 2016. <em>Analyzing Longitudinal Clinical Trial Data</em>. Chapman; Hall/CRC. <a href="https://doi.org/10.1201/9781315186634">https://doi.org/10.1201/9781315186634</a>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -458,7 +484,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./s1_visualization.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Longitudinal Data Exploration and Visualization</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

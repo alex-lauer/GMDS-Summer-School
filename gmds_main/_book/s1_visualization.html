@@ -54,7 +54,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -64,7 +83,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./s2_missingness.html" rel="next">
+<link href="./s2_inference_continuous.html" rel="next">
 <link href="./intro.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -96,6 +115,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -153,14 +174,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./s2_missingness.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
+  <a href="./s2_inference_continuous.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inference from Longitudinal Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./s3_inference_continuous.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inference from Longitudinal Data</span></span></a>
+  <a href="./s3_missingness.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -187,7 +208,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">2.1</span> Introduction</a></li>
+  <li><a href="#task-1---exploration-of-dataset-all2---15-minutes-working-time" id="toc-task-1---exploration-of-dataset-all2---15-minutes-working-time" class="nav-link" data-scroll-target="#task-1---exploration-of-dataset-all2---15-minutes-working-time"><span class="header-section-number">2.2</span> Task 1 - Exploration of dataset all2 - 15 Minutes working time</a>
+  <ul class="collapse">
+  <li><a href="#task-1-discussion-possible-solution" id="toc-task-1-discussion-possible-solution" class="nav-link" data-scroll-target="#task-1-discussion-possible-solution"><span class="header-section-number">2.2.1</span> Task 1 Discussion, possible solution</a></li>
+  </ul></li>
+  <li><a href="#correlation-structure-covariance-matrices" id="toc-correlation-structure-covariance-matrices" class="nav-link" data-scroll-target="#correlation-structure-covariance-matrices"><span class="header-section-number">3</span> Correlation structure, covariance matrices</a>
+  <ul class="collapse">
+  <li><a href="#overview---different-covariance-matrices" id="toc-overview---different-covariance-matrices" class="nav-link" data-scroll-target="#overview---different-covariance-matrices"><span class="header-section-number">3.1</span> Overview - different covariance matrices</a>
+  <ul class="collapse">
+  <li><a href="#independence-structure-vc" id="toc-independence-structure-vc" class="nav-link" data-scroll-target="#independence-structure-vc"><span class="header-section-number">3.1.1</span> Independence structure (VC)</a></li>
+  <li><a href="#compound-symmetry-cs" id="toc-compound-symmetry-cs" class="nav-link" data-scroll-target="#compound-symmetry-cs"><span class="header-section-number">3.1.2</span> Compound symmetry (CS)</a></li>
+  <li><a href="#unstructured-un" id="toc-unstructured-un" class="nav-link" data-scroll-target="#unstructured-un"><span class="header-section-number">3.1.3</span> Unstructured (UN)</a></li>
+  <li><a href="#toeplitz-structure-toep" id="toc-toeplitz-structure-toep" class="nav-link" data-scroll-target="#toeplitz-structure-toep"><span class="header-section-number">3.1.4</span> Toeplitz structure (TOEP)</a></li>
+  <li><a href="#autoregressive-structure-ar1" id="toc-autoregressive-structure-ar1" class="nav-link" data-scroll-target="#autoregressive-structure-ar1"><span class="header-section-number">3.1.5</span> Autoregressive structure (AR(1))</a></li>
+  <li><a href="#spatial-sp" id="toc-spatial-sp" class="nav-link" data-scroll-target="#spatial-sp"><span class="header-section-number">3.1.6</span> Spatial (SP)</a></li>
+  </ul></li>
+  <li><a href="#selecting-the-covariance-structure" id="toc-selecting-the-covariance-structure" class="nav-link" data-scroll-target="#selecting-the-covariance-structure"><span class="header-section-number">3.2</span> Selecting the covariance structure</a></li>
+  <li><a href="#task---exploration-of-correlation-in-the-data" id="toc-task---exploration-of-correlation-in-the-data" class="nav-link" data-scroll-target="#task---exploration-of-correlation-in-the-data"><span class="header-section-number">3.3</span> Task - Exploration of correlation in the data</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -209,15 +254,653 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>In summary, this book has no content whatsoever.</p>
+<section id="introduction" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">2.1</span> Introduction</h2>
+<ul>
+<li>Data on individuals followed over time with information collected at several time points.</li>
+<li>Clusters are the individuals who are followed over time.</li>
+<li>Repeated observations may or may not be taken at regular times (balanced, fixed occasions, do not differ between subjects).</li>
+<li>Our interest is in the change from baseline.</li>
+</ul>
+<p>Datasets used in this course: Example data is taken from <span class="citation" data-cites="mallinckrodt2016">(<a href="references.html#ref-mallinckrodt2016" role="doc-biblioref">Mallinckrodt 2016</a>)</span>. Contain data on the HAMD17 (Hamilton 17-item rating scale for depression). Two treatement arms are included: drug vs.&nbsp;placebo. Assessments were taken at baseline and weeks 1, 2, 4, 6, and 8</p>
+<p>There are 3 data sets created from the original data: - <em>all2</em> Subsample of the large dataset with n=50, visits: weeks 2, 4, 8 - <em>high2</em> Large dataset with n=100, high dropout = 70% (drug), 60% (placebo) - <em>low2</em> Large dataset with n=100, low dropout = 18%</p>
+</section>
+<section id="task-1---exploration-of-dataset-all2---15-minutes-working-time" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="task-1---exploration-of-dataset-all2---15-minutes-working-time"><span class="header-section-number">2.2</span> Task 1 - Exploration of dataset all2 - 15 Minutes working time</h2>
+<ul>
+<li>Are the data balanced and equally spaced?</li>
+<li>Number of observations by week?</li>
+<li>Summary statistics for HAMD17 (change from baseline) by week.</li>
+<li>Plot trajectories for each individual, different colors for each treatment group (or panels). Add mean to your plot. ODER Mean plot separat evtl. mit CI</li>
+<li>Generate and interpret the group-wise boxplots of the change from baseline.</li>
+<li>Plot trajectories separately by gender. Comment on the plots.</li>
+</ul>
+<section id="task-1-discussion-possible-solution" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="task-1-discussion-possible-solution"><span class="header-section-number">2.2.1</span> Task 1 Discussion, possible solution</h3>
+<p>TO DO: Datensatz aufbereiten, Label, Time=Faktor (t) Alex: library gtsummary okay? Oder sollen wir es anders machen</p>
+<p>Table: Summary statistics for HAMD17 by treatment and week in the all2 dataset</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>all2 <span class="sc">%&gt;%</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(change, group, avisit) <span class="sc">%&gt;%</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_strata</span>(<span class="at">strata=</span>group, </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>             <span class="sc">~</span>.x <span class="sc">%&gt;%</span> </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>               <span class="fu">tbl_summary</span>(<span class="at">by =</span> avisit,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">statistic =</span> <span class="fu">list</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">"{mean} ({sd})"</span>), </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">digits =</span> <span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="dv">2</span> ) </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="bxnguznjft" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bxnguznjft table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#bxnguznjft thead, #bxnguznjft tbody, #bxnguznjft tfoot, #bxnguznjft tr, #bxnguznjft td, #bxnguznjft th {
+  border-style: none;
+}
+
+#bxnguznjft p {
+  margin: 0;
+  padding: 0;
+}
+
+#bxnguznjft .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#bxnguznjft .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#bxnguznjft .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#bxnguznjft .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#bxnguznjft .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bxnguznjft .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bxnguznjft .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bxnguznjft .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#bxnguznjft .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#bxnguznjft .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#bxnguznjft .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#bxnguznjft .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#bxnguznjft .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#bxnguznjft .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#bxnguznjft .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#bxnguznjft .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#bxnguznjft .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#bxnguznjft .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#bxnguznjft .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bxnguznjft .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#bxnguznjft .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#bxnguznjft .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#bxnguznjft .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bxnguznjft .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#bxnguznjft .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#bxnguznjft .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bxnguznjft .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bxnguznjft .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#bxnguznjft .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bxnguznjft .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#bxnguznjft .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bxnguznjft .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bxnguznjft .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bxnguznjft .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bxnguznjft .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bxnguznjft .gt_left {
+  text-align: left;
+}
+
+#bxnguznjft .gt_center {
+  text-align: center;
+}
+
+#bxnguznjft .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#bxnguznjft .gt_font_normal {
+  font-weight: normal;
+}
+
+#bxnguznjft .gt_font_bold {
+  font-weight: bold;
+}
+
+#bxnguznjft .gt_font_italic {
+  font-style: italic;
+}
+
+#bxnguznjft .gt_super {
+  font-size: 65%;
+}
+
+#bxnguznjft .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#bxnguznjft .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#bxnguznjft .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#bxnguznjft .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#bxnguznjft .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#bxnguznjft .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#bxnguznjft .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    
+    <tr class="gt_col_headings gt_spanner_row">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" scope="col" id="<strong>Characteristic</strong>"><strong>Characteristic</strong></th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="<strong>Arm 1</strong>">
+        <span class="gt_column_spanner"><strong>Arm 1</strong></span>
+      </th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="<strong>Arm 2</strong>">
+        <span class="gt_column_spanner"><strong>Arm 2</strong></span>
+      </th>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Week 2</strong>, N = 25<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Week 2</strong>, N = 25<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Week 4</strong>, N = 25<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Week 4</strong>, N = 25<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Week 8</strong>, N = 25<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Week 8</strong>, N = 25<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Week 2</strong>, N = 25<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Week 2</strong>, N = 25<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Week 4</strong>, N = 25<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Week 4</strong>, N = 25<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Week 8</strong>, N = 25<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Week 8</strong>, N = 25<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left">change</td>
+<td headers="stat_1_1" class="gt_row gt_center">-4.20 (3.66)</td>
+<td headers="stat_2_1" class="gt_row gt_center">-6.80 (4.25)</td>
+<td headers="stat_3_1" class="gt_row gt_center">-9.88 (4.85)</td>
+<td headers="stat_1_2" class="gt_row gt_center">-5.24 (5.49)</td>
+<td headers="stat_2_2" class="gt_row gt_center">-8.60 (5.39)</td>
+<td headers="stat_3_2" class="gt_row gt_center">-13.24 (5.54)</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="7"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> Mean (SD)</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+</div>
+</div>
+<p>Figure: trajectories</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> all2, <span class="fu">aes</span>(<span class="at">x =</span> avisit, <span class="at">y =</span> change, <span class="at">group=</span>subject)) <span class="sc">+</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">facet_grid</span>(.<span class="sc">~</span>group)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-traj" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="s1_visualization_files/figure-html/fig-traj-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;2.1: Individual trajectories of HAMD17 by treatment group</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> all2, <span class="fu">aes</span>(<span class="at">x =</span> avisit, <span class="at">y =</span> change)) <span class="sc">+</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">facet_grid</span>(.<span class="sc">~</span>group) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="fu">aes</span>(<span class="at">group =</span> <span class="dv">1</span>), <span class="at">geom =</span> <span class="st">"line"</span>, <span class="at">fun.y =</span> mean,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">size =</span> <span class="dv">1</span>, <span class="at">col=</span><span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="fu">aes</span>(<span class="at">group =</span> <span class="dv">1</span>), <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">fun.y =</span> mean,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">shape=</span><span class="dv">17</span>,<span class="at">size =</span> <span class="dv">3</span>, <span class="at">col=</span><span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The `fun.y` argument of `stat_summary()` is deprecated as of ggplot2 3.3.0.
+ℹ Please use the `fun` argument instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-mean" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="s1_visualization_files/figure-html/fig-mean-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;2.2: Mean change from baseline by treatment group</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="correlation-structure-covariance-matrices" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Correlation structure, covariance matrices</h1>
+<ul>
+<li>model within-subject error correlation</li>
+<li>different residual covariance structures can be implemented</li>
+</ul>
+<section id="overview---different-covariance-matrices" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="overview---different-covariance-matrices"><span class="header-section-number">3.1</span> Overview - different covariance matrices</h2>
+<ul>
+<li>Variance components (VC) independence structure</li>
+<li>Compound symmetry (CS) also known as exchangeable</li>
+<li>Toeplitz (TOEP)</li>
+<li>First order auto regressive (AR(1))</li>
+<li>Unstructured (UN)</li>
+</ul>
+<p>Selected covariance structures for data with three assessment times are shown below. Note that with three assessment times, the number of parameters estimated for the various structures did not differ as much as would be the case with more assessment times. Thus, results from different covariance structures are more similar than would be the case with more assessment times.</p>
+<section id="independence-structure-vc" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="independence-structure-vc"><span class="header-section-number">3.1.1</span> Independence structure (VC)</h3>
+<p>Constant variance. It is assumed to be no correlation between assessments. <span class="math display">\[ \begin{bmatrix}
+   \sigma^2   &amp; 0  &amp; 0  \\
+   0  &amp; \sigma^2   &amp; 0 \\
+   0  &amp; 0  &amp; \sigma^2
+   \end{bmatrix}\]</span></p>
+</section>
+<section id="compound-symmetry-cs" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="compound-symmetry-cs"><span class="header-section-number">3.1.2</span> Compound symmetry (CS)</h3>
+<p>Constant variance and constant covariance across all assessments. Also known as exchangeable.</p>
+<p><span class="math display">\[ \begin{bmatrix}
+   \sigma^2 + \sigma_1 &amp; \sigma_1  &amp; \sigma_1  \\
+   \sigma_1  &amp; \sigma^2 + \sigma_1  &amp; \sigma_1  \\
+   \sigma_1  &amp; \sigma_1  &amp; \sigma^2 + \sigma_1
+   \end{bmatrix}\]</span></p>
+</section>
+<section id="unstructured-un" class="level3" data-number="3.1.3">
+<h3 data-number="3.1.3" class="anchored" data-anchor-id="unstructured-un"><span class="header-section-number">3.1.3</span> Unstructured (UN)</h3>
+<p>This is the most general (saturated) model</p>
+<p><span class="math display">\[ \begin{bmatrix}
+   \sigma_1^2 &amp; \sigma_{21}  &amp; \sigma_{31}  \\
+   \sigma_{21}  &amp; \sigma_2^2   &amp; \sigma_{32}  \\
+   \sigma_{31}  &amp; \sigma_{32}  &amp; \sigma_3^2
+   \end{bmatrix}\]</span></p>
+</section>
+<section id="toeplitz-structure-toep" class="level3" data-number="3.1.4">
+<h3 data-number="3.1.4" class="anchored" data-anchor-id="toeplitz-structure-toep"><span class="header-section-number">3.1.4</span> Toeplitz structure (TOEP)</h3>
+<p>Homogenous variances and heterogenous correlations. Same correlation value is used whenever the degree of adjacency is the same e.g.&nbsp;correlation between times 1 and 2 = correlation between times 2 and 3.</p>
+<p><span class="math display">\[ \begin{bmatrix}
+   \sigma^2  &amp; \sigma^2 \rho_1  &amp; \sigma^2 \rho_2  \\
+   \sigma^2 \rho_1 &amp; \sigma^2   &amp; \sigma^2 \rho_1  \\
+   \sigma^2 \rho_2  &amp; \sigma^2 \rho_1  &amp; \sigma^2
+   \end{bmatrix}\]</span></p>
+</section>
+<section id="autoregressive-structure-ar1" class="level3" data-number="3.1.5">
+<h3 data-number="3.1.5" class="anchored" data-anchor-id="autoregressive-structure-ar1"><span class="header-section-number">3.1.5</span> Autoregressive structure (AR(1))</h3>
+<p>Correlation decreases as time between observations increases.</p>
+<p><span class="math display">\[ \begin{bmatrix}
+   \sigma^2  &amp; \sigma^2 \rho  &amp; \sigma^2 \rho^2  \\
+   \sigma^2 \rho &amp; \sigma^2   &amp; \sigma^2 \rho  \\
+  \sigma^2 \rho^2  &amp; \sigma^2 \rho  &amp; \sigma^2
+   \end{bmatrix}\]</span></p>
+</section>
+<section id="spatial-sp" class="level3" data-number="3.1.6">
+<h3 data-number="3.1.6" class="anchored" data-anchor-id="spatial-sp"><span class="header-section-number">3.1.6</span> Spatial (SP)</h3>
+<p>Spatial covariance structures does not require that the timepoints are consistent between subjects. Instead, as long as the distance between visits can be quantified in terms of time and/or other coordinates, the spatial covariance structure can be applied.</p>
+<p>For spatial exponential, the covariance structure is defined as follows: <span class="math display">\[ \rho_{ij}=\rho^{d_{ij}} \]</span> where <span class="math display">\[d_{ij} \]</span> is the distance between time point i and time point j.</p>
+</section>
+</section>
+<section id="selecting-the-covariance-structure" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="selecting-the-covariance-structure"><span class="header-section-number">3.2</span> Selecting the covariance structure</h2>
+<p>There are a variety of considerations when selecting the covariance structure: - number of parameters - interpretation of the structure - model fit UN is the most flexible. Choose a reasonable covaraiance structure which is the best compromise between model fit and complexity. E.g. use AIC as it penalises more complex models.</p>
+</section>
+<section id="task---exploration-of-correlation-in-the-data" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="task---exploration-of-correlation-in-the-data"><span class="header-section-number">3.3</span> Task - Exploration of correlation in the data</h2>
+<ul>
+<li>Compute the empirical correlations between measurement timepoints (e.g.&nbsp;correlation between baseline and post-baseline changes).</li>
+<li>Looking at these correlations, comment on the suitability of the correlation structures VC, CS, UN, AR(1).</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2</code></pre>
 </div>
 </div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-mallinckrodt2016" class="csl-entry" role="listitem">
+Mallinckrodt, Craig. 2016. <em>Analyzing Longitudinal Clinical Trial Data</em>. Chapman; Hall/CRC. <a href="https://doi.org/10.1201/9781315186634">https://doi.org/10.1201/9781315186634</a>.
+</div>
+</div>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -460,8 +1143,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./s2_missingness.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Missing Data</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./s2_inference_continuous.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inference from Longitudinal Data</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

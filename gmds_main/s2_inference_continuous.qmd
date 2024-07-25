@@ -1,27 +1,54 @@
 # Inference from Longitudinal Data
 
+```{r}
+#| include: false
+
+source("setup.R")
+```
+
 Continuous endpoints
 
 ## Categorical Time
 
+avisit with three distinct values -> 2 df
+
+```{r}
+?mmrm
+```
+
+
+
 ```{r}
 fit_cat_time <- mmrm::mmrm(
-  formula = change ~ basval*week + trt*week + us(week | subject),
-  data = all,
+  formula = change ~ basval*avisit + trt*avisit + us(avisit | subject),
+  data = all2,
   control = mmrm_control(method = "Kenward-Roger")
 )
 
+summary(fit_cat_time)
 ```
+
+Can extract covariance matrix via
+
+```{r}
+summary(fit_cat_time)$varcor
+```
+
+
 
 ## Continuous Time
 
-Linear time trend
+Time as continuous effect -> single df for time and trt-by-time interaction
+
+Modeling:
+- Need avisit for structure of covariance matrix
+- Implicit assumption is for the covariance between values for two timepoints to be equal, regardless of the specific timing
 
 ```{r}
 fit_cont_time <- mmrm::mmrm(
-  formula = change ~ basval*time + trt*time + us(week | subject),
-  weights = all$time,
-  data = all,
+  formula = change ~ basval*time + trt*time + us(avisit | subject),
+  weights = all2$time,
+  data = all2,
   control = mmrm_control(method = "Kenward-Roger")
 )
 
@@ -30,12 +57,12 @@ fit_cont_time <- mmrm::mmrm(
 Quadratic trend
 
 ```{r}
-all$timesq <- all$time^2
+all2$timesq <- all2$time^2
 
 fit_cont_timesq <- mmrm::mmrm(
-  formula = change ~ basval*timesq + trt*timesq + us(week | subject),
-  weights = all$time,
-  data = all,
+  formula = change ~ basval*timesq + trt*timesq + us(avisit | subject),
+  weights = all2$time,
+  data = all2,
   control = mmrm_control(method = "Kenward-Roger")
 )
 ```
@@ -43,14 +70,16 @@ fit_cont_timesq <- mmrm::mmrm(
 
 model checks - residuals per time point
 
-## Accounting for Covariates
+## Baseline as a Response (cLDA + LDA)
 
 
-
-### Continuous Covariates
-
-### Categorical Covariates
 
 ### Adjustment of LS Means Calculations
 
 observed vs. balanced margins -> interpretation
+comparison to arithmetic (observed means)
+
+### Addendum on RS&I Models
+
+Different dosing/ assessment frequency between treatment arms in parallel design
+-> oncology (chemo with fixed cycles vs immune-therapy)
