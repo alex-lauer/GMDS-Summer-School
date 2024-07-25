@@ -1,45 +1,4 @@
 # Preface {.unnumbered}
 
-```{r}
-#| include: false
 
-renv::install("tidyverse")
-renv::install("mmrm")
-renv::install("emmeans")
-renv::install("nlme")
-
-library(tidyverse)
-library(mmrm)
-library(emmeans)
-```
-
-
-
-```{r}
-#| echo: false
-
-### This is the small example dataset, created from the low dropout
-all <- haven::read_sas("data/all2.sas7bdat") 
-colnames(all) <- tolower(colnames(all))
-
-all <- all %>% 
-  dplyr::mutate(
-    aval = change + basval,
-    week = dplyr::recode(as.character(time), "1" = "Week 2", "2" = "Week 4", "3" = "Week 8"),
-    week = factor(week, levels = c("Week 2", "Week 4", "Week 8")),
-    subject = factor(subject)
-  )
-
-
-### Larger dataset with low dropout rate
-low <- haven::read_sas("data/low2.sas7bdat") %>% 
-  dplyr::mutate(
-    aval = change + basval
-  )
-
-high <- haven::read_sas("data/high2.sas7bdat") %>% 
-  dplyr::mutate(
-    aval = change + basval
-  )
-```
 
