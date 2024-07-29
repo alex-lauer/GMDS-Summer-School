@@ -1,1 +1,22 @@
 # Sensitivity Analyses
+
+MMRM is an appropriate choice for the primary analysis in many longitudinal clinical trials under the MAR assumption.
+Flexibility in modeling treatment effects over time and the within-patient error correlation structure makes MMRM a widely useful analysis.
+Consider sensivitiy analyses to check model assumptions e.g. MNAR methods
+LOCF, complete case: used in the past
+
+Mit Alexandra abstimmen: was genau, machst du MI in deinem Teil, MMRM vs. MI+ANCOVA?, was ist eure primary analysis + typische sensitivity analyses
+MI: eingehen auf welche Variablen im Modell e.g. at least those from the primary model
+
+## Missing covariates
+- missing baseline value of the outcome: MI or use of mean imputation (Paper: ), 
+Paper von 
+
+## Multiple imputation
+
+## Handling nonignorable missingness (MNAR)
+- Assumption of MAR is often reasonable, but possibility of data missing not at random (MNAR) is difficult to rule out.
+- Thus, analysis under MNAR needed
+- Analysis under MNAR: these methods are heavily assumption driven and the assumptions are not testable as we do not have the missing data
+- Consider a sensitivity analsyis framework allowing assessment of robustness of results to the various assumptions
+- MNAR methods: Pattern-mixture, delta method
