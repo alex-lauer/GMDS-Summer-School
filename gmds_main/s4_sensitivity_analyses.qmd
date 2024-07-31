@@ -1,22 +1,37 @@
 # Sensitivity Analyses
 
-MMRM is an appropriate choice for the primary analysis in many longitudinal clinical trials under the MAR assumption.
-Flexibility in modeling treatment effects over time and the within-patient error correlation structure makes MMRM a widely useful analysis.
-Consider sensivitiy analyses to check model assumptions e.g. MNAR methods
-LOCF, complete case: used in the past
+Sensitivity analyses with respect to missing data - only?
+
+- MMRM is an appropriate choice for the primary analysis in many longitudinal clinical trials under the MAR assumption.
+- MCAR and MAR missingness can be ignored in likelihood-based analyses. MAR: future outcomes for subjects who discontinued should be similar to the future outocmes of subjects who continued if they had the same values of past (observed) outcomes, covariates,...
+- Flexibility in modeling treatment effects over time and the within-patient error correlation structure makes MMRM a widely useful analysis.
+- Consider sensivitiy analyses to check model assumptions e.g. MNAR methods
+- Comparing results from sensitivity analyses: how much inference rely on the assumptions
+- Here, inference with regard to the treatment effect. Thus, investigate how treatment effects vary depending on assumptions e.g. about missing data.
+- Uncertainty from incompleteness cannot be objectively evaluated from observed data so there is a need for missing data sensitivity analyses.
 
 Mit Alexandra abstimmen: was genau, machst du MI in deinem Teil, MMRM vs. MI+ANCOVA?, was ist eure primary analysis + typische sensitivity analyses
 MI: eingehen auf welche Variablen im Modell e.g. at least those from the primary model
 
-## Missing covariates
+## Simple approaches
+In general, not recommended for use. Methods are of histroic interest and provide a useful starting point
+- LOCF: used in the past, justified as it was thought that it provides conservative estimates
+- complete case (observed case/completers analysis): creates selection bias, may cause overestimation of within group effects particularly at the last scheduled visit
+
+## Missing covariates (baseline data)
 - missing baseline value of the outcome: MI or use of mean imputation (Paper: ), 
-Paper von 
+- MMRM not efficient or potential biased estimates as subjects with missing covariates are excluded from the analysis
+
+## Baseline complete, missingness in post-baseline values
+- for MMRM: at least one post-baseline value needed
+- when implemented in similar manners: MI and MMRM have similar assumptions and yield similar results. Thus, MI implemented similarly to MMRM is not a sensitivity analysis
 
 ## Multiple imputation
+- MI very useful for sensitivity analyses
 
 ## Handling nonignorable missingness (MNAR)
 - Assumption of MAR is often reasonable, but possibility of data missing not at random (MNAR) is difficult to rule out.
 - Thus, analysis under MNAR needed
 - Analysis under MNAR: these methods are heavily assumption driven and the assumptions are not testable as we do not have the missing data
 - Consider a sensitivity analsyis framework allowing assessment of robustness of results to the various assumptions
-- MNAR methods: Pattern-mixture, delta method
+- MNAR methods: Pattern-mixture, delta-adjustment method (controlled imputation; another method is reference-based imputation)
