@@ -20,10 +20,11 @@ In general, not recommended for use. Methods are of histroic interest and provid
 
 ## Missing covariates (baseline data)
 - missing baseline value of the outcome: MI or use of mean imputation (Paper: ), 
-- MMRM not efficient or potential biased estimates as subjects with missing covariates are excluded from the analysis
+- MMRM not efficient or potential biased estimates as subjects with missing covariates are excluded from the analysis 
 
 ## Baseline complete, missingness in post-baseline values
 - for MMRM: at least one post-baseline value needed
+- Alternative: LDA where baseline is part of the response vector
 - when implemented in similar manners: MI and MMRM have similar assumptions and yield similar results. Thus, MI implemented similarly to MMRM is not a sensitivity analysis
 
 ## Multiple imputation
