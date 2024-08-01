@@ -96,6 +96,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -193,10 +195,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#categorical-time" id="toc-categorical-time" class="nav-link active" data-scroll-target="#categorical-time"><span class="header-section-number">3.1</span> Categorical Time</a></li>
   <li><a href="#continuous-time" id="toc-continuous-time" class="nav-link" data-scroll-target="#continuous-time"><span class="header-section-number">3.2</span> Continuous Time</a></li>
-  <li><a href="#baseline-as-a-response-clda-lda" id="toc-baseline-as-a-response-clda-lda" class="nav-link" data-scroll-target="#baseline-as-a-response-clda-lda"><span class="header-section-number">3.3</span> Baseline as a Response (cLDA + LDA)</a>
+  <li><a href="#baseline-as-a-response-clda-lda" id="toc-baseline-as-a-response-clda-lda" class="nav-link" data-scroll-target="#baseline-as-a-response-clda-lda"><span class="header-section-number">3.3</span> Baseline as a Response (cLDA + LDA)</a></li>
+  <li><a href="#adjusted-ls-means-from-mmrms" id="toc-adjusted-ls-means-from-mmrms" class="nav-link" data-scroll-target="#adjusted-ls-means-from-mmrms"><span class="header-section-number">3.4</span> (Adjusted) LS Means from MMRMs</a>
   <ul class="collapse">
-  <li><a href="#adjustment-of-ls-means-calculations" id="toc-adjustment-of-ls-means-calculations" class="nav-link" data-scroll-target="#adjustment-of-ls-means-calculations"><span class="header-section-number">3.3.1</span> Adjustment of LS Means Calculations</a></li>
-  <li><a href="#addendum-on-rsi-models" id="toc-addendum-on-rsi-models" class="nav-link" data-scroll-target="#addendum-on-rsi-models"><span class="header-section-number">3.3.2</span> Addendum on RS&amp;I Models</a></li>
+  <li><a href="#observed-vs.-balanced-margins" id="toc-observed-vs.-balanced-margins" class="nav-link" data-scroll-target="#observed-vs.-balanced-margins"><span class="header-section-number">3.4.1</span> Observed vs.&nbsp;balanced margins</a></li>
+  <li><a href="#contrasts" id="toc-contrasts" class="nav-link" data-scroll-target="#contrasts"><span class="header-section-number">3.4.2</span> Contrasts</a></li>
+  <li><a href="#addendum-on-rsi-models" id="toc-addendum-on-rsi-models" class="nav-link" data-scroll-target="#addendum-on-rsi-models"><span class="header-section-number">3.4.3</span> Addendum on RS&amp;I Models</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -221,13 +225,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>Continuous endpoints</p>
+<p>This section will focus on the application of Mixed Model with Repeated Measures (MMRMs). Our main focus will be the modeling of the means of the data. MMRMs are generalizations of standard linear models in the way that data is allowed to be correlated between subsequent measurements from the same subject and exhibit non-constant variability.</p>
+<p>The primary assumptions for MMRMs are:</p>
+<ul>
+<li><p>The data are normally distributed</p></li>
+<li><p>The means (expected values) of the data are linear in terms of a certain set of parameters.</p></li>
+<li><p>The variances and covariances of the data are in terms of a different set of parameters, and they exhibit a structure matching one of those outlined in the former chapter.</p></li>
+</ul>
+<p>[Alex to add reference to PROC MIXED]</p>
+<p>The mixed linear model can be described via the following formula</p>
+<p><span class="math display">\[
+y_i = X_i\beta\,+\,Z_i\gamma_i\,+\,\varepsilon_i\,,\, i = 1,\ldots,N
+\]</span></p>
+<p>where <span class="math inline">\(y\)</span> is the vector of responses (observed data, dependent variable), <span class="math inline">\(\beta\)</span> is an unknown vector of fixed effects with known design matrix <span class="math inline">\(X\)</span>, <span class="math inline">\(\gamma\)</span> is an unknown vector of random effects with known design matrix <span class="math inline">\(Z\)</span>, and <span class="math inline">\(\varepsilon\)</span> is an unknown random error vector. Furthermore <span class="math inline">\(N\)</span> denotes the total number of subjects in our analysis. For the sake of readability, we will omit the subject index and simplify the above formula to</p>
+<p><span class="math display">\[
+y = X\beta\,+\,Z\gamma\,+\,\varepsilon\,.
+\]</span></p>
+<p>We will further assume that <span class="math inline">\(\gamma\)</span> and <span class="math inline">\(\varepsilon\)</span> are uncorrelated Gaussian random variables with expectation <span class="math inline">\(0\)</span> and variances <span class="math inline">\(G\)</span> and <span class="math inline">\(R\)</span>, respectively. Then the variance-covariance matrix of <span class="math inline">\(y\)</span> is given by</p>
+<p><span class="math display">\[
+\text{Var}(y) := V = ZGZ' + R\,.
+\]</span> In this case <span class="math inline">\(ZGZ'\)</span> comprises the random effects component, and <span class="math inline">\(R\)</span> is the within-subject component.</p>
+<p>In this workshop we will focus on the case where only the within-subject component is accounted for, via modeling of the <span class="math inline">\(R\)</span> matrix. The random effects component <span class="math inline">\(Z\gamma\)</span> will be omitted. In this case we will have <span class="math inline">\(\text{Var}(y) = V = R\)</span>, resulting in a model given by</p>
+<p><span class="math display">\[
+y = X\beta\,+\,\varepsilon\,.
+\]</span></p>
 <section id="categorical-time" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="categorical-time"><span class="header-section-number">3.1</span> Categorical Time</h2>
-<p>avisit with three distinct values -&gt; 2 df</p>
+<p>You can start and familiarise yourself with the main function <code>mmrm()</code> using the command</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>?mmrm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mmrm)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>?mmrm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Two inputs are strictly required to get <code>mmrm()</code> to work:</p>
+<ul>
+<li><p>A model formula</p></li>
+<li><p>The dataset, containing the response, as well as all fixed effects and variables in the covariance matrix.</p></li>
+</ul>
+<p><strong>Exercise</strong>: Fit a model <code>fit_cat_time</code> using the dataset <code>all2</code>, with change as dependent variable, baseline value, visit, baseline by visit interaction and treatment by visit interaction as fixed effects and an unstructured covariance matrix for visits within each subject.</p>
+<ul>
+<li><p>How do different choices for covariance matrices change the results? What is the difference on the estimation procedure?</p></li>
+<li><p>You can obtain a summary of the fit results via <code>summary(fit_cat_time)</code>. How do you interpret the fit summary?</p></li>
+<li><p>Look at the structure of the fit summary and try to extract the estimate of the <span class="math inline">\(R\)</span> matrix.</p></li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>fit_cat_time <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>avisit <span class="sc">+</span> trt<span class="sc">*</span>avisit <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
@@ -272,9 +311,45 @@ Week 4 15.3034 21.3565 17.6648
 Week 8 12.2766 17.6648 27.6127</code></pre>
 </div>
 </div>
-<p>Can extract covariance matrix via</p>
+<p>We can assess the structure of the fit summary via</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cat_time)<span class="sc">$</span>varcor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">summary</span>(fit_cat_time))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 15
+ $ cov_type        : chr "us"
+ $ reml            : logi TRUE
+ $ n_groups        : int 1
+ $ n_theta         : int 6
+ $ n_subjects      : int 50
+ $ n_timepoints    : int 3
+ $ n_obs           : int 150
+ $ beta_vcov       : num [1:9, 1:9] 10.724 -0.501 -2.675 -4.267 -1.047 ...
+  ..- attr(*, "dimnames")=List of 2
+  .. ..$ : chr [1:9] "(Intercept)" "basval" "avisitWeek 4" "avisitWeek 8" ...
+  .. ..$ : chr [1:9] "(Intercept)" "basval" "avisitWeek 4" "avisitWeek 8" ...
+ $ varcor          : num [1:3, 1:3] 20.6 15.3 12.3 15.3 21.4 ...
+  ..- attr(*, "dimnames")=List of 2
+  .. ..$ : chr [1:3] "Week 2" "Week 4" "Week 8"
+  .. ..$ : chr [1:3] "Week 2" "Week 4" "Week 8"
+ $ method          : chr "Kenward-Roger"
+ $ vcov            : chr "Kenward-Roger"
+ $ coefficients    : num [1:9, 1:5] 1.985 -0.312 -0.909 -10.586 -1.19 ...
+  ..- attr(*, "dimnames")=List of 2
+  .. ..$ : chr [1:9] "(Intercept)" "basval" "avisitWeek 4" "avisitWeek 8" ...
+  .. ..$ : chr [1:5] "Estimate" "Std. Error" "df" "t value" ...
+ $ n_singular_coefs: int 0
+ $ aic_list        :List of 4
+  ..$ AIC     : num 822
+  ..$ BIC     : num 834
+  ..$ logLik  : num -405
+  ..$ deviance: num 810
+ $ call            : language mmrm::mmrm(formula = change ~ basval * avisit + trt * avisit + us(avisit |      subject), data = all2, control = | __truncated__
+ - attr(*, "class")= chr "summary.mmrm"</code></pre>
+</div>
+</div>
+<p>and then extract the covariance matrix</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cat_time)<span class="sc">$</span>varcor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         Week 2   Week 4   Week 8
 Week 2 20.61117 15.30339 12.27661
@@ -288,34 +363,240 @@ Week 8 12.27661 17.66478 27.61271</code></pre>
 <p>Time as continuous effect -&gt; single df for time and trt-by-time interaction</p>
 <p>Modeling: - Need avisit for structure of covariance matrix - Implicit assumption is for the covariance between values for two timepoints to be equal, regardless of the specific timing</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fit_cont_time <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>time <span class="sc">+</span> trt<span class="sc">*</span>time <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> all2<span class="sc">$</span>time,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all2,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit_cont_time <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>time <span class="sc">+</span> trt<span class="sc">*</span>time <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> all2<span class="sc">$</span>time,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all2,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Quadratic trend</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>all2<span class="sc">$</span>timesq <span class="ot">&lt;-</span> all2<span class="sc">$</span>time<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>fit_cont_timesq <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>timesq <span class="sc">+</span> trt<span class="sc">*</span>timesq <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> all2<span class="sc">$</span>time,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all2,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>all2<span class="sc">$</span>timesq <span class="ot">&lt;-</span> all2<span class="sc">$</span>time<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>fit_cont_timesq <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>timesq <span class="sc">+</span> trt<span class="sc">*</span>timesq <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> all2<span class="sc">$</span>time,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all2,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>model checks - residuals per time point</p>
 </section>
 <section id="baseline-as-a-response-clda-lda" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="baseline-as-a-response-clda-lda"><span class="header-section-number">3.3</span> Baseline as a Response (cLDA + LDA)</h2>
-<section id="adjustment-of-ls-means-calculations" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="adjustment-of-ls-means-calculations"><span class="header-section-number">3.3.1</span> Adjustment of LS Means Calculations</h3>
-<p>observed vs.&nbsp;balanced margins -&gt; interpretation comparison to arithmetic (observed means)</p>
 </section>
-<section id="addendum-on-rsi-models" class="level3" data-number="3.3.2">
-<h3 data-number="3.3.2" class="anchored" data-anchor-id="addendum-on-rsi-models"><span class="header-section-number">3.3.2</span> Addendum on RS&amp;I Models</h3>
+<section id="adjusted-ls-means-from-mmrms" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="adjusted-ls-means-from-mmrms"><span class="header-section-number">3.4</span> (Adjusted) LS Means from MMRMs</h2>
+<p>LS Means are means of the dependent variable adjusted for covariates in the statistical model. We can obtain LS Means estimates and contrasts allowing for a treatment comparison using the <code>emmeans</code> package.</p>
+<p><strong>Example</strong>: Calculate the observed (raw) means of changes along with number of patients by treatment group from the dataset <code>all2</code> overall and by visit. Then take the model <code>fit_cat_time</code> and derive the respective LS Means from the model. What do you observe?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Raw means</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>all2 <span class="sc">%&gt;%</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(group) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">N =</span> dplyr<span class="sc">::</span><span class="fu">n</span>(),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(change),</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  group     N  Mean
+  &lt;fct&gt; &lt;int&gt; &lt;dbl&gt;
+1 Arm 1    75 -6.96
+2 Arm 2    75 -9.03</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>all2 <span class="sc">%&gt;%</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(group, avisit) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">N =</span> dplyr<span class="sc">::</span><span class="fu">n</span>(),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(change),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  group avisit     N   Mean
+  &lt;fct&gt; &lt;fct&gt;  &lt;int&gt;  &lt;dbl&gt;
+1 Arm 1 Week 2    25  -4.2 
+2 Arm 1 Week 4    25  -6.8 
+3 Arm 1 Week 8    25  -9.88
+4 Arm 2 Week 2    25  -5.24
+5 Arm 2 Week 4    25  -8.6 
+6 Arm 2 Week 8    25 -13.2 </code></pre>
+</div>
+</div>
+<p>The respective LS Means from the model with time as a fixed factor yields the following estimates:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">ref_grid</span>(fit_cat_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'emmGrid' object with variables:
+    basval = 19.56
+    avisit = Week 2, Week 4, Week 8
+    trt = 1, 2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>NOTE: Results may be misleading due to involvement in interactions</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> trt emmean    SE df lower.CL upper.CL
+ 1    -6.90 0.836 47    -8.58    -5.22
+ 2    -9.09 0.836 47   -10.77    -7.41
+
+Results are averaged over the levels of: avisit 
+Confidence level used: 0.95 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt<span class="sc">*</span>avisit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> trt avisit emmean    SE df lower.CL upper.CL
+ 1   Week 2  -4.13 0.899 47    -5.93    -2.32
+ 2   Week 2  -5.31 0.899 47    -7.12    -3.51
+ 1   Week 4  -6.70 0.916 47    -8.55    -4.86
+ 2   Week 4  -8.70 0.916 47   -10.54    -6.85
+ 1   Week 8  -9.86 1.033 47   -11.94    -7.79
+ 2   Week 8 -13.26 1.033 47   -15.33   -11.18
+
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
+<section id="observed-vs.-balanced-margins" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="observed-vs.-balanced-margins"><span class="header-section-number">3.4.1</span> Observed vs.&nbsp;balanced margins</h3>
+<p>In the example above we have used the standard option for the weights in the calculation of LS Means. We will delve deeper into the following two options and will try to understand the difference:</p>
+<ul>
+<li><p><code>weights = "equal"</code>: Each stratum induced by covariate levels is assigned the same weight in the calculation of the LS Means. This is the default option.</p></li>
+<li><p><code>weights = "proportional"</code>: Each stratum induced by covariate levels is assigned a weight according to their observed proportion in the calculation of the LS Mean. This option gives each stratum a weight corresponding to its size. Estimates using this option are reflective of the balance of covariates in the data.</p></li>
+</ul>
+<p><strong>Exercise:</strong> Based on the <code>fit_cat_time</code> model, compare the LS Means for the change in the response variable by treatment overall and treatment by visit interaction using the different options for <code>weight</code>. Compare the results for the two LS Means options to the observed means and to one another.</p>
+<p>Discuss the following points:</p>
+<ul>
+<li>Why is there no difference between LS Means estimates for the overall treatment effect and the treatment by visit interaction? (Hint: Create a frequency table)</li>
+</ul>
+<p>Now update the <code>fit_cat_time</code> model to <code>fit_cat_time2</code>, and include the covariate <code>gender</code>. Estimate the same LS Means for the change in the response variable by treatment (overall) and treatment by visit interaction.</p>
+<ul>
+<li><p>Why is there a difference now between results from the different LS Means options? (Hint: another frequency table can help)</p></li>
+<li><p>What effect could missing data have on the estimation, even in the case of <code>fit_cat_time</code>? I.e. what would happen if this data was not complete but subject to missingness, with the degree of missing data increasing over time and being disproportionate between treatment arms?</p></li>
+</ul>
+<p><strong>Solution</strong>:</p>
+<p>We first calculate the LS Means, using the different <code>weights</code> options and find they are indeed identical.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># These will yield the same results:</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt, <span class="at">weights =</span> <span class="st">"equal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>NOTE: Results may be misleading due to involvement in interactions</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> trt emmean    SE df lower.CL upper.CL
+ 1    -6.90 0.836 47    -8.58    -5.22
+ 2    -9.09 0.836 47   -10.77    -7.41
+
+Results are averaged over the levels of: avisit 
+Confidence level used: 0.95 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>NOTE: Results may be misleading due to involvement in interactions</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> trt emmean    SE df lower.CL upper.CL
+ 1    -6.90 0.836 47    -8.58    -5.22
+ 2    -9.09 0.836 47   -10.77    -7.41
+
+Results are averaged over the levels of: avisit 
+Confidence level used: 0.95 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"equal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> trt avisit emmean    SE df lower.CL upper.CL
+ 1   Week 2  -4.13 0.899 47    -5.93    -2.32
+ 2   Week 2  -5.31 0.899 47    -7.12    -3.51
+ 1   Week 4  -6.70 0.916 47    -8.55    -4.86
+ 2   Week 4  -8.70 0.916 47   -10.54    -6.85
+ 1   Week 8  -9.86 1.033 47   -11.94    -7.79
+ 2   Week 8 -13.26 1.033 47   -15.33   -11.18
+
+Confidence level used: 0.95 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> trt avisit emmean    SE df lower.CL upper.CL
+ 1   Week 2  -4.13 0.899 47    -5.93    -2.32
+ 2   Week 2  -5.31 0.899 47    -7.12    -3.51
+ 1   Week 4  -6.70 0.916 47    -8.55    -4.86
+ 2   Week 4  -8.70 0.916 47   -10.54    -6.85
+ 1   Week 8  -9.86 1.033 47   -11.94    -7.79
+ 2   Week 8 -13.26 1.033 47   -15.33   -11.18
+
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
+<p>Now we can update the model to include the covariate <code>gender</code>. We can specify this a new model using the <code>mmrm()</code> function again, or simply use <code>update()</code> to add the new covariate to the model. Either way is fine, and a look into the model formula from the fit summary shows the two approaches work interchangeably.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fit_cat_time2 <span class="ot">&lt;-</span> <span class="fu">update</span>(fit_cat_time, . <span class="sc">~</span> . <span class="sc">+</span> gender)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cat_time2)<span class="sc">$</span>call</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mmrm::mmrm(formula = change ~ basval + avisit + trt + (us(avisit | 
+    subject)) + gender + basval:avisit + avisit:trt, data = all2, 
+    control = mmrm_control(method = "Kenward-Roger"))</code></pre>
+</div>
+</div>
+<p>A look into the reference grid shows us the new factor levels for <code>gender</code>. Note that <code>gender</code> itself will not be included in the <code>emmeans()</code> statement, but the output indicates the averaging over its levels (same for the levels of <code>avisit</code>)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reference grid shows us the new levels</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">ref_grid</span>(fit_cat_time2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'emmGrid' object with variables:
+    basval = 19.56
+    avisit = Week 2, Week 4, Week 8
+    trt = 1, 2
+    gender = F, M</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># These two won't yield the same results</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time2, <span class="sc">~</span>trt, <span class="at">weights =</span> <span class="st">"equal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>NOTE: Results may be misleading due to involvement in interactions</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> trt emmean    SE   df lower.CL upper.CL
+ 1    -7.13 0.840 45.8    -8.82    -5.44
+ 2    -8.48 0.896 46.4   -10.28    -6.68
+
+Results are averaged over the levels of: avisit, gender 
+Confidence level used: 0.95 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time2, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> trt avisit emmean    SE   df lower.CL upper.CL
+ 1   Week 2  -4.55 0.890 46.2    -6.34    -2.75
+ 2   Week 2  -4.89 0.890 46.2    -6.69    -3.10
+ 1   Week 4  -7.13 0.941 47.1    -9.02    -5.23
+ 2   Week 4  -8.27 0.941 47.1   -10.17    -6.38
+ 1   Week 8 -10.29 1.081 46.6   -12.46    -8.11
+ 2   Week 8 -12.83 1.081 46.6   -15.01   -10.66
+
+Results are averaged over the levels of: gender 
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
+<p>The following frequency table shows the imbalance in the distribution of the <code>gender</code> variable. We can see that Treatment 1 has more men than women, whereas Treatment 2 has more women than men.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(all2<span class="sc">$</span>trt, all2<span class="sc">$</span>gender)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   
+     F  M
+  1 30 45
+  2 57 18</code></pre>
+</div>
+</div>
+<p>The data is no longer balanced across the covariates in the model. The <code>weights = "equal"</code> option is agnostic to this imbalance and assigns all levels equal weights, whereas the <code>weights = "proportional"</code> assigns a weight reflecting the proportional size of the stratum over which the average is taken.</p>
+</section>
+<section id="contrasts" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="contrasts"><span class="header-section-number">3.4.2</span> Contrasts</h3>
+</section>
+<section id="addendum-on-rsi-models" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="addendum-on-rsi-models"><span class="header-section-number">3.4.3</span> Addendum on RS&amp;I Models</h3>
 <p>Different dosing/ assessment frequency between treatment arms in parallel design -&gt; oncology (chemo with fixed cycles vs immune-therapy)</p>
 
 

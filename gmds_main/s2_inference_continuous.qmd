@@ -34,8 +34,7 @@ We will further assume that $\gamma$ and $\varepsilon$ are uncorrelated Gaussian
 
 $$
 \text{Var}(y) := V = ZGZ' + R\,.
-$$
-In this case $ZGZ'$ comprises the random effects component, and $R$ is the within-subject component. 
+$$ In this case $ZGZ'$ comprises the random effects component, and $R$ is the within-subject component.
 
 In this workshop we will focus on the case where only the within-subject component is accounted for, via modeling of the $R$ matrix. The random effects component $Z\gamma$ will be omitted. In this case we will have $\text{Var}(y) = V = R$, resulting in a model given by
 
@@ -45,9 +44,10 @@ $$
 
 ## Categorical Time
 
-avisit with three distinct values -\> 2 df
+You can start and familiarise yourself with the main function `mmrm()` using the command
 
 ```{r}
+library(mmrm)
 ?mmrm
 ```
 
@@ -55,7 +55,15 @@ Two inputs are strictly required to get `mmrm()` to work:
 
 -   A model formula
 
--   The dataset, containing the dependent and independent
+-   The dataset, containing the response, as well as all fixed effects and variables in the covariance matrix.
+
+**Exercise**: Fit a model `fit_cat_time` using the dataset `all2`, with change as dependent variable, baseline value, visit, baseline by visit interaction and treatment by visit interaction as fixed effects and an unstructured covariance matrix for visits within each subject.
+
+-   How do different choices for covariance matrices change the results? What is the difference on the estimation procedure?
+
+-   You can obtain a summary of the fit results via `summary(fit_cat_time)`. How do you interpret the fit summary?
+
+-   Look at the structure of the fit summary and try to extract the estimate of the $R$ matrix.
 
 ```{r}
 fit_cat_time <- mmrm::mmrm(
@@ -67,7 +75,13 @@ fit_cat_time <- mmrm::mmrm(
 summary(fit_cat_time)
 ```
 
-Can extract covariance matrix via
+We can assess the structure of the fit summary via
+
+```{r}
+str(summary(fit_cat_time))
+```
+
+and then extract the covariance matrix
 
 ```{r}
 summary(fit_cat_time)$varcor
@@ -106,9 +120,103 @@ model checks - residuals per time point
 
 ## Baseline as a Response (cLDA + LDA)
 
-### Adjustment of LS Means Calculations
+## (Adjusted) LS Means from MMRMs
 
-observed vs. balanced margins -\> interpretation comparison to arithmetic (observed means)
+LS Means are means of the dependent variable adjusted for covariates in the statistical model. We can obtain LS Means estimates and contrasts allowing for a treatment comparison using the `emmeans` package.
+
+**Example**: Calculate the observed (raw) means of changes along with number of patients by treatment group from the dataset `all2` overall and by visit. Then take the model `fit_cat_time` and derive the respective LS Means from the model. What do you observe?
+
+```{r}
+# Raw means
+
+all2 %>% 
+  dplyr::group_by(group) %>% 
+  dplyr::summarise(
+    N = dplyr::n(),
+    Mean = mean(change),
+    .groups = "drop"
+  )
+
+all2 %>% 
+  dplyr::group_by(group, avisit) %>% 
+  dplyr::summarise(
+    N = dplyr::n(),
+    Mean = mean(change),
+    .groups = "drop"
+  )
+```
+
+The respective LS Means from the model with time as a fixed factor yields the following estimates:
+
+```{r}
+library(emmeans)
+
+emmeans::ref_grid(fit_cat_time)
+emmeans(fit_cat_time, ~trt)
+
+emmeans(fit_cat_time, ~trt*avisit)
+```
+
+### Observed vs. balanced margins
+
+In the example above we have used the standard option for the weights in the calculation of LS Means. We will delve deeper into the following two options and will try to understand the difference:
+
+-   `weights = "equal"`: Each stratum induced by covariate levels is assigned the same weight in the calculation of the LS Means. This is the default option.
+
+-   `weights = "proportional"`: Each stratum induced by covariate levels is assigned a weight according to their observed proportion in the calculation of the LS Mean. This option gives each stratum a weight corresponding to its size. Estimates using this option are reflective of the balance of covariates in the data.
+
+**Exercise:** Based on the `fit_cat_time` model, compare the LS Means for the change in the response variable by treatment overall and treatment by visit interaction using the different options for `weight`. Compare the results for the two LS Means options to the observed means and to one another.
+
+Discuss the following points:
+
+-   Why is there no difference between LS Means estimates for the overall treatment effect and the treatment by visit interaction? (Hint: Create a frequency table)
+
+Now update the `fit_cat_time` model to `fit_cat_time2`, and include the covariate `gender`. Estimate the same LS Means for the change in the response variable by treatment (overall) and treatment by visit interaction.
+
+-   Why is there a difference now between results from the different LS Means options? (Hint: another frequency table can help)
+
+-   What effect could missing data have on the estimation, even in the case of `fit_cat_time`? I.e. what would happen if this data was not complete but subject to missingness, with the degree of missing data increasing over time and being disproportionate between treatment arms?
+
+**Solution**:
+
+We first calculate the LS Means, using the different `weights` options and find they are indeed identical.
+
+```{r}
+# These will yield the same results:
+emmeans(fit_cat_time, ~trt, weights = "equal")
+emmeans(fit_cat_time, ~trt, weights = "proportional")
+
+emmeans(fit_cat_time, ~trt*avisit, weights = "equal")
+emmeans(fit_cat_time, ~trt*avisit, weights = "proportional")
+```
+
+Now we can update the model to include the covariate `gender`. We can specify this a new model using the `mmrm()` function again, or simply use `update()` to add the new covariate to the model. Either way is fine, and a look into the model formula from the fit summary shows the two approaches work interchangeably.
+
+```{r}
+fit_cat_time2 <- update(fit_cat_time, . ~ . + gender)
+summary(fit_cat_time2)
+```
+
+A look into the reference grid shows us the new factor levels for `gender`. Note that `gender` itself will not be included in the `emmeans()` statement, but the output indicates the averaging over its levels (same for the levels of `avisit`)
+
+```{r}
+# Reference grid shows us the new levels
+emmeans::ref_grid(fit_cat_time2)
+
+# These two won't yield the same results
+emmeans(fit_cat_time2, ~trt, weights = "equal")
+emmeans(fit_cat_time2, ~trt*avisit, weights = "proportional")
+```
+
+The following frequency table shows the imbalance in the distribution of the `gender` variable. We can see that Treatment 1 has more men than women, whereas Treatment 2 has more women than men. 
+
+```{r}
+table(all2$trt, all2$gender)
+```
+
+The data is no longer balanced across the covariates in the model. The `weights = "equal"` option is agnostic to this imbalance and assigns all levels equal weights, whereas the `weights = "proportional"` assigns a weight reflecting the proportional size of the stratum over which the average is taken.
+
+### Contrasts
 
 ### Addendum on RS&I Models
 
