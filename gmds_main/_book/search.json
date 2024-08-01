@@ -98,6 +98,41 @@
     "text": "3.3 Baseline as a Response (cLDA + LDA)\n\n3.3.1 Adjustment of LS Means Calculations\nobserved vs. balanced margins -&gt; interpretation comparison to arithmetic (observed means)\n\n\n3.3.2 Addendum on RS&I Models\nDifferent dosing/ assessment frequency between treatment arms in parallel design -&gt; oncology (chemo with fixed cycles vs immune-therapy)"
   },
   {
+    "objectID": "s4_sensitivity_analyses.html#simple-approaches",
+    "href": "s4_sensitivity_analyses.html#simple-approaches",
+    "title": "5  Sensitivity Analyses",
+    "section": "5.1 Simple approaches",
+    "text": "5.1 Simple approaches\nIn general, not recommended for use. Methods are of histroic interest and provide a useful starting point - LOCF: used in the past, justified as it was thought that it provides conservative estimates - complete case (observed case/completers analysis): creates selection bias, may cause overestimation of within group effects particularly at the last scheduled visit"
+  },
+  {
+    "objectID": "s4_sensitivity_analyses.html#missing-covariates-baseline-data",
+    "href": "s4_sensitivity_analyses.html#missing-covariates-baseline-data",
+    "title": "5  Sensitivity Analyses",
+    "section": "5.2 Missing covariates (baseline data)",
+    "text": "5.2 Missing covariates (baseline data)\n\nmissing baseline value of the outcome: MI or use of mean imputation (Paper: ),\nMMRM not efficient or potential biased estimates as subjects with missing covariates are excluded from the analysis"
+  },
+  {
+    "objectID": "s4_sensitivity_analyses.html#baseline-complete-missingness-in-post-baseline-values",
+    "href": "s4_sensitivity_analyses.html#baseline-complete-missingness-in-post-baseline-values",
+    "title": "5  Sensitivity Analyses",
+    "section": "5.3 Baseline complete, missingness in post-baseline values",
+    "text": "5.3 Baseline complete, missingness in post-baseline values\n\nfor MMRM: at least one post-baseline value needed\nAlternative: LDA where baseline is part of the response vector\nwhen implemented in similar manners: MI and MMRM have similar assumptions and yield similar results. Thus, MI implemented similarly to MMRM is not a sensitivity analysis"
+  },
+  {
+    "objectID": "s4_sensitivity_analyses.html#multiple-imputation",
+    "href": "s4_sensitivity_analyses.html#multiple-imputation",
+    "title": "5  Sensitivity Analyses",
+    "section": "5.4 Multiple imputation",
+    "text": "5.4 Multiple imputation\n\nMI very useful for sensitivity analyses"
+  },
+  {
+    "objectID": "s4_sensitivity_analyses.html#handling-nonignorable-missingness-mnar",
+    "href": "s4_sensitivity_analyses.html#handling-nonignorable-missingness-mnar",
+    "title": "5  Sensitivity Analyses",
+    "section": "5.5 Handling nonignorable missingness (MNAR)",
+    "text": "5.5 Handling nonignorable missingness (MNAR)\n\nAssumption of MAR is often reasonable, but possibility of data missing not at random (MNAR) is difficult to rule out.\nThus, analysis under MNAR needed\nAnalysis under MNAR: these methods are heavily assumption driven and the assumptions are not testable as we do not have the missing data\nConsider a sensitivity analsyis framework allowing assessment of robustness of results to the various assumptions\nMNAR methods: Pattern-mixture, delta-adjustment method (controlled imputation; another method is reference-based imputation)"
+  },
+  {
     "objectID": "references.html",
     "href": "references.html",
     "title": "References",

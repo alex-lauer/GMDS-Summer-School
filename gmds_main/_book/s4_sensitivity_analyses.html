@@ -153,7 +153,17 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#simple-approaches" id="toc-simple-approaches" class="nav-link active" data-scroll-target="#simple-approaches"><span class="header-section-number">5.1</span> Simple approaches</a></li>
+  <li><a href="#missing-covariates-baseline-data" id="toc-missing-covariates-baseline-data" class="nav-link" data-scroll-target="#missing-covariates-baseline-data"><span class="header-section-number">5.2</span> Missing covariates (baseline data)</a></li>
+  <li><a href="#baseline-complete-missingness-in-post-baseline-values" id="toc-baseline-complete-missingness-in-post-baseline-values" class="nav-link" data-scroll-target="#baseline-complete-missingness-in-post-baseline-values"><span class="header-section-number">5.3</span> Baseline complete, missingness in post-baseline values</a></li>
+  <li><a href="#multiple-imputation" id="toc-multiple-imputation" class="nav-link" data-scroll-target="#multiple-imputation"><span class="header-section-number">5.4</span> Multiple imputation</a></li>
+  <li><a href="#handling-nonignorable-missingness-mnar" id="toc-handling-nonignorable-missingness-mnar" class="nav-link" data-scroll-target="#handling-nonignorable-missingness-mnar"><span class="header-section-number">5.5</span> Handling nonignorable missingness (MNAR)</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -175,8 +185,54 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<p>Sensitivity analyses with respect to missing data - only?</p>
+<ul>
+<li>MMRM is an appropriate choice for the primary analysis in many longitudinal clinical trials under the MAR assumption.</li>
+<li>MCAR and MAR missingness can be ignored in likelihood-based analyses. MAR: future outcomes for subjects who discontinued should be similar to the future outocmes of subjects who continued if they had the same values of past (observed) outcomes, covariates,…</li>
+<li>Flexibility in modeling treatment effects over time and the within-patient error correlation structure makes MMRM a widely useful analysis.</li>
+<li>Consider sensivitiy analyses to check model assumptions e.g.&nbsp;MNAR methods</li>
+<li>Comparing results from sensitivity analyses: how much inference rely on the assumptions</li>
+<li>Here, inference with regard to the treatment effect. Thus, investigate how treatment effects vary depending on assumptions e.g.&nbsp;about missing data.</li>
+<li>Uncertainty from incompleteness cannot be objectively evaluated from observed data so there is a need for missing data sensitivity analyses.</li>
+</ul>
+<p>Mit Alexandra abstimmen: was genau, machst du MI in deinem Teil, MMRM vs.&nbsp;MI+ANCOVA?, was ist eure primary analysis + typische sensitivity analyses MI: eingehen auf welche Variablen im Modell e.g.&nbsp;at least those from the primary model</p>
+<section id="simple-approaches" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="simple-approaches"><span class="header-section-number">5.1</span> Simple approaches</h2>
+<p>In general, not recommended for use. Methods are of histroic interest and provide a useful starting point - LOCF: used in the past, justified as it was thought that it provides conservative estimates - complete case (observed case/completers analysis): creates selection bias, may cause overestimation of within group effects particularly at the last scheduled visit</p>
+</section>
+<section id="missing-covariates-baseline-data" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="missing-covariates-baseline-data"><span class="header-section-number">5.2</span> Missing covariates (baseline data)</h2>
+<ul>
+<li>missing baseline value of the outcome: MI or use of mean imputation (Paper: ),</li>
+<li>MMRM not efficient or potential biased estimates as subjects with missing covariates are excluded from the analysis</li>
+</ul>
+</section>
+<section id="baseline-complete-missingness-in-post-baseline-values" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="baseline-complete-missingness-in-post-baseline-values"><span class="header-section-number">5.3</span> Baseline complete, missingness in post-baseline values</h2>
+<ul>
+<li>for MMRM: at least one post-baseline value needed</li>
+<li>Alternative: LDA where baseline is part of the response vector</li>
+<li>when implemented in similar manners: MI and MMRM have similar assumptions and yield similar results. Thus, MI implemented similarly to MMRM is not a sensitivity analysis</li>
+</ul>
+</section>
+<section id="multiple-imputation" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="multiple-imputation"><span class="header-section-number">5.4</span> Multiple imputation</h2>
+<ul>
+<li>MI very useful for sensitivity analyses</li>
+</ul>
+</section>
+<section id="handling-nonignorable-missingness-mnar" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="handling-nonignorable-missingness-mnar"><span class="header-section-number">5.5</span> Handling nonignorable missingness (MNAR)</h2>
+<ul>
+<li>Assumption of MAR is often reasonable, but possibility of data missing not at random (MNAR) is difficult to rule out.</li>
+<li>Thus, analysis under MNAR needed</li>
+<li>Analysis under MNAR: these methods are heavily assumption driven and the assumptions are not testable as we do not have the missing data</li>
+<li>Consider a sensitivity analsyis framework allowing assessment of robustness of results to the various assumptions</li>
+<li>MNAR methods: Pattern-mixture, delta-adjustment method (controlled imputation; another method is reference-based imputation)</li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

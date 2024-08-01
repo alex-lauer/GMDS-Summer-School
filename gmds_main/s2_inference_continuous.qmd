@@ -6,17 +6,56 @@
 source("setup.R")
 ```
 
-Continuous endpoints
+This section will focus on the application of Mixed Model with Repeated Measures (MMRMs). Our main focus will be the modeling of the means of the data. MMRMs are generalizations of standard linear models in the way that data is allowed to be correlated between subsequent measurements from the same subject and exhibit non-constant variability.
+
+The primary assumptions for MMRMs are:
+
+-   The data are normally distributed
+
+-   The means (expected values) of the data are linear in terms of a certain set of parameters.
+
+-   The variances and covariances of the data are in terms of a different set of parameters, and they exhibit a structure matching one of those outlined in the former chapter.
+
+\[Alex to add reference to PROC MIXED\]
+
+The mixed linear model can be described via the following formula
+
+$$
+y_i = X_i\beta\,+\,Z_i\gamma_i\,+\,\varepsilon_i\,,\, i = 1,\ldots,N
+$$
+
+where $y$ is the vector of responses (observed data, dependent variable), $\beta$ is an unknown vector of fixed effects with known design matrix $X$, $\gamma$ is an unknown vector of random effects with known design matrix $Z$, and $\varepsilon$ is an unknown random error vector. Furthermore $N$ denotes the total number of subjects in our analysis. For the sake of readability, we will omit the subject index and simplify the above formula to
+
+$$
+y = X\beta\,+\,Z\gamma\,+\,\varepsilon\,.
+$$
+
+We will further assume that $\gamma$ and $\varepsilon$ are uncorrelated Gaussian random variables with expectation $0$ and variances $G$ and $R$, respectively. Then the variance-covariance matrix of $y$ is given by
+
+$$
+\text{Var}(y) := V = ZGZ' + R\,.
+$$
+In this case $ZGZ'$ comprises the random effects component, and $R$ is the within-subject component. 
+
+In this workshop we will focus on the case where only the within-subject component is accounted for, via modeling of the $R$ matrix. The random effects component $Z\gamma$ will be omitted. In this case we will have $\text{Var}(y) = V = R$, resulting in a model given by
+
+$$
+y = X\beta\,+\,\varepsilon\,.
+$$
 
 ## Categorical Time
 
-avisit with three distinct values -> 2 df
+avisit with three distinct values -\> 2 df
 
 ```{r}
 ?mmrm
 ```
 
+Two inputs are strictly required to get `mmrm()` to work:
 
+-   A model formula
+
+-   The dataset, containing the dependent and independent
 
 ```{r}
 fit_cat_time <- mmrm::mmrm(
@@ -34,15 +73,11 @@ Can extract covariance matrix via
 summary(fit_cat_time)$varcor
 ```
 
-
-
 ## Continuous Time
 
-Time as continuous effect -> single df for time and trt-by-time interaction
+Time as continuous effect -\> single df for time and trt-by-time interaction
 
-Modeling:
-- Need avisit for structure of covariance matrix
-- Implicit assumption is for the covariance between values for two timepoints to be equal, regardless of the specific timing
+Modeling: - Need avisit for structure of covariance matrix - Implicit assumption is for the covariance between values for two timepoints to be equal, regardless of the specific timing
 
 ```{r}
 fit_cont_time <- mmrm::mmrm(
@@ -67,19 +102,14 @@ fit_cont_timesq <- mmrm::mmrm(
 )
 ```
 
-
 model checks - residuals per time point
 
 ## Baseline as a Response (cLDA + LDA)
 
-
-
 ### Adjustment of LS Means Calculations
 
-observed vs. balanced margins -> interpretation
-comparison to arithmetic (observed means)
+observed vs. balanced margins -\> interpretation comparison to arithmetic (observed means)
 
 ### Addendum on RS&I Models
 
-Different dosing/ assessment frequency between treatment arms in parallel design
--> oncology (chemo with fixed cycles vs immune-therapy)
+Different dosing/ assessment frequency between treatment arms in parallel design -\> oncology (chemo with fixed cycles vs immune-therapy)
