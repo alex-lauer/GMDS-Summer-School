@@ -6,7 +6,3 @@ bibliography: references.bib
 
 ::: {#refs}
 :::
-
-[@little2019]
-
-[@mallinckrodt2020]

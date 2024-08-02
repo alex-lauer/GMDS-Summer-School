@@ -208,7 +208,7 @@ emmeans(fit_cat_time2, ~trt, weights = "equal")
 emmeans(fit_cat_time2, ~trt*avisit, weights = "proportional")
 ```
 
-The following frequency table shows the imbalance in the distribution of the `gender` variable. We can see that Treatment 1 has more men than women, whereas Treatment 2 has more women than men. 
+The following frequency table shows the imbalance in the distribution of the `gender` variable. We can see that Treatment 1 has more men than women, whereas Treatment 2 has more women than men.
 
 ```{r}
 table(all2$trt, all2$gender)
@@ -217,6 +217,70 @@ table(all2$trt, all2$gender)
 The data is no longer balanced across the covariates in the model. The `weights = "equal"` option is agnostic to this imbalance and assigns all levels equal weights, whereas the `weights = "proportional"` assigns a weight reflecting the proportional size of the stratum over which the average is taken.
 
 ### Contrasts
+
+## Fit diagnostics
+
+The following section closely follows the content in Chapter 10 in [@fitzmaurice2011].
+
+Our analysis should be concluded with a look into the fit diagnostics, more specifically, the residuals. Residuals are defined by the difference between the true responses and the fitted values from the model:
+
+$$
+r := y - X\hat\beta\,,
+$$ where $\hat\beta$ are the estimated coefficients from our model. Residuals provide an estimate of the true vector of random errors
+
+$$
+\varepsilon = y - X\beta\,.
+$$
+
+As per our modeling assumptions, $\varepsilon$ should follow a normal distribution with mean zero. The mean of the residuals is zero and therefore identical with the mean of the error term. For the covariance of the residuals however, the variance-covariance matrix of $\varepsilon$ only serves us as an approximation (as suggested by [@fitzmaurice2011] for all 'practical applications'):
+
+$$
+Cov(r) \approx Cov(\varepsilon) = R\,.
+$$ This assumption has several implications on the residual diagnostics:
+
+-   The variance is not necessarily constant. Plotting the fitted values versus the residuals might therefore lead to a non-constant range. An examination of the residual variance or autocorrelation among residuals is therefore not very meaningful.
+
+-   Residuals from analyses of longitudinal data can exhibit correlation with the covariates. Scatterplots of residuals versus selected covariates can therefore reveal systematic trends (which normally should not be the case).
+
+A transformation of residuals to achieve constant variance and zero correlation is therefore often useful. This transformation uses the so-called *Cholesky decomposition* of the variance-covariance matrix $R$. Let $L$ be a lower triangular matrix, such that
+
+$$
+R = L\,L'\,,
+$$
+then the transformed residuals are given by
+$$
+r^* =  L^{-1}(y - X\beta)\,.
+$$
+Note to self: `chol(m)` returns $L'$.
+
+Residual plots overall and by visit
+
+-   predicted vs. actual values
+-   predicted vs. residuals
+-   standardized residuals vs. theoretic quantiles
+
+How? What can/ should be seen?
+
+```{r}
+#| message: false
+library(ggplot2)
+
+dplyr::tibble(
+  residuals = residuals(fit_cat_time),
+  predictions = fitted.values(fit_cat_time)
+) %>% 
+  ggplot(aes(x = predictions, y = residuals)) +
+  geom_point(color = "blue") +
+  geom_smooth(method = lm, color = "red") +
+  geom_hline(yintercept = 0, show.legend = FALSE, linetype = 2)
+  
+```
+
+What do we see?
+
+-   The points in the plot look well dispersed and symmetric around zero. The fitted line shows no departure from zero.
+
+-   There is no systematic trend, but a rather random scatter.
 
 ### Addendum on RS&I Models
 

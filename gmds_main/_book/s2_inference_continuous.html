@@ -54,7 +54,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -200,7 +219,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#observed-vs.-balanced-margins" id="toc-observed-vs.-balanced-margins" class="nav-link" data-scroll-target="#observed-vs.-balanced-margins"><span class="header-section-number">3.4.1</span> Observed vs.&nbsp;balanced margins</a></li>
   <li><a href="#contrasts" id="toc-contrasts" class="nav-link" data-scroll-target="#contrasts"><span class="header-section-number">3.4.2</span> Contrasts</a></li>
-  <li><a href="#addendum-on-rsi-models" id="toc-addendum-on-rsi-models" class="nav-link" data-scroll-target="#addendum-on-rsi-models"><span class="header-section-number">3.4.3</span> Addendum on RS&amp;I Models</a></li>
+  </ul></li>
+  <li><a href="#fit-diagnostics" id="toc-fit-diagnostics" class="nav-link" data-scroll-target="#fit-diagnostics"><span class="header-section-number">3.5</span> Fit diagnostics</a>
+  <ul class="collapse">
+  <li><a href="#addendum-on-rsi-models" id="toc-addendum-on-rsi-models" class="nav-link" data-scroll-target="#addendum-on-rsi-models"><span class="header-section-number">3.5.1</span> Addendum on RS&amp;I Models</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -535,11 +557,44 @@ Confidence level used: 0.95 </code></pre>
 <p>Now we can update the model to include the covariate <code>gender</code>. We can specify this a new model using the <code>mmrm()</code> function again, or simply use <code>update()</code> to add the new covariate to the model. Either way is fine, and a look into the model formula from the fit summary shows the two approaches work interchangeably.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fit_cat_time2 <span class="ot">&lt;-</span> <span class="fu">update</span>(fit_cat_time, . <span class="sc">~</span> . <span class="sc">+</span> gender)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cat_time2)<span class="sc">$</span>call</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cat_time2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>mmrm::mmrm(formula = change ~ basval + avisit + trt + (us(avisit | 
-    subject)) + gender + basval:avisit + avisit:trt, data = all2, 
-    control = mmrm_control(method = "Kenward-Roger"))</code></pre>
+<pre><code>mmrm fit
+
+Formula:     
+change ~ basval + avisit + trt + (us(avisit | subject)) + gender +  
+    basval:avisit + avisit:trt
+Data:        all2 (used 150 observations from 50 subjects with maximum 3 
+timepoints)
+Covariance:  unstructured (6 variance parameters)
+Method:      Kenward-Roger
+Vcov Method: Kenward-Roger
+Inference:   REML
+
+Model selection criteria:
+     AIC      BIC   logLik deviance 
+   817.0    828.5   -402.5    805.0 
+
+Coefficients: 
+                     Estimate Std. Error        df t value Pr(&gt;|t|)   
+(Intercept)           0.47589    3.23944  46.14000   0.147  0.88385   
+basval               -0.30674    0.15200  45.44000  -2.018  0.04951 * 
+avisitWeek 4         -0.90862    2.39786  47.00000  -0.379  0.70645   
+avisitWeek 8        -10.58630    3.45626  47.00000  -3.063  0.00362 **
+trt2                 -0.34868    1.30287  46.74000  -0.268  0.79016   
+genderM               2.32931    1.29556  45.99000   1.798  0.07876 . 
+basval:avisitWeek 4  -0.08542    0.11646  47.00000  -0.734  0.46689   
+basval:avisitWeek 8   0.24779    0.16786  47.00000   1.476  0.14657   
+avisitWeek 4:trt2    -0.80100    0.93186  47.00000  -0.860  0.39439   
+avisitWeek 8:trt2    -2.20106    1.34318  47.00000  -1.639  0.10795   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Covariance estimate:
+        Week 2  Week 4  Week 8
+Week 2 18.8295 14.3160 12.0002
+Week 4 14.3160 21.1623 18.1813
+Week 8 12.0002 18.1813 28.8384</code></pre>
 </div>
 </div>
 <p>A look into the reference grid shows us the new factor levels for <code>gender</code>. Note that <code>gender</code> itself will not be included in the <code>emmeans()</code> statement, but the output indicates the averaging over its levels (same for the levels of <code>avisit</code>)</p>
@@ -595,11 +650,68 @@ Confidence level used: 0.95 </code></pre>
 <section id="contrasts" class="level3" data-number="3.4.2">
 <h3 data-number="3.4.2" class="anchored" data-anchor-id="contrasts"><span class="header-section-number">3.4.2</span> Contrasts</h3>
 </section>
-<section id="addendum-on-rsi-models" class="level3" data-number="3.4.3">
-<h3 data-number="3.4.3" class="anchored" data-anchor-id="addendum-on-rsi-models"><span class="header-section-number">3.4.3</span> Addendum on RS&amp;I Models</h3>
+</section>
+<section id="fit-diagnostics" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="fit-diagnostics"><span class="header-section-number">3.5</span> Fit diagnostics</h2>
+<p>The following section closely follows the content in Chapter 10 in <span class="citation" data-cites="fitzmaurice2011">(<a href="references.html#ref-fitzmaurice2011" role="doc-biblioref">Fitzmaurice 2011</a>)</span>.</p>
+<p>Our analysis should be concluded with a look into the fit diagnostics, more specifically, the residuals. Residuals are defined by the difference between the true responses and the fitted values from the model:</p>
+<p><span class="math display">\[
+r := y - X\hat\beta\,,
+\]</span> where <span class="math inline">\(\hat\beta\)</span> are the estimated coefficients from our model. Residuals provide an estimate of the true vector of random errors</p>
+<p><span class="math display">\[
+\varepsilon = y - X\beta\,.
+\]</span></p>
+<p>As per our modeling assumptions, <span class="math inline">\(\varepsilon\)</span> should follow a normal distribution with mean zero. The mean of the residuals is zero and therefore identical with the mean of the error term. For the covariance of the residuals however, the variance-covariance matrix of <span class="math inline">\(\varepsilon\)</span> only serves us as an approximation (as suggested by <span class="citation" data-cites="fitzmaurice2011">(<a href="references.html#ref-fitzmaurice2011" role="doc-biblioref">Fitzmaurice 2011</a>)</span> for all ‘practical applications’):</p>
+<p><span class="math display">\[
+Cov(r) \approx Cov(\varepsilon) = R\,.
+\]</span> This assumption has several implications on the residual diagnostics:</p>
+<ul>
+<li><p>The variance is not necessarily constant. Plotting the fitted values versus the residuals might therefore lead to a non-constant range. An examination of the residual variance or autocorrelation among residuals is therefore not very meaningful.</p></li>
+<li><p>Residuals from analyses of longitudinal data can exhibit correlation with the covariates. Scatterplots of residuals versus selected covariates can therefore reveal systematic trends (which normally should not be the case).</p></li>
+</ul>
+<p>A transformation of residuals to achieve constant variance and zero correlation is therefore often useful. This transformation uses the so-called <em>Cholesky decomposition</em> of the variance-covariance matrix <span class="math inline">\(R\)</span>. Let <span class="math inline">\(L\)</span> be a lower triangular matrix, such that</p>
+<p><span class="math display">\[
+R = L\,L'\,,
+\]</span> then the transformed residuals are given by <span class="math display">\[
+r^* =  L^{-1}(y - X\beta)\,.
+\]</span> Note to self: <code>chol(m)</code> returns <span class="math inline">\(L'\)</span>.</p>
+<p>Residual plots overall and by visit</p>
+<ul>
+<li>predicted vs.&nbsp;actual values</li>
+<li>predicted vs.&nbsp;residuals</li>
+<li>standardized residuals vs.&nbsp;theoretic quantiles</li>
+</ul>
+<p>How? What can/ should be seen?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">tibble</span>(</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">residuals =</span> <span class="fu">residuals</span>(fit_cat_time),</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">predictions =</span> <span class="fu">fitted.values</span>(fit_cat_time)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> predictions, <span class="at">y =</span> residuals)) <span class="sc">+</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>, <span class="at">linetype =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="s2_inference_continuous_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>What do we see?</p>
+<ul>
+<li><p>The points in the plot look well dispersed and symmetric around zero. The fitted line shows no departure from zero.</p></li>
+<li><p>There is no systematic trend, but a rather random scatter.</p></li>
+</ul>
+<section id="addendum-on-rsi-models" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="addendum-on-rsi-models"><span class="header-section-number">3.5.1</span> Addendum on RS&amp;I Models</h3>
 <p>Different dosing/ assessment frequency between treatment arms in parallel design -&gt; oncology (chemo with fixed cycles vs immune-therapy)</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-fitzmaurice2011" class="csl-entry" role="listitem">
+Fitzmaurice, Laird, G. M. 2011. <em>Applied Longitudinal Analysis</em>. Vol. 2. USA: New York, Wiley. <a href="https://doi.org/10.1002/9781119513469">https://doi.org/10.1002/9781119513469</a>.
+</div>
+</div>
 </section>
 </section>
 
