@@ -1,38 +1,57 @@
 # Sensitivity Analyses
 
-Sensitivity analyses with respect to missing data - only?
+Purpose: talk about sensitivity analyses with respect to missing data
 
 - MMRM is an appropriate choice for the primary analysis in many longitudinal clinical trials under the MAR assumption.
-- MCAR and MAR missingness can be ignored in likelihood-based analyses. MAR: future outcomes for subjects who discontinued should be similar to the future outocmes of subjects who continued if they had the same values of past (observed) outcomes, covariates,...
-- Flexibility in modeling treatment effects over time and the within-patient error correlation structure makes MMRM a widely useful analysis.
-- Consider sensivitiy analyses to check model assumptions e.g. MNAR methods
-- Comparing results from sensitivity analyses: how much inference rely on the assumptions
+- MMRM can handle missing values. BUT: need of baseline and at least one post-baseline value
+- No imputation for individual missing values but missing data is implicitly imputed
+- Based on the assumption of missing at random (MAR)
+- MAR: future outcomes for subjects who discontinued should be similar to the future outocmes of subjects who continued if they had the same values of past (observed) outcomes, covariates,...
+
+## Purpose of sensitivity analyses
+- Consider sensivitiy analyses to check model assumptions e.g. MNAR methods.
+- Comparing results from sensitivity analyses: how much inference rely on the assumptions.
 - Here, inference with regard to the treatment effect. Thus, investigate how treatment effects vary depending on assumptions e.g. about missing data.
 - Uncertainty from incompleteness cannot be objectively evaluated from observed data so there is a need for missing data sensitivity analyses.
 
-Mit Alexandra abstimmen: was genau, machst du MI in deinem Teil, MMRM vs. MI+ANCOVA?, was ist eure primary analysis + typische sensitivity analyses
-MI: eingehen auf welche Variablen im Modell e.g. at least those from the primary model
+## MMRM vs. MI
+- Flexibility in modeling treatment effects over time and the within-patient error correlation structure makes MMRM a widely useful analysis.
+- MMRM, MI: two mafor apporaches to missing data with good statistical properties.
+- MMRM: missing values implicitly imputed, MI: missing values explicitly imputed.
+- MMRM vs. MI: approximately equivalent provided the variables used in the imputation model are the same as those in cluded in the analysis model (level of euqivalence will depend on the number of imputations)
+- MI: imputation model with at least those variables from the primary model, additional auxiliary variables can be used in the imputation model to improve the accuracy of the missing data prediction
+- Handling missing not at random (MNAR) possible for MI (e.g. reference-based imputation) but not within MMRM 
+- MMRM does not work if missing baseline values are present. Missing baseline values can be imputed first. Additionally, at least one post-baseline value has to be observed. Alternative: LDA where baseline is part of the response vector.
 
-## Simple approaches
-In general, not recommended for use. Methods are of histroic interest and provide a useful starting point
-- LOCF: used in the past, justified as it was thought that it provides conservative estimates
-- complete case (observed case/completers analysis): creates selection bias, may cause overestimation of within group effects particularly at the last scheduled visit
+Take-home message
+Note that, when implemented in similar manners MI and MMRM have similar assumptions and yield similar results. Thus, MI implemented similarly to MMRM is not a sensitivity analysis!
 
 ## Missing covariates (baseline data)
-- missing baseline value of the outcome: MI or use of mean imputation (Paper: ), 
+- Missing baseline value of the outcome: MI or use of mean imputation (Paper: ), 
 - MMRM not efficient or potential biased estimates as subjects with missing covariates are excluded from the analysis 
 
-## Baseline complete, missingness in post-baseline values
-- for MMRM: at least one post-baseline value needed
-- Alternative: LDA where baseline is part of the response vector
-- when implemented in similar manners: MI and MMRM have similar assumptions and yield similar results. Thus, MI implemented similarly to MMRM is not a sensitivity analysis
+## Sensitivity analyses - Simple approaches
+In general, not recommended for use. Methods are of histroic interest and provide a useful starting point.
+- Last observation carried forward (LOCF): used in the past, justified as it was thought that it provides conservative estimates
+- Complete case (observed case/completers analysis): creates selection bias, may cause overestimation of within group effects particularly at the last scheduled visit
+We apply these two methods here as well to compare results.
 
-## Multiple imputation
-- MI very useful for sensitivity analyses
-
-## Handling nonignorable missingness (MNAR)
+## Sensitivity analyses - Handling nonignorable missingness (MNAR)
 - Assumption of MAR is often reasonable, but possibility of data missing not at random (MNAR) is difficult to rule out.
 - Thus, analysis under MNAR needed
 - Analysis under MNAR: these methods are heavily assumption driven and the assumptions are not testable as we do not have the missing data
 - Consider a sensitivity analsyis framework allowing assessment of robustness of results to the various assumptions
-- MNAR methods: Pattern-mixture, delta-adjustment method (controlled imputation; another method is reference-based imputation)
+- MNAR methods: Pattern-mixture, delta-adjustment method (controlled imputation)
+MI can also be used to explore departures from MAR (for analysis under a MNAR assumption). This is referred to as controlled MI and includes delta-based MI and reference-based MI. Data is imputed under an alternative MNAR distribution that reflects a contextually relevant scenario for the unobserved data. The imputed datasets are then analysed as with standard MI. 
+
+- Controlled imputation approaches: include delta-based MI and reference-based MI 
+Reference‐based multiple imputation is part of the reference‐based (or “controlled” or “placebo‐based”) approaches to handling missing data which belong to a broader class of “pattern mixture models,” modelling MNAR data by allowing for a different data distribution by pattern of missingness
+
+### Reference-based multiple imputation
+- Has recieved increasing attention in clinical trials as it provides an attractive approach for a sensitivity analysis because missing data assumptions are framed in an intuitive way. The departure from MAR is captured in a qualitative way, making the formulation of the problem intiutive.
+- For example, a plausible MNAR mechanism in a placebo‐controlled trial is to assume that subjects in the experimental arm who dropped out stop taking their treatment and have similar outcomes to those in the placebo arm.
+- Different options to handle missing outcome data for reference-based imputation were described: e.g. copy reference, copy increments in reference, jump to reference (Paper Carpenter 2013)
+
+### Delta-based multiple imputation
+- Impute assuming all unobserved subjects having a poorer or better response than those observed, by adding or subtracting a “delta” parameter to the expected value of the MAR imputed values. 
+- “Delta” can be implemented in all treatment groups, or in only one group, or may vary by treatment group or an alternative specified factor.
