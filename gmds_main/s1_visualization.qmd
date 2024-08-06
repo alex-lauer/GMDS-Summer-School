@@ -157,6 +157,12 @@ UN is the most flexible. Choose a reasonable covaraiance structure which is the 
 
 ## Task 3 - Discussion and possible solution
 
+Table: Correlation and covariance matrix
+
 ```{r}
-1 + 1
+all2 %>% pivot_wider(id_cols=subject,names_from = time, values_from = c(basval,change)) %>% 
+  select(-basval_2) %>% select(-basval_3) -> all2.w
+
+cor(all2.w[-1]) 
+cov(all2.w[-1])
 ```
