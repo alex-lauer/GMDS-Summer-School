@@ -54,15 +54,17 @@ Figure: trajectories
 ```{r}
 #| label: fig-traj
 #| fig-cap: "Individual trajectories of HAMD17 by treatment group"
-ggplot(data = all2, aes(x = avisit, y = change, group=subject)) +
-geom_point() + geom_line() + facet_grid(.~group)
+ggplot(data = all2, aes(x = week, y = change, group=subject)) +
+  geom_point() + geom_line() + facet_grid(.~group) + ylab("Change from baseline HAMD17") +
+  scale_x_continuous(name="Visit [week]", breaks=c(2,4,8))
 ```
 
 ```{r}
 #| label: fig-mean
 #| fig-cap: "Mean change from baseline by treatment group"
-ggplot(data = all2, aes(x = avisit, y = change)) + 
-  geom_point() + facet_grid(.~group) +
+ggplot(data = all2, aes(x = week, y = change)) + facet_grid(.~group) + 
+  geom_point() + ylab("Change from baseline HAMD17") +
+  scale_x_continuous(name="Visit [week]", breaks=c(2,4,8)) +
   stat_summary(aes(group = 1), geom = "line", fun.y = mean,
                size = 1, col="blue") +
   stat_summary(aes(group = 1), geom = "point", fun.y = mean,
