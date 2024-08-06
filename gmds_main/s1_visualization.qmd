@@ -19,11 +19,11 @@ Two treatement arms are included: drug vs. placebo.
 Assessments were taken at baseline and weeks 1, 2, 4, 6, and 8
 
 There are 3 data sets created from the original data:
-- *all2* Subsample of the large dataset with n=50, visits: weeks 2, 4, 8
-- *high2* Large dataset with n=100, high dropout = 70% (drug), 60% (placebo)
-- *low2* Large dataset with n=100, low dropout = 18%
+- Data *all2* Subsample of the large dataset with n=50, visits: weeks 2, 4, 8
+- Data *high2* Large dataset with n=100, high dropout = 70% (drug), 60% (placebo)
+- Data *low2* Large dataset with n=100, low dropout = 18%
 
-## Task 1 - Exploration of dataset all2 - 15 Minutes working time
+## Task 1 - Exploration of dataset all2 - 15 minutes working time
 - Are the data balanced and equally spaced?
 - Number of observations by week?
 - Summary statistics for HAMD17 (change from baseline) by week.
@@ -68,6 +68,7 @@ ggplot(data = all2, aes(x = avisit, y = change)) +
   stat_summary(aes(group = 1), geom = "point", fun.y = mean,
                shape=17,size = 3, col="blue")
 ```
+## Task 2 - Exploration of dataset high2 - 15 minutes working time
 
 # Correlation structure, covariance matrices
 - model within-subject error correlation
@@ -80,10 +81,10 @@ ggplot(data = all2, aes(x = avisit, y = change)) +
 - First order auto regressive (AR(1))
 - Unstructured (UN)
 
-Selected covariance structures for data with three assessment times are shown below. Note that with three assessment times, the number of parameters estimated for the various structures did not differ as much as would be the case with more assessment times. Thus, results from different covariance structures are more similar than would be the case with more assessment times.
+Selected covariance structures for data with three assessment times (t=3) are shown below. Note that with three assessment times, the number of parameters estimated for the various structures did not differ as much as would be the case with more assessment times. Thus, results from different covariance structures are more similar than would be the case with more assessment times.
 
 ### Independence structure (VC)
-Constant variance. It is assumed to be no correlation between assessments.
+Constant variance. It is assumed to be no correlation between assessments (residuals are independent across time).
 $$ \begin{bmatrix}
    \sigma^2   & 0  & 0  \\
    0  & \sigma^2   & 0 \\
@@ -91,9 +92,9 @@ $$ \begin{bmatrix}
    \end{bmatrix}$$
 
 ### Compound symmetry (CS)
-Constant variance and constant covariance across all assessments. Also known as exchangeable.
+Constant variance and constant covariance across all assessments. Also known as exchangeable. It requires two parameter estimates. Most simplest repeated measures (i.e., correlated errors) structure.
 
-$$ \begin{bmatrix}
+$$ R = \begin{bmatrix}
    \sigma^2 + \sigma_1 & \sigma_1  & \sigma_1  \\
    \sigma_1  & \sigma^2 + \sigma_1  & \sigma_1  \\
    \sigma_1  & \sigma_1  & \sigma^2 + \sigma_1
@@ -101,38 +102,45 @@ $$ \begin{bmatrix}
    
    
 ### Unstructured (UN)
-This is the most general (saturated) model
+This is the most general (saturated) model. It has t + [t(t-1)/2] parameters to be estimated. Here it is 3 + 3 = 6 parameters.
 
-$$ \begin{bmatrix}
+$$ R = \begin{bmatrix}
    \sigma_1^2 & \sigma_{21}  & \sigma_{31}  \\
    \sigma_{21}  & \sigma_2^2   & \sigma_{32}  \\
    \sigma_{31}  & \sigma_{32}  & \sigma_3^2
    \end{bmatrix}$$
    
 ### Toeplitz structure (TOEP)
-Homogenous variances and heterogenous correlations. Same correlation value is used whenever the degree of adjacency is the same e.g. correlation between times 1 and 2 = correlation between times 2 and 3.
+Homogenous variances and heterogenous correlations. Same correlation value is used whenever the degree of adjacency is the same e.g. correlation between times 1 and 2 = correlation between times 2 and 3. Repeated measurements are assumed to be equally spaced. TOEP requries t parameter estimates so here we have t=3 parameter.
 
-$$ \begin{bmatrix}
-   \sigma^2  & \sigma^2 \rho_1  & \sigma^2 \rho_2  \\
-   \sigma^2 \rho_1 & \sigma^2   & \sigma^2 \rho_1  \\
-   \sigma^2 \rho_2  & \sigma^2 \rho_1  & \sigma^2 
+$$ R = \begin{bmatrix}
+   \sigma^2  & \sigma_1^2 & \sigma_2^2 \  \\
+   \sigma_1^2 & \sigma^2  & \sigma_1^2  \\
+   \sigma_2^2  & \sigma_1^2 & \sigma^2 
    \end{bmatrix}$$
 
 ### Autoregressive structure (AR(1))
-Correlation decreases as time between observations increases.
+Correlation decreases as time between observations increases. Assumtpion of equal spacing between each repeated measurement must be reasonably applicable. This structure requires the estimation of two parameters.
 
-$$ \begin{bmatrix}
+$$ R = \begin{bmatrix}
    \sigma^2  & \sigma^2 \rho  & \sigma^2 \rho^2  \\
    \sigma^2 \rho & \sigma^2   & \sigma^2 \rho  \\
   \sigma^2 \rho^2  & \sigma^2 \rho  & \sigma^2 
    \end{bmatrix}$$
 
-### Spatial (SP)
-Spatial covariance structures does not require that the timepoints are consistent between subjects. Instead, as long as the distance between visits can be quantified in terms of time and/or other coordinates, the spatial covariance structure can be applied.
+### Spatial Power (SP)
+Spatial covariance structures does not require equal spacing between measurements. Instead, as long as the distance between visits can be quantified in terms of time and/or other coordinates, the spatial covariance structure can be applied. Covariances are mathematical functions of Euclidean distances between observed measurements. Again, two parameters need to be estimated.
 
 For spatial exponential, the covariance structure is defined as follows:
-$$ \rho_{ij}=\rho^{d_{ij}} $$
-where $$d_{ij} $$ is the distance between time point i and time point j.
+
+$$ R = \begin{bmatrix}
+   \sigma^2  & \sigma^2 \rho_{12}  & \sigma^2 \rho_{13}  \\
+   \sigma^2 \rho_{21} & \sigma^2   & \sigma^2 \rho_{23}  \\
+  \sigma^2 \rho_{31}  & \sigma^2 \rho_{32}  & \sigma^2 
+   \end{bmatrix}$$
+
+with $$ \rho_{ij}=\rho^{d_{ij}} $$
+where $$d_{ij} $$ is the distance between time point i and time point j e.g. distance in weeks.
 
 ## Selecting the covariance structure
 There are a variety of considerations when selecting the covariance structure:
@@ -141,9 +149,11 @@ There are a variety of considerations when selecting the covariance structure:
 - model fit
 UN is the most flexible. Choose a reasonable covaraiance structure which is the best compromise between model fit and complexity. E.g. use AIC as it penalises more complex models.
 
-## Task - Exploration of correlation in the data
+## Task 3 - Exploration of correlation in the data
 - Compute the empirical correlations between measurement timepoints (e.g. correlation between baseline and post-baseline changes). 
 - Looking at these correlations, comment on the suitability of the correlation structures VC, CS, UN, AR(1).
+
+## Task 3 - Discussion and possible solution
 
 ```{r}
 1 + 1
