@@ -71,6 +71,10 @@ ggplot(data = all2, aes(x = week, y = change)) + facet_grid(.~group) +
                shape=17,size = 3, col="blue")
 ```
 ## Task 2 - Exploration of dataset high2 - 15 minutes working time
+- drop-outs
+- trajectories for different drop-out groups
+
+### Task 2 Discussion, possible solution
 
 # Correlation structure, covariance matrices
 - model within-subject error correlation
@@ -149,11 +153,13 @@ There are a variety of considerations when selecting the covariance structure:
 - number of parameters
 - interpretation of the structure
 - model fit
-UN is the most flexible. Choose a reasonable covaraiance structure which is the best compromise between model fit and complexity. E.g. use AIC as it penalises more complex models.
+
+UN is the most flexible (complex) structure and can fail to run especially if one has many repeated measures.
+Choose a reasonable covaraiance structure which is the best compromise between model fit and complexity. E.g. use AIC as it penalises more complex models. 
 
 ## Task 3 - Exploration of correlation in the data
 - Compute the empirical correlations between measurement timepoints (e.g. correlation between baseline and post-baseline changes). 
-- Looking at these correlations, comment on the suitability of the correlation structures VC, CS, UN, AR(1).
+- Looking at these correlations + using your knowledge of the experiment (e.g., spacing of measurement), comment on the suitability of the correlation structures VC, CS, UN, AR(1).
 
 ## Task 3 - Discussion and possible solution
 
