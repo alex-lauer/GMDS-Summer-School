@@ -25,6 +25,7 @@ all2 <- all %>%
     aval = change + basval,
     avisit = dplyr::recode(as.character(time), "1" = "Week 2", "2" = "Week 4", "3" = "Week 8"),
     avisit = factor(avisit, levels = c("Week 2", "Week 4", "Week 8")),
+    week = ifelse(time==3,8,time*2),
     subject = factor(subject),
     group = factor(trt, levels = 1:2, labels = c("Arm 1","Arm 2"))
   )
