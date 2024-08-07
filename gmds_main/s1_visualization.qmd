@@ -98,7 +98,7 @@ head(high2)
 
 ### Task 2 Discussion, possible solution
 ```{r}
-#| label: fig-traj
+#| label: fig-traj2
 #| fig-cap: "Individual trajectories of HAMD17 by treatment group"
 ggplot(data = high2, aes(x = week, y = change, group=patient)) + 
   geom_point() + geom_line() + facet_grid(.~group) +
@@ -106,7 +106,7 @@ ggplot(data = high2, aes(x = week, y = change, group=patient)) +
 ```
 
 ```{r}
-#| label: fig-traj
+#| label: fig-traj3
 #| fig-cap: "Visit-wise mean HAMD17 changes from baseline by treatment group and drop-out"
 ggplot(data = high2, aes(x = week, y = change, group=patient)) + 
   geom_point(col="lightgray") + geom_line(col="lightgray") + facet_grid(.~group) +

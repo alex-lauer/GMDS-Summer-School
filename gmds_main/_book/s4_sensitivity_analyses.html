@@ -62,6 +62,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -157,11 +159,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#simple-approaches" id="toc-simple-approaches" class="nav-link active" data-scroll-target="#simple-approaches"><span class="header-section-number">5.1</span> Simple approaches</a></li>
-  <li><a href="#missing-covariates-baseline-data" id="toc-missing-covariates-baseline-data" class="nav-link" data-scroll-target="#missing-covariates-baseline-data"><span class="header-section-number">5.2</span> Missing covariates (baseline data)</a></li>
-  <li><a href="#baseline-complete-missingness-in-post-baseline-values" id="toc-baseline-complete-missingness-in-post-baseline-values" class="nav-link" data-scroll-target="#baseline-complete-missingness-in-post-baseline-values"><span class="header-section-number">5.3</span> Baseline complete, missingness in post-baseline values</a></li>
-  <li><a href="#multiple-imputation" id="toc-multiple-imputation" class="nav-link" data-scroll-target="#multiple-imputation"><span class="header-section-number">5.4</span> Multiple imputation</a></li>
-  <li><a href="#handling-nonignorable-missingness-mnar" id="toc-handling-nonignorable-missingness-mnar" class="nav-link" data-scroll-target="#handling-nonignorable-missingness-mnar"><span class="header-section-number">5.5</span> Handling nonignorable missingness (MNAR)</a></li>
+  <li><a href="#purpose-of-sensitivity-analyses" id="toc-purpose-of-sensitivity-analyses" class="nav-link active" data-scroll-target="#purpose-of-sensitivity-analyses"><span class="header-section-number">5.1</span> Purpose of sensitivity analyses</a></li>
+  <li><a href="#mmrm-vs.-mi" id="toc-mmrm-vs.-mi" class="nav-link" data-scroll-target="#mmrm-vs.-mi"><span class="header-section-number">5.2</span> MMRM vs.&nbsp;MI</a></li>
+  <li><a href="#missing-covariates-baseline-data" id="toc-missing-covariates-baseline-data" class="nav-link" data-scroll-target="#missing-covariates-baseline-data"><span class="header-section-number">5.3</span> Missing covariates (baseline data)</a></li>
+  <li><a href="#sensitivity-analyses---simple-approaches" id="toc-sensitivity-analyses---simple-approaches" class="nav-link" data-scroll-target="#sensitivity-analyses---simple-approaches"><span class="header-section-number">5.4</span> Sensitivity analyses - Simple approaches</a></li>
+  <li><a href="#sensitivity-analyses---handling-nonignorable-missingness-mnar" id="toc-sensitivity-analyses---handling-nonignorable-missingness-mnar" class="nav-link" data-scroll-target="#sensitivity-analyses---handling-nonignorable-missingness-mnar"><span class="header-section-number">5.5</span> Sensitivity analyses - Handling nonignorable missingness (MNAR)</a>
+  <ul class="collapse">
+  <li><a href="#reference-based-multiple-imputation" id="toc-reference-based-multiple-imputation" class="nav-link" data-scroll-target="#reference-based-multiple-imputation"><span class="header-section-number">5.5.1</span> Reference-based multiple imputation</a></li>
+  <li><a href="#delta-based-multiple-imputation" id="toc-delta-based-multiple-imputation" class="nav-link" data-scroll-target="#delta-based-multiple-imputation"><span class="header-section-number">5.5.2</span> Delta-based multiple imputation</a></li>
+  </ul></li>
+  <li><a href="#practical-part" id="toc-practical-part" class="nav-link" data-scroll-target="#practical-part"><span class="header-section-number">5.6</span> Practical part</a></li>
   </ul>
 </nav>
     </div>
@@ -185,50 +192,83 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>Sensitivity analyses with respect to missing data - only?</p>
+<p>Purpose: talk about sensitivity analyses with respect to missing data</p>
 <ul>
-<li>MMRM is an appropriate choice for the primary analysis in many longitudinal clinical trials under the MAR assumption.</li>
-<li>MCAR and MAR missingness can be ignored in likelihood-based analyses. MAR: future outcomes for subjects who discontinued should be similar to the future outocmes of subjects who continued if they had the same values of past (observed) outcomes, covariates,…</li>
-<li>Flexibility in modeling treatment effects over time and the within-patient error correlation structure makes MMRM a widely useful analysis.</li>
-<li>Consider sensivitiy analyses to check model assumptions e.g.&nbsp;MNAR methods</li>
-<li>Comparing results from sensitivity analyses: how much inference rely on the assumptions</li>
-<li>Here, inference with regard to the treatment effect. Thus, investigate how treatment effects vary depending on assumptions e.g.&nbsp;about missing data.</li>
+<li>MMRM is an appropriate choice for the primary analysis in many longitudinal clinical trials under the missing at random (MAR) assumption.</li>
+<li>MMRM can handle missing values. BUT: need of baseline and at least one post-baseline value.</li>
+<li>No imputation for individual missing values but missing data is implicitly imputed.</li>
+<li>Exploit the correlation between outcomes within subjects.</li>
+<li>MAR: future outcomes for subjects who discontinued are assumed be similar to the future outcomes of subjects who continued if they had the same values of past (observed) outcomes, covariates,…</li>
+</ul>
+<section id="purpose-of-sensitivity-analyses" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="purpose-of-sensitivity-analyses"><span class="header-section-number">5.1</span> Purpose of sensitivity analyses</h2>
+<ul>
+<li>Consider sensivitiy analyses to check model assumptions e.g.&nbsp;assumption of MAR.</li>
+<li>Comparing results from sensitivity analyses: how much inference rely on the assumptions.</li>
+<li>Here, inference with regard to the treatment effect. Thus, investigate how treatment effects vary depending on assumptions (about missing data).</li>
 <li>Uncertainty from incompleteness cannot be objectively evaluated from observed data so there is a need for missing data sensitivity analyses.</li>
 </ul>
-<p>Mit Alexandra abstimmen: was genau, machst du MI in deinem Teil, MMRM vs.&nbsp;MI+ANCOVA?, was ist eure primary analysis + typische sensitivity analyses MI: eingehen auf welche Variablen im Modell e.g.&nbsp;at least those from the primary model</p>
-<section id="simple-approaches" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="simple-approaches"><span class="header-section-number">5.1</span> Simple approaches</h2>
-<p>In general, not recommended for use. Methods are of histroic interest and provide a useful starting point - LOCF: used in the past, justified as it was thought that it provides conservative estimates - complete case (observed case/completers analysis): creates selection bias, may cause overestimation of within group effects particularly at the last scheduled visit</p>
 </section>
-<section id="missing-covariates-baseline-data" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="missing-covariates-baseline-data"><span class="header-section-number">5.2</span> Missing covariates (baseline data)</h2>
+<section id="mmrm-vs.-mi" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="mmrm-vs.-mi"><span class="header-section-number">5.2</span> MMRM vs.&nbsp;MI</h2>
 <ul>
-<li>missing baseline value of the outcome: MI or use of mean imputation (Paper: ),</li>
+<li>Flexibility in modeling treatment effects over time and the within-patient error correlation structure makes MMRM a widely useful analysis.</li>
+<li>MMRM, MI: two major approaches to missing data with good statistical properties. Both rely on MAR assumption (for MI: standard implementation).</li>
+<li>MMRM: missing values implicitly imputed, MI: missing values explicitly imputed.</li>
+<li>MMRM vs.&nbsp;MI: approximately equivalent provided the variables used in the imputation model are the same as those included in the analysis model (level of equivalence will depend on the number of imputations)</li>
+<li>MI: imputation model with at least those variables from the primary model, additional auxiliary variables can be used in the imputation model to improve the accuracy of the missing data prediction.</li>
+<li>Handling missing not at random (MNAR) possible for MI (e.g.&nbsp;reference-based imputation) but not within MMRM.</li>
+<li>MMRM does not work if missing baseline values are present. Missing baseline values can be imputed first. Additionally, at least one post-baseline value has to be observed. Alternative: LDA where baseline is part of the response vector.</li>
+</ul>
+<p>Note that, when implemented in similar manners, MI and MMRM have similar assumptions and yield similar results. Thus, MI implemented similarly to MMRM is not a sensitivity analysis!</p>
+</section>
+<section id="missing-covariates-baseline-data" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="missing-covariates-baseline-data"><span class="header-section-number">5.3</span> Missing covariates (baseline data)</h2>
+<ul>
+<li>Missing baseline value of the outcome: MI or use of mean imputation (Paper: ),</li>
 <li>MMRM not efficient or potential biased estimates as subjects with missing covariates are excluded from the analysis</li>
 </ul>
 </section>
-<section id="baseline-complete-missingness-in-post-baseline-values" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="baseline-complete-missingness-in-post-baseline-values"><span class="header-section-number">5.3</span> Baseline complete, missingness in post-baseline values</h2>
-<ul>
-<li>for MMRM: at least one post-baseline value needed</li>
-<li>Alternative: LDA where baseline is part of the response vector</li>
-<li>when implemented in similar manners: MI and MMRM have similar assumptions and yield similar results. Thus, MI implemented similarly to MMRM is not a sensitivity analysis</li>
-</ul>
+<section id="sensitivity-analyses---simple-approaches" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="sensitivity-analyses---simple-approaches"><span class="header-section-number">5.4</span> Sensitivity analyses - Simple approaches</h2>
+<p>In general, not recommended for use. Methods are of histroic interest and provide a useful starting point. - Last observation carried forward (LOCF): used in the past, justified as it was thought that it provides conservative estimates. - Complete case (observed case/completers analysis): creates selection bias, may cause overestimation of within group effects particularly at the last scheduled visit.</p>
+<p>We apply these two methods here as well to compare results.</p>
 </section>
-<section id="multiple-imputation" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="multiple-imputation"><span class="header-section-number">5.4</span> Multiple imputation</h2>
-<ul>
-<li>MI very useful for sensitivity analyses</li>
-</ul>
-</section>
-<section id="handling-nonignorable-missingness-mnar" class="level2" data-number="5.5">
-<h2 data-number="5.5" class="anchored" data-anchor-id="handling-nonignorable-missingness-mnar"><span class="header-section-number">5.5</span> Handling nonignorable missingness (MNAR)</h2>
+<section id="sensitivity-analyses---handling-nonignorable-missingness-mnar" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="sensitivity-analyses---handling-nonignorable-missingness-mnar"><span class="header-section-number">5.5</span> Sensitivity analyses - Handling nonignorable missingness (MNAR)</h2>
 <ul>
 <li>Assumption of MAR is often reasonable, but possibility of data missing not at random (MNAR) is difficult to rule out.</li>
-<li>Thus, analysis under MNAR needed</li>
-<li>Analysis under MNAR: these methods are heavily assumption driven and the assumptions are not testable as we do not have the missing data</li>
-<li>Consider a sensitivity analsyis framework allowing assessment of robustness of results to the various assumptions</li>
-<li>MNAR methods: Pattern-mixture, delta-adjustment method (controlled imputation; another method is reference-based imputation)</li>
+<li>Thus, analysis under MNAR needed.</li>
+<li>Analysis under MNAR: these methods are heavily assumption driven and the assumptions are not testable as we do not have the missing data.</li>
+<li>Consider a sensitivity analysis framework allowing assessment of robustness of results to the various assumptions.</li>
+<li>MNAR methods: different possibilies e.g.&nbsp;class of pattern-mixture models</li>
+<li>MI can be used to explore departures from MAR (for analysis under a MNAR assumption). This is referred to as controlled MI and includes delta-based MI and reference-based MI (belong to the class of pattern mixture models). Data is imputed under an alternative MNAR distribution that reflects a contextually relevant scenario for the unobserved data. The imputed data sets are then analysed as with standard MI.</li>
+</ul>
+<section id="reference-based-multiple-imputation" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="reference-based-multiple-imputation"><span class="header-section-number">5.5.1</span> Reference-based multiple imputation</h3>
+<ul>
+<li>Has recieved increasing attention in clinical trials as it provides an attractive approach for a sensitivity analysis because missing data assumptions are framed in an intuitive way. The departure from MAR is captured in a qualitative way, making the formulation of the problem intuitive.</li>
+<li>For example, a plausible MNAR mechanism in a placebo‐controlled trial is to assume that subjects in the experimental arm who dropped out stop taking their treatment and have similar outcomes to those in the placebo arm.</li>
+<li>Different options to handle missing outcome data for reference-based imputation were described: e.g.&nbsp;copy reference, copy increments in reference, jump to reference (Paper Carpenter 2013)</li>
+</ul>
+</section>
+<section id="delta-based-multiple-imputation" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="delta-based-multiple-imputation"><span class="header-section-number">5.5.2</span> Delta-based multiple imputation</h3>
+<ul>
+<li>Impute data assuming all unobserved subjects having a poorer or better response than those observed, by adding or subtracting a delta parameter <span class="math inline">\(\delta\)</span> to the expected value of the MAR imputed values.</li>
+<li>Delta can be implemented in all treatment groups, or in only one group, or may vary by treatment group or an alternative specified factor.</li>
+<li>Choice of values for the sensitivity parameter <span class="math inline">\(\delta\)</span>: often selected by the analyst. Better: selection by content experts.</li>
+<li>Steps: 1. missing values are imputed using standard MI procedure under MAR, 2. imputed values are shifted by adding some fixed value <span class="math inline">\(\delta\)</span> to reflect the MNAR mechanism, 3. analysis with standard statistical methods including Rubin’s rule to combine results</li>
+</ul>
+</section>
+</section>
+<section id="practical-part" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="practical-part"><span class="header-section-number">5.6</span> Practical part</h2>
+<ul>
+<li>Take the <em>high2</em> data set</li>
+<li>Look again at the complete case analysis</li>
+<li>Apply additionally LOCF and compare results</li>
+<li>Try MNAR method reference-based MI and/or delta-based MI. Compare with the other results.</li>
 </ul>
 
 

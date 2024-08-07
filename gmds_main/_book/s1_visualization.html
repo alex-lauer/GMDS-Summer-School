@@ -213,9 +213,15 @@ div.csl-indent {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">2.1</span> Introduction</a></li>
-  <li><a href="#task-1---exploration-of-dataset-all2---15-minutes-working-time" id="toc-task-1---exploration-of-dataset-all2---15-minutes-working-time" class="nav-link" data-scroll-target="#task-1---exploration-of-dataset-all2---15-minutes-working-time"><span class="header-section-number">2.2</span> Task 1 - Exploration of dataset all2 - 15 Minutes working time</a>
+  <li><a href="#data-set-all2" id="toc-data-set-all2" class="nav-link" data-scroll-target="#data-set-all2"><span class="header-section-number">2.2</span> Data set all2</a>
   <ul class="collapse">
-  <li><a href="#task-1-discussion-possible-solution" id="toc-task-1-discussion-possible-solution" class="nav-link" data-scroll-target="#task-1-discussion-possible-solution"><span class="header-section-number">2.2.1</span> Task 1 Discussion, possible solution</a></li>
+  <li><a href="#task-1---exploration-of-data-set-all2---15-minutes-working-time" id="toc-task-1---exploration-of-data-set-all2---15-minutes-working-time" class="nav-link" data-scroll-target="#task-1---exploration-of-data-set-all2---15-minutes-working-time"><span class="header-section-number">2.2.1</span> Task 1 - Exploration of data set all2 - 15 minutes working time</a></li>
+  <li><a href="#task-1-discussion-possible-solution" id="toc-task-1-discussion-possible-solution" class="nav-link" data-scroll-target="#task-1-discussion-possible-solution"><span class="header-section-number">2.2.2</span> Task 1 Discussion, possible solution</a></li>
+  </ul></li>
+  <li><a href="#data-set-high2" id="toc-data-set-high2" class="nav-link" data-scroll-target="#data-set-high2"><span class="header-section-number">2.3</span> Data set high2</a>
+  <ul class="collapse">
+  <li><a href="#task-2---exploration-of-data-set-high2---15-minutes-working-time" id="toc-task-2---exploration-of-data-set-high2---15-minutes-working-time" class="nav-link" data-scroll-target="#task-2---exploration-of-data-set-high2---15-minutes-working-time"><span class="header-section-number">2.3.1</span> Task 2 - Exploration of data set high2 - 15 minutes working time</a></li>
+  <li><a href="#task-2-discussion-possible-solution" id="toc-task-2-discussion-possible-solution" class="nav-link" data-scroll-target="#task-2-discussion-possible-solution"><span class="header-section-number">2.3.2</span> Task 2 Discussion, possible solution</a></li>
   </ul></li>
   <li><a href="#correlation-structure-covariance-matrices" id="toc-correlation-structure-covariance-matrices" class="nav-link" data-scroll-target="#correlation-structure-covariance-matrices"><span class="header-section-number">3</span> Correlation structure, covariance matrices</a>
   <ul class="collapse">
@@ -226,10 +232,11 @@ div.csl-indent {
   <li><a href="#unstructured-un" id="toc-unstructured-un" class="nav-link" data-scroll-target="#unstructured-un"><span class="header-section-number">3.1.3</span> Unstructured (UN)</a></li>
   <li><a href="#toeplitz-structure-toep" id="toc-toeplitz-structure-toep" class="nav-link" data-scroll-target="#toeplitz-structure-toep"><span class="header-section-number">3.1.4</span> Toeplitz structure (TOEP)</a></li>
   <li><a href="#autoregressive-structure-ar1" id="toc-autoregressive-structure-ar1" class="nav-link" data-scroll-target="#autoregressive-structure-ar1"><span class="header-section-number">3.1.5</span> Autoregressive structure (AR(1))</a></li>
-  <li><a href="#spatial-sp" id="toc-spatial-sp" class="nav-link" data-scroll-target="#spatial-sp"><span class="header-section-number">3.1.6</span> Spatial (SP)</a></li>
+  <li><a href="#spatial-power-sp" id="toc-spatial-power-sp" class="nav-link" data-scroll-target="#spatial-power-sp"><span class="header-section-number">3.1.6</span> Spatial Power (SP)</a></li>
   </ul></li>
   <li><a href="#selecting-the-covariance-structure" id="toc-selecting-the-covariance-structure" class="nav-link" data-scroll-target="#selecting-the-covariance-structure"><span class="header-section-number">3.2</span> Selecting the covariance structure</a></li>
-  <li><a href="#task---exploration-of-correlation-in-the-data" id="toc-task---exploration-of-correlation-in-the-data" class="nav-link" data-scroll-target="#task---exploration-of-correlation-in-the-data"><span class="header-section-number">3.3</span> Task - Exploration of correlation in the data</a></li>
+  <li><a href="#task-3---exploration-of-correlation-in-the-data" id="toc-task-3---exploration-of-correlation-in-the-data" class="nav-link" data-scroll-target="#task-3---exploration-of-correlation-in-the-data"><span class="header-section-number">3.3</span> Task 3 - Exploration of correlation in the data</a></li>
+  <li><a href="#task-3---discussion-and-possible-solution" id="toc-task-3---discussion-and-possible-solution" class="nav-link" data-scroll-target="#task-3---discussion-and-possible-solution"><span class="header-section-number">3.4</span> Task 3 - Discussion and possible solution</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -262,52 +269,68 @@ div.csl-indent {
 <li>Repeated observations may or may not be taken at regular times (balanced, fixed occasions, do not differ between subjects).</li>
 <li>Our interest is in the change from baseline.</li>
 </ul>
-<p>Datasets used in this course: Example data is taken from <span class="citation" data-cites="mallinckrodt2016">(<a href="references.html#ref-mallinckrodt2016" role="doc-biblioref">Mallinckrodt 2016</a>)</span>. Contain data on the HAMD17 (Hamilton 17-item rating scale for depression). Two treatement arms are included: drug vs.&nbsp;placebo. Assessments were taken at baseline and weeks 1, 2, 4, 6, and 8</p>
-<p>There are 3 data sets created from the original data: - <em>all2</em> Subsample of the large dataset with n=50, visits: weeks 2, 4, 8 - <em>high2</em> Large dataset with n=100, high dropout = 70% (drug), 60% (placebo) - <em>low2</em> Large dataset with n=100, low dropout = 18%</p>
+<p>Datasets used in this course: - Example data is taken from <span class="citation" data-cites="mallinckrodt2016">(<a href="references.html#ref-mallinckrodt2016" role="doc-biblioref">Mallinckrodt 2016</a>)</span>. The authors generated data sets based on two nearly identically designed antidepressant clinical trials by randomly selecting subjects from the original data. - Contain data on the continuous variable HAMD17 (Hamilton 17-item rating scale for depression). - Two treatement arms are included: placebo (arm 1) vs.&nbsp;drug (arm 2). - Assessments were taken at baseline and weeks 1, 2, 4, 6, and 8.</p>
+<p>There are 3 data sets created from the original data: - Data <em>all2</em> = Subsample of the large dataset with n=50, visits: weeks 2, 4, 8 - Data <em>high2</em> = Large dataset with n=100, high dropout = 70% (drug), 60% (placebo) - Data <em>low2</em> = Large dataset with n=100, low dropout = 18%</p>
 </section>
-<section id="task-1---exploration-of-dataset-all2---15-minutes-working-time" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="task-1---exploration-of-dataset-all2---15-minutes-working-time"><span class="header-section-number">2.2</span> Task 1 - Exploration of dataset all2 - 15 Minutes working time</h2>
+<section id="data-set-all2" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="data-set-all2"><span class="header-section-number">2.2</span> Data set all2</h2>
 <ul>
-<li>Are the data balanced and equally spaced?</li>
-<li>Number of observations by week?</li>
-<li>Summary statistics for HAMD17 (change from baseline) by week.</li>
-<li>Plot trajectories for each individual, different colors for each treatment group (or panels). Add mean to your plot. ODER Mean plot separat evtl. mit CI</li>
-<li>Generate and interpret the group-wise boxplots of the change from baseline.</li>
-<li>Plot trajectories separately by gender. Comment on the plots.</li>
+<li>Small data set with n=50 subjects.</li>
+<li>1st version: complete data where all subjects adhered to the originally assigend study medication, variable <em>change</em></li>
+<li>2nd version = missing data: identical to the first except some data were missing (drop-out), variable <em>chgdrop</em></li>
 </ul>
-<section id="task-1-discussion-possible-solution" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="task-1-discussion-possible-solution"><span class="header-section-number">2.2.1</span> Task 1 Discussion, possible solution</h3>
-<p>TO DO: Datensatz aufbereiten, Label, Time=Faktor (t) Alex: library gtsummary okay? Oder sollen wir es anders machen</p>
-<p>Table: Summary statistics for HAMD17 by treatment and week in the all2 dataset</p>
+<p>Looking at the variables in the data set</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>all2 <span class="sc">%&gt;%</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(change, group, avisit) <span class="sc">%&gt;%</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_strata</span>(<span class="at">strata=</span>group, </span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>             <span class="sc">~</span>.x <span class="sc">%&gt;%</span> </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>               <span class="fu">tbl_summary</span>(<span class="at">by =</span> avisit,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">statistic =</span> <span class="fu">list</span>(</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">"{mean} ({sd})"</span>), </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">digits =</span> <span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="dv">2</span> ) </span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(all2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 13
+  subject  time chgdrop trt   basval change pgiimp gender chgrescue  aval avisit
+  &lt;fct&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; 
+1 1           1     -11 2         24    -11      3 F            -11    13 Week 2
+2 1           2      NA 2         24    -16      2 F            -26     8 Week 4
+3 1           3      NA 2         24    -24      2 F            -34     0 Week 8
+4 2           1      -6 1         20     -6      4 F             -6    14 Week 2
+5 2           2      NA 1         20     -8      4 F            -18    12 Week 4
+6 2           3      NA 1         20     -5      5 F            -15    15 Week 8
+# ℹ 2 more variables: week &lt;dbl&gt;, group &lt;fct&gt;</code></pre>
+</div>
+</div>
+<section id="task-1---exploration-of-data-set-all2---15-minutes-working-time" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="task-1---exploration-of-data-set-all2---15-minutes-working-time"><span class="header-section-number">2.2.1</span> Task 1 - Exploration of data set all2 - 15 minutes working time</h3>
+<p>Only consider the complete data, variable <em>change</em> - Are the data balanced and equally spaced? - Number of observations by week? - Summary statistics for HAMD17 (change from baseline) by week. - Plot trajectories for each individual, different colors for each treatment group (or panels). Add mean to your plot. ODER Mean plot separat evtl. mit CI - Generate and interpret the group-wise boxplots of the change from baseline. - Plot trajectories separately by gender. Comment on the plots.</p>
+</section>
+<section id="task-1-discussion-possible-solution" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="task-1-discussion-possible-solution"><span class="header-section-number">2.2.2</span> Task 1 Discussion, possible solution</h3>
+<p>Table: Summary statistics for HAMD17 by treatment and week in the all2 data set</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>all2 <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(change, group, avisit) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_strata</span>(<span class="at">strata=</span>group, </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>             <span class="sc">~</span>.x <span class="sc">%&gt;%</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>               <span class="fu">tbl_summary</span>(<span class="at">by =</span> avisit,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">statistic =</span> <span class="fu">list</span>(</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">"{mean} ({sd})"</span>), </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">digits =</span> <span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="dv">2</span> ) </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
-<div id="savyxorvgs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#savyxorvgs table {
+<div id="ihdqdctakr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ihdqdctakr table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#savyxorvgs thead, #savyxorvgs tbody, #savyxorvgs tfoot, #savyxorvgs tr, #savyxorvgs td, #savyxorvgs th {
+#ihdqdctakr thead, #ihdqdctakr tbody, #ihdqdctakr tfoot, #ihdqdctakr tr, #ihdqdctakr td, #ihdqdctakr th {
   border-style: none;
 }
 
-#savyxorvgs p {
+#ihdqdctakr p {
   margin: 0;
   padding: 0;
 }
 
-#savyxorvgs .gt_table {
+#ihdqdctakr .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -333,12 +356,12 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#savyxorvgs .gt_caption {
+#ihdqdctakr .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#savyxorvgs .gt_title {
+#ihdqdctakr .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -350,7 +373,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#savyxorvgs .gt_subtitle {
+#ihdqdctakr .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -362,7 +385,7 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-#savyxorvgs .gt_heading {
+#ihdqdctakr .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -374,13 +397,13 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#savyxorvgs .gt_bottom_border {
+#ihdqdctakr .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#savyxorvgs .gt_col_headings {
+#ihdqdctakr .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -395,7 +418,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#savyxorvgs .gt_col_heading {
+#ihdqdctakr .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -415,7 +438,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#savyxorvgs .gt_column_spanner_outer {
+#ihdqdctakr .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -427,15 +450,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#savyxorvgs .gt_column_spanner_outer:first-child {
+#ihdqdctakr .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#savyxorvgs .gt_column_spanner_outer:last-child {
+#ihdqdctakr .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#savyxorvgs .gt_column_spanner {
+#ihdqdctakr .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -447,11 +470,11 @@ div.csl-indent {
   width: 100%;
 }
 
-#savyxorvgs .gt_spanner_row {
+#ihdqdctakr .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#savyxorvgs .gt_group_heading {
+#ihdqdctakr .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -477,7 +500,7 @@ div.csl-indent {
   text-align: left;
 }
 
-#savyxorvgs .gt_empty_group_heading {
+#ihdqdctakr .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -492,15 +515,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#savyxorvgs .gt_from_md > :first-child {
+#ihdqdctakr .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#savyxorvgs .gt_from_md > :last-child {
+#ihdqdctakr .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#savyxorvgs .gt_row {
+#ihdqdctakr .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -519,7 +542,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#savyxorvgs .gt_stub {
+#ihdqdctakr .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -532,7 +555,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#savyxorvgs .gt_stub_row_group {
+#ihdqdctakr .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -546,15 +569,15 @@ div.csl-indent {
   vertical-align: top;
 }
 
-#savyxorvgs .gt_row_group_first td {
+#ihdqdctakr .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#savyxorvgs .gt_row_group_first th {
+#ihdqdctakr .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#savyxorvgs .gt_summary_row {
+#ihdqdctakr .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -564,16 +587,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#savyxorvgs .gt_first_summary_row {
+#ihdqdctakr .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#savyxorvgs .gt_first_summary_row.thick {
+#ihdqdctakr .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#savyxorvgs .gt_last_summary_row {
+#ihdqdctakr .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -583,7 +606,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#savyxorvgs .gt_grand_summary_row {
+#ihdqdctakr .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -593,7 +616,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#savyxorvgs .gt_first_grand_summary_row {
+#ihdqdctakr .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -603,7 +626,7 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#savyxorvgs .gt_last_grand_summary_row_top {
+#ihdqdctakr .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -613,11 +636,11 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#savyxorvgs .gt_striped {
+#ihdqdctakr .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#savyxorvgs .gt_table_body {
+#ihdqdctakr .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -626,7 +649,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#savyxorvgs .gt_footnotes {
+#ihdqdctakr .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -640,7 +663,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#savyxorvgs .gt_footnote {
+#ihdqdctakr .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -649,7 +672,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#savyxorvgs .gt_sourcenotes {
+#ihdqdctakr .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -663,7 +686,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#savyxorvgs .gt_sourcenote {
+#ihdqdctakr .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -671,63 +694,63 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#savyxorvgs .gt_left {
+#ihdqdctakr .gt_left {
   text-align: left;
 }
 
-#savyxorvgs .gt_center {
+#ihdqdctakr .gt_center {
   text-align: center;
 }
 
-#savyxorvgs .gt_right {
+#ihdqdctakr .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#savyxorvgs .gt_font_normal {
+#ihdqdctakr .gt_font_normal {
   font-weight: normal;
 }
 
-#savyxorvgs .gt_font_bold {
+#ihdqdctakr .gt_font_bold {
   font-weight: bold;
 }
 
-#savyxorvgs .gt_font_italic {
+#ihdqdctakr .gt_font_italic {
   font-style: italic;
 }
 
-#savyxorvgs .gt_super {
+#ihdqdctakr .gt_super {
   font-size: 65%;
 }
 
-#savyxorvgs .gt_footnote_marks {
+#ihdqdctakr .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#savyxorvgs .gt_asterisk {
+#ihdqdctakr .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#savyxorvgs .gt_indent_1 {
+#ihdqdctakr .gt_indent_1 {
   text-indent: 5px;
 }
 
-#savyxorvgs .gt_indent_2 {
+#ihdqdctakr .gt_indent_2 {
   text-indent: 10px;
 }
 
-#savyxorvgs .gt_indent_3 {
+#ihdqdctakr .gt_indent_3 {
   text-indent: 15px;
 }
 
-#savyxorvgs .gt_indent_4 {
+#ihdqdctakr .gt_indent_4 {
   text-indent: 20px;
 }
 
-#savyxorvgs .gt_indent_5 {
+#ihdqdctakr .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -773,8 +796,9 @@ div.csl-indent {
 </div>
 <p>Figure: trajectories</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> all2, <span class="fu">aes</span>(<span class="at">x =</span> avisit, <span class="at">y =</span> change, <span class="at">group=</span>subject)) <span class="sc">+</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">facet_grid</span>(.<span class="sc">~</span>group)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> all2, <span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> change, <span class="at">group=</span>subject)) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">facet_grid</span>(.<span class="sc">~</span>group) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Change from baseline HAMD17"</span>) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name=</span><span class="st">"Visit [week]"</span>, <span class="at">breaks=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-traj" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -785,12 +809,13 @@ div.csl-indent {
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> all2, <span class="fu">aes</span>(<span class="at">x =</span> avisit, <span class="at">y =</span> change)) <span class="sc">+</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">facet_grid</span>(.<span class="sc">~</span>group) <span class="sc">+</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="fu">aes</span>(<span class="at">group =</span> <span class="dv">1</span>), <span class="at">geom =</span> <span class="st">"line"</span>, <span class="at">fun.y =</span> mean,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">size =</span> <span class="dv">1</span>, <span class="at">col=</span><span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="fu">aes</span>(<span class="at">group =</span> <span class="dv">1</span>), <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">fun.y =</span> mean,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">shape=</span><span class="dv">17</span>,<span class="at">size =</span> <span class="dv">3</span>, <span class="at">col=</span><span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> all2, <span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> change)) <span class="sc">+</span>  </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">colour=</span><span class="fu">factor</span>(group))) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Change from baseline HAMD17"</span>) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name=</span><span class="st">"Visit [week]"</span>, <span class="at">breaks=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="fu">aes</span>(<span class="at">group =</span> group, <span class="at">colour=</span><span class="fu">factor</span>(group)), <span class="at">geom =</span> <span class="st">"line"</span>, <span class="at">fun.y =</span> mean,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="fu">aes</span>(<span class="at">group =</span> group, <span class="at">colour=</span><span class="fu">factor</span>(group)), <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">fun.y =</span> mean,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">shape=</span><span class="dv">17</span>,<span class="at">size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: The `fun.y` argument of `stat_summary()` is deprecated as of ggplot2 3.3.0.
 ℹ Please use the `fun` argument instead.</code></pre>
@@ -803,7 +828,71 @@ div.csl-indent {
 <div id="fig-mean" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="s1_visualization_files/figure-html/fig-mean-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;2.2: Mean change from baseline by treatment group</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;2.2: Mean HAMD17 change from baseline by treatment group</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="data-set-high2" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="data-set-high2"><span class="header-section-number">2.3</span> Data set high2</h2>
+<ul>
+<li>Large data set with n=100 subjects.</li>
+<li>Note that we have no intermittent missing values but drop-outs.</li>
+</ul>
+<p>Looking at the variables in the data set.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(high2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 14
+# Groups:   patient [2]
+  patient trt   poolinv basval  week change pgiimp   age gender  aval  drop
+    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1    1401 1     005         19     1     -7      3  44.5 F         12     2
+2    1401 1     005         19     2     -4      3  44.5 F         15     2
+3    1411 2     005         17     1      0      3  35.7 F         17     8
+4    1411 2     005         17     2     -2      3  35.7 F         15     8
+5    1411 2     005         17     4      2      3  35.7 F         19     8
+6    1411 2     005         17     6     -3      2  35.7 F         14     8
+# ℹ 3 more variables: group &lt;fct&gt;, avisit &lt;fct&gt;, dropgr &lt;fct&gt;</code></pre>
+</div>
+</div>
+<section id="task-2---exploration-of-data-set-high2---15-minutes-working-time" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="task-2---exploration-of-data-set-high2---15-minutes-working-time"><span class="header-section-number">2.3.1</span> Task 2 - Exploration of data set high2 - 15 minutes working time</h3>
+<ul>
+<li>drop-outs, last visit for each subject</li>
+<li>trajectories for different drop-out groups</li>
+</ul>
+</section>
+<section id="task-2-discussion-possible-solution" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="task-2-discussion-possible-solution"><span class="header-section-number">2.3.2</span> Task 2 Discussion, possible solution</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> high2, <span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> change, <span class="at">group=</span>patient)) <span class="sc">+</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">facet_grid</span>(.<span class="sc">~</span>group) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Change from baseline HAMD17"</span>) <span class="sc">+</span> <span class="fu">scale_x_continuous</span>(<span class="at">name=</span><span class="st">"Visit [week]"</span>, <span class="at">breaks=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-traj2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="s1_visualization_files/figure-html/fig-traj2-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;2.3: Individual trajectories of HAMD17 by treatment group</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> high2, <span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> change, <span class="at">group=</span>patient)) <span class="sc">+</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">col=</span><span class="st">"lightgray"</span>) <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">col=</span><span class="st">"lightgray"</span>) <span class="sc">+</span> <span class="fu">facet_grid</span>(.<span class="sc">~</span>group) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Change from baseline HAMD17"</span>) <span class="sc">+</span> <span class="fu">scale_x_continuous</span>(<span class="at">name=</span><span class="st">"Visit [week]"</span>, <span class="at">breaks=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="fu">aes</span>(<span class="at">group =</span> dropgr, <span class="at">colour=</span><span class="fu">factor</span>(dropgr)), <span class="at">geom =</span> <span class="st">"line"</span>, <span class="at">fun.y =</span> mean,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="fu">aes</span>(<span class="at">group =</span> dropgr, <span class="at">colour=</span><span class="fu">factor</span>(dropgr)), <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">fun.y =</span> mean,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">shape=</span><span class="dv">17</span>,<span class="at">size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-traj3" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="s1_visualization_files/figure-html/fig-traj3-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;2.4: Visit-wise mean HAMD17 changes from baseline by treatment group and drop-out</figcaption>
 </figure>
 </div>
 </div>
@@ -813,8 +902,9 @@ div.csl-indent {
 <section id="correlation-structure-covariance-matrices" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Correlation structure, covariance matrices</h1>
 <ul>
-<li>model within-subject error correlation</li>
-<li>different residual covariance structures can be implemented</li>
+<li>Longitudinal data allows to exploit the correlation between otucomes wihtin subjects regardless of whether or not focues is on a single landmark time point.</li>
+<li>Model within-subject error correlation</li>
+<li>Different residual covariance structures can be implemented</li>
 </ul>
 <section id="overview---different-covariance-matrices" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="overview---different-covariance-matrices"><span class="header-section-number">3.1</span> Overview - different covariance matrices</h2>
@@ -825,10 +915,10 @@ div.csl-indent {
 <li>First order auto regressive (AR(1))</li>
 <li>Unstructured (UN)</li>
 </ul>
-<p>Selected covariance structures for data with three assessment times are shown below. Note that with three assessment times, the number of parameters estimated for the various structures did not differ as much as would be the case with more assessment times. Thus, results from different covariance structures are more similar than would be the case with more assessment times.</p>
+<p>Selected covariance structures for data with three assessment times (t=3) are shown below. Note that with three assessment times, the number of parameters estimated for the various structures did not differ as much as would be the case with more assessment times. Thus, results from different covariance structures are more similar than would be the case with more assessment times.</p>
 <section id="independence-structure-vc" class="level3" data-number="3.1.1">
 <h3 data-number="3.1.1" class="anchored" data-anchor-id="independence-structure-vc"><span class="header-section-number">3.1.1</span> Independence structure (VC)</h3>
-<p>Constant variance. It is assumed to be no correlation between assessments. <span class="math display">\[ \begin{bmatrix}
+<p>Constant variance. It is assumed to be no correlation between assessments (residuals are independent across time). <span class="math display">\[ \begin{bmatrix}
    \sigma^2   &amp; 0  &amp; 0  \\
    0  &amp; \sigma^2   &amp; 0 \\
    0  &amp; 0  &amp; \sigma^2
@@ -836,8 +926,8 @@ div.csl-indent {
 </section>
 <section id="compound-symmetry-cs" class="level3" data-number="3.1.2">
 <h3 data-number="3.1.2" class="anchored" data-anchor-id="compound-symmetry-cs"><span class="header-section-number">3.1.2</span> Compound symmetry (CS)</h3>
-<p>Constant variance and constant covariance across all assessments. Also known as exchangeable.</p>
-<p><span class="math display">\[ \begin{bmatrix}
+<p>Constant variance and constant covariance across all assessments. Also known as exchangeable. It requires two parameter estimates. Most simplest repeated measures (i.e., correlated errors) structure.</p>
+<p><span class="math display">\[ R = \begin{bmatrix}
    \sigma^2 + \sigma_1 &amp; \sigma_1  &amp; \sigma_1  \\
    \sigma_1  &amp; \sigma^2 + \sigma_1  &amp; \sigma_1  \\
    \sigma_1  &amp; \sigma_1  &amp; \sigma^2 + \sigma_1
@@ -845,8 +935,8 @@ div.csl-indent {
 </section>
 <section id="unstructured-un" class="level3" data-number="3.1.3">
 <h3 data-number="3.1.3" class="anchored" data-anchor-id="unstructured-un"><span class="header-section-number">3.1.3</span> Unstructured (UN)</h3>
-<p>This is the most general (saturated) model</p>
-<p><span class="math display">\[ \begin{bmatrix}
+<p>This is the most general (saturated) model. It has t + [t(t-1)/2] parameters to be estimated. Here it is 3 + 3 = 6 parameters.</p>
+<p><span class="math display">\[ R = \begin{bmatrix}
    \sigma_1^2 &amp; \sigma_{21}  &amp; \sigma_{31}  \\
    \sigma_{21}  &amp; \sigma_2^2   &amp; \sigma_{32}  \\
    \sigma_{31}  &amp; \sigma_{32}  &amp; \sigma_3^2
@@ -854,42 +944,68 @@ div.csl-indent {
 </section>
 <section id="toeplitz-structure-toep" class="level3" data-number="3.1.4">
 <h3 data-number="3.1.4" class="anchored" data-anchor-id="toeplitz-structure-toep"><span class="header-section-number">3.1.4</span> Toeplitz structure (TOEP)</h3>
-<p>Homogenous variances and heterogenous correlations. Same correlation value is used whenever the degree of adjacency is the same e.g.&nbsp;correlation between times 1 and 2 = correlation between times 2 and 3.</p>
-<p><span class="math display">\[ \begin{bmatrix}
-   \sigma^2  &amp; \sigma^2 \rho_1  &amp; \sigma^2 \rho_2  \\
-   \sigma^2 \rho_1 &amp; \sigma^2   &amp; \sigma^2 \rho_1  \\
-   \sigma^2 \rho_2  &amp; \sigma^2 \rho_1  &amp; \sigma^2
+<p>Homogenous variances and heterogenous correlations. Same correlation value is used whenever the degree of adjacency is the same e.g.&nbsp;correlation between times 1 and 2 = correlation between times 2 and 3. Repeated measurements are assumed to be equally spaced. TOEP requries t parameter estimates so here we have t=3 parameter.</p>
+<p><span class="math display">\[ R = \begin{bmatrix}
+   \sigma^2  &amp; \sigma_1^2 &amp; \sigma_2^2 \  \\
+   \sigma_1^2 &amp; \sigma^2  &amp; \sigma_1^2  \\
+   \sigma_2^2  &amp; \sigma_1^2 &amp; \sigma^2
    \end{bmatrix}\]</span></p>
 </section>
 <section id="autoregressive-structure-ar1" class="level3" data-number="3.1.5">
 <h3 data-number="3.1.5" class="anchored" data-anchor-id="autoregressive-structure-ar1"><span class="header-section-number">3.1.5</span> Autoregressive structure (AR(1))</h3>
-<p>Correlation decreases as time between observations increases.</p>
-<p><span class="math display">\[ \begin{bmatrix}
+<p>Correlation decreases as time between observations increases. Assumtpion of equal spacing between each repeated measurement must be reasonably applicable. This structure requires the estimation of two parameters.</p>
+<p><span class="math display">\[ R = \begin{bmatrix}
    \sigma^2  &amp; \sigma^2 \rho  &amp; \sigma^2 \rho^2  \\
    \sigma^2 \rho &amp; \sigma^2   &amp; \sigma^2 \rho  \\
   \sigma^2 \rho^2  &amp; \sigma^2 \rho  &amp; \sigma^2
    \end{bmatrix}\]</span></p>
 </section>
-<section id="spatial-sp" class="level3" data-number="3.1.6">
-<h3 data-number="3.1.6" class="anchored" data-anchor-id="spatial-sp"><span class="header-section-number">3.1.6</span> Spatial (SP)</h3>
-<p>Spatial covariance structures does not require that the timepoints are consistent between subjects. Instead, as long as the distance between visits can be quantified in terms of time and/or other coordinates, the spatial covariance structure can be applied.</p>
-<p>For spatial exponential, the covariance structure is defined as follows: <span class="math display">\[ \rho_{ij}=\rho^{d_{ij}} \]</span> where <span class="math display">\[d_{ij} \]</span> is the distance between time point i and time point j.</p>
+<section id="spatial-power-sp" class="level3" data-number="3.1.6">
+<h3 data-number="3.1.6" class="anchored" data-anchor-id="spatial-power-sp"><span class="header-section-number">3.1.6</span> Spatial Power (SP)</h3>
+<p>Spatial covariance structures does not require equal spacing between measurements. Instead, as long as the distance between visits can be quantified in terms of time and/or other coordinates, the spatial covariance structure can be applied. Covariances are mathematical functions of Euclidean distances between observed measurements. Again, two parameters need to be estimated.</p>
+<p>For spatial exponential, the covariance structure is defined as follows:</p>
+<p><span class="math display">\[ R = \begin{bmatrix}
+   \sigma^2  &amp; \sigma^2 \rho_{12}  &amp; \sigma^2 \rho_{13}  \\
+   \sigma^2 \rho_{21} &amp; \sigma^2   &amp; \sigma^2 \rho_{23}  \\
+  \sigma^2 \rho_{31}  &amp; \sigma^2 \rho_{32}  &amp; \sigma^2
+   \end{bmatrix}\]</span></p>
+<p>with <span class="math display">\[ \rho_{ij}=\rho^{d_{ij}} \]</span> where <span class="math display">\[d_{ij} \]</span> is the distance between time point i and time point j e.g.&nbsp;distance in weeks.</p>
 </section>
 </section>
 <section id="selecting-the-covariance-structure" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="selecting-the-covariance-structure"><span class="header-section-number">3.2</span> Selecting the covariance structure</h2>
-<p>There are a variety of considerations when selecting the covariance structure: - number of parameters - interpretation of the structure - model fit UN is the most flexible. Choose a reasonable covaraiance structure which is the best compromise between model fit and complexity. E.g. use AIC as it penalises more complex models.</p>
+<p>There are a variety of considerations when selecting the covariance structure: - number of parameters - interpretation of the structure - model fit</p>
+<p>UN is the most flexible (complex) structure and can fail to run especially if one has many repeated measures. Choose a reasonable covaraiance structure which is the best compromise between model fit and complexity. E.g. use AIC as it penalises more complex models.</p>
 </section>
-<section id="task---exploration-of-correlation-in-the-data" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="task---exploration-of-correlation-in-the-data"><span class="header-section-number">3.3</span> Task - Exploration of correlation in the data</h2>
+<section id="task-3---exploration-of-correlation-in-the-data" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="task-3---exploration-of-correlation-in-the-data"><span class="header-section-number">3.3</span> Task 3 - Exploration of correlation in the data</h2>
 <ul>
-<li>Compute the empirical correlations between measurement timepoints (e.g.&nbsp;correlation between baseline and post-baseline changes).</li>
-<li>Looking at these correlations, comment on the suitability of the correlation structures VC, CS, UN, AR(1).</li>
+<li>Compute the empirical correlations between measurement timepoints in the all2 data set (e.g.&nbsp;correlation between baseline and post-baseline changes).</li>
+<li>Looking at these correlations + using your knowledge of the experiment (e.g., spacing of measurements), comment on the suitability of the correlation structures VC, CS, UN, AR(1).</li>
 </ul>
+</section>
+<section id="task-3---discussion-and-possible-solution" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="task-3---discussion-and-possible-solution"><span class="header-section-number">3.4</span> Task 3 - Discussion and possible solution</h2>
+<p>Table: Correlation and covariance matrix</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>all2 <span class="sc">%&gt;%</span> <span class="fu">pivot_wider</span>(<span class="at">id_cols=</span>subject,<span class="at">names_from =</span> time, <span class="at">values_from =</span> <span class="fu">c</span>(basval,change)) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(basval_2,basval_3)) <span class="ot">-&gt;</span> all2.w</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(all2.w[<span class="sc">-</span><span class="dv">1</span>]) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
+<pre><code>            basval_1   change_1   change_2    change_3
+basval_1  1.00000000 -0.2636447 -0.3165711 -0.02915138
+change_1 -0.26364471  1.0000000  0.7557078  0.51502724
+change_2 -0.31657106  0.7557078  1.0000000  0.71298768
+change_3 -0.02915138  0.5150272  0.7129877  1.00000000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(all2.w[<span class="sc">-</span><span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           basval_1  change_1  change_2   change_3
+basval_1 16.3330612 -4.955918 -6.253061 -0.6391837
+change_1 -4.9559184 21.634286 17.179592 12.9967347
+change_2 -6.2530612 17.179592 23.887755 18.9061224
+change_3 -0.6391837 12.996735 18.906122 29.4351020</code></pre>
 </div>
 </div>
 
