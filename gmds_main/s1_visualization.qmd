@@ -14,16 +14,29 @@ source("setup.R")
 - Our interest is in the change from baseline.
 
 Datasets used in this course:
-Example data is taken from [@mallinckrodt2016]. Contain data on the HAMD17 (Hamilton 17-item rating scale for depression). 
-Two treatement arms are included: drug vs. placebo.
-Assessments were taken at baseline and weeks 1, 2, 4, 6, and 8
+- Example data is taken from [@mallinckrodt2016]. The authors generated data sets based on two nearly identically designed antidepressant clinical trials by randomly selecting subjects from the original data.
+- Contain data on the continuous variable HAMD17 (Hamilton 17-item rating scale for depression). 
+- Two treatement arms are included: placebo (arm 1) vs. drug (arm 2).
+- Assessments were taken at baseline and weeks 1, 2, 4, 6, and 8.
 
 There are 3 data sets created from the original data:
-- *all2* Subsample of the large dataset with n=50, visits: weeks 2, 4, 8
-- *high2* Large dataset with n=100, high dropout = 70% (drug), 60% (placebo)
-- *low2* Large dataset with n=100, low dropout = 18%
+- Data *all2* = Subsample of the large dataset with n=50, visits: weeks 2, 4, 8
+- Data *high2* = Large dataset with n=100, high dropout = 70% (drug), 60% (placebo)
+- Data *low2* = Large dataset with n=100, low dropout = 18%
 
-## Task 1 - Exploration of dataset all2 - 15 Minutes working time
+## Data set all2
+- Small data set with n=50 subjects.
+- 1st version: complete data where all subjects adhered to the originally assigend study medication, variable *change*
+- 2nd version = missing data: identical to the first except some data were missing (drop-out), variable *chgdrop* 
+
+Looking at the variables in the data set
+
+```{r}
+head(all2)
+```
+
+### Task 1 - Exploration of data set all2 - 15 minutes working time
+Only consider the complete data, variable *change*
 - Are the data balanced and equally spaced?
 - Number of observations by week?
 - Summary statistics for HAMD17 (change from baseline) by week.
@@ -32,10 +45,8 @@ There are 3 data sets created from the original data:
 - Plot trajectories separately by gender. Comment on the plots.
 
 ### Task 1 Discussion, possible solution
-TO DO: Datensatz aufbereiten, Label, Time=Faktor (t)
-Alex: library gtsummary okay? Oder sollen wir es anders machen
 
-Table: Summary statistics for HAMD17 by treatment and week in the all2 dataset
+Table: Summary statistics for HAMD17 by treatment and week in the all2 data set
 
 ```{r}
 all2 %>%
@@ -54,24 +65,62 @@ Figure: trajectories
 ```{r}
 #| label: fig-traj
 #| fig-cap: "Individual trajectories of HAMD17 by treatment group"
-ggplot(data = all2, aes(x = avisit, y = change, group=subject)) +
-geom_point() + geom_line() + facet_grid(.~group)
+ggplot(data = all2, aes(x = week, y = change, group=subject)) +
+  geom_point() + geom_line() + facet_grid(.~group) + ylab("Change from baseline HAMD17") +
+  scale_x_continuous(name="Visit [week]", breaks=c(2,4,8))
 ```
 
 ```{r}
 #| label: fig-mean
-#| fig-cap: "Mean change from baseline by treatment group"
-ggplot(data = all2, aes(x = avisit, y = change)) + 
-  geom_point() + facet_grid(.~group) +
-  stat_summary(aes(group = 1), geom = "line", fun.y = mean,
-               size = 1, col="blue") +
-  stat_summary(aes(group = 1), geom = "point", fun.y = mean,
-               shape=17,size = 3, col="blue")
+#| fig-cap: "Mean HAMD17 change from baseline by treatment group"
+ggplot(data = all2, aes(x = week, y = change)) +  
+  geom_point(aes(colour=factor(group))) + ylab("Change from baseline HAMD17") +
+  scale_x_continuous(name="Visit [week]", breaks=c(2,4,8)) +
+  stat_summary(aes(group = group, colour=factor(group)), geom = "line", fun.y = mean,
+               size = 1) +
+  stat_summary(aes(group = group, colour=factor(group)), geom = "point", fun.y = mean,
+               shape=17,size = 2)
+```
+
+## Data set high2
+- Large data set with n=100 subjects.
+- Note that we have no intermittent missing values but drop-outs.
+
+Looking at the variables in the data set.
+
+```{r}
+head(high2)
+```
+
+### Task 2 - Exploration of data set high2 - 15 minutes working time
+- drop-outs, last visit for each subject
+- trajectories for different drop-out groups
+
+### Task 2 Discussion, possible solution
+```{r}
+#| label: fig-traj
+#| fig-cap: "Individual trajectories of HAMD17 by treatment group"
+ggplot(data = high2, aes(x = week, y = change, group=patient)) + 
+  geom_point() + geom_line() + facet_grid(.~group) +
+  ylab("Change from baseline HAMD17") + scale_x_continuous(name="Visit [week]", breaks=c(1,2,4,6,8))
+```
+
+```{r}
+#| label: fig-traj
+#| fig-cap: "Visit-wise mean HAMD17 changes from baseline by treatment group and drop-out"
+ggplot(data = high2, aes(x = week, y = change, group=patient)) + 
+  geom_point(col="lightgray") + geom_line(col="lightgray") + facet_grid(.~group) +
+  ylab("Change from baseline HAMD17") + scale_x_continuous(name="Visit [week]", breaks=c(1,2,4,6,8)) +
+  stat_summary(aes(group = dropgr, colour=factor(dropgr)), geom = "line", fun.y = mean,
+               size = 1) +
+  stat_summary(aes(group = dropgr, colour=factor(dropgr)), geom = "point", fun.y = mean,
+               shape=17,size = 2)
 ```
 
 # Correlation structure, covariance matrices
-- model within-subject error correlation
-- different residual covariance structures can be implemented
+- Longitudinal data allows to exploit the correlation between otucomes wihtin subjects regardless of whether or not focues is on a single landmark time point.
+- Model within-subject error correlation
+- Different residual covariance structures can be implemented
 
 ## Overview - different covariance matrices
 - Variance components (VC) independence structure
@@ -80,10 +129,10 @@ ggplot(data = all2, aes(x = avisit, y = change)) +
 - First order auto regressive (AR(1))
 - Unstructured (UN)
 
-Selected covariance structures for data with three assessment times are shown below. Note that with three assessment times, the number of parameters estimated for the various structures did not differ as much as would be the case with more assessment times. Thus, results from different covariance structures are more similar than would be the case with more assessment times.
+Selected covariance structures for data with three assessment times (t=3) are shown below. Note that with three assessment times, the number of parameters estimated for the various structures did not differ as much as would be the case with more assessment times. Thus, results from different covariance structures are more similar than would be the case with more assessment times.
 
 ### Independence structure (VC)
-Constant variance. It is assumed to be no correlation between assessments.
+Constant variance. It is assumed to be no correlation between assessments (residuals are independent across time).
 $$ \begin{bmatrix}
    \sigma^2   & 0  & 0  \\
    0  & \sigma^2   & 0 \\
@@ -91,9 +140,9 @@ $$ \begin{bmatrix}
    \end{bmatrix}$$
 
 ### Compound symmetry (CS)
-Constant variance and constant covariance across all assessments. Also known as exchangeable.
+Constant variance and constant covariance across all assessments. Also known as exchangeable. It requires two parameter estimates. Most simplest repeated measures (i.e., correlated errors) structure.
 
-$$ \begin{bmatrix}
+$$ R = \begin{bmatrix}
    \sigma^2 + \sigma_1 & \sigma_1  & \sigma_1  \\
    \sigma_1  & \sigma^2 + \sigma_1  & \sigma_1  \\
    \sigma_1  & \sigma_1  & \sigma^2 + \sigma_1
@@ -101,50 +150,67 @@ $$ \begin{bmatrix}
    
    
 ### Unstructured (UN)
-This is the most general (saturated) model
+This is the most general (saturated) model. It has t + [t(t-1)/2] parameters to be estimated. Here it is 3 + 3 = 6 parameters.
 
-$$ \begin{bmatrix}
+$$ R = \begin{bmatrix}
    \sigma_1^2 & \sigma_{21}  & \sigma_{31}  \\
    \sigma_{21}  & \sigma_2^2   & \sigma_{32}  \\
    \sigma_{31}  & \sigma_{32}  & \sigma_3^2
    \end{bmatrix}$$
    
 ### Toeplitz structure (TOEP)
-Homogenous variances and heterogenous correlations. Same correlation value is used whenever the degree of adjacency is the same e.g. correlation between times 1 and 2 = correlation between times 2 and 3.
+Homogenous variances and heterogenous correlations. Same correlation value is used whenever the degree of adjacency is the same e.g. correlation between times 1 and 2 = correlation between times 2 and 3. Repeated measurements are assumed to be equally spaced. TOEP requries t parameter estimates so here we have t=3 parameter.
 
-$$ \begin{bmatrix}
-   \sigma^2  & \sigma^2 \rho_1  & \sigma^2 \rho_2  \\
-   \sigma^2 \rho_1 & \sigma^2   & \sigma^2 \rho_1  \\
-   \sigma^2 \rho_2  & \sigma^2 \rho_1  & \sigma^2 
+$$ R = \begin{bmatrix}
+   \sigma^2  & \sigma_1^2 & \sigma_2^2 \  \\
+   \sigma_1^2 & \sigma^2  & \sigma_1^2  \\
+   \sigma_2^2  & \sigma_1^2 & \sigma^2 
    \end{bmatrix}$$
 
 ### Autoregressive structure (AR(1))
-Correlation decreases as time between observations increases.
+Correlation decreases as time between observations increases. Assumtpion of equal spacing between each repeated measurement must be reasonably applicable. This structure requires the estimation of two parameters.
 
-$$ \begin{bmatrix}
+$$ R = \begin{bmatrix}
    \sigma^2  & \sigma^2 \rho  & \sigma^2 \rho^2  \\
    \sigma^2 \rho & \sigma^2   & \sigma^2 \rho  \\
   \sigma^2 \rho^2  & \sigma^2 \rho  & \sigma^2 
    \end{bmatrix}$$
 
-### Spatial (SP)
-Spatial covariance structures does not require that the timepoints are consistent between subjects. Instead, as long as the distance between visits can be quantified in terms of time and/or other coordinates, the spatial covariance structure can be applied.
+### Spatial Power (SP)
+Spatial covariance structures does not require equal spacing between measurements. Instead, as long as the distance between visits can be quantified in terms of time and/or other coordinates, the spatial covariance structure can be applied. Covariances are mathematical functions of Euclidean distances between observed measurements. Again, two parameters need to be estimated.
 
 For spatial exponential, the covariance structure is defined as follows:
-$$ \rho_{ij}=\rho^{d_{ij}} $$
-where $$d_{ij} $$ is the distance between time point i and time point j.
+
+$$ R = \begin{bmatrix}
+   \sigma^2  & \sigma^2 \rho_{12}  & \sigma^2 \rho_{13}  \\
+   \sigma^2 \rho_{21} & \sigma^2   & \sigma^2 \rho_{23}  \\
+  \sigma^2 \rho_{31}  & \sigma^2 \rho_{32}  & \sigma^2 
+   \end{bmatrix}$$
+
+with $$ \rho_{ij}=\rho^{d_{ij}} $$
+where $$d_{ij} $$ is the distance between time point i and time point j e.g. distance in weeks.
 
 ## Selecting the covariance structure
 There are a variety of considerations when selecting the covariance structure:
 - number of parameters
 - interpretation of the structure
 - model fit
-UN is the most flexible. Choose a reasonable covaraiance structure which is the best compromise between model fit and complexity. E.g. use AIC as it penalises more complex models.
 
-## Task - Exploration of correlation in the data
-- Compute the empirical correlations between measurement timepoints (e.g. correlation between baseline and post-baseline changes). 
-- Looking at these correlations, comment on the suitability of the correlation structures VC, CS, UN, AR(1).
+UN is the most flexible (complex) structure and can fail to run especially if one has many repeated measures.
+Choose a reasonable covaraiance structure which is the best compromise between model fit and complexity. E.g. use AIC as it penalises more complex models. 
+
+## Task 3 - Exploration of correlation in the data
+- Compute the empirical correlations between measurement timepoints in the all2 data set (e.g. correlation between baseline and post-baseline changes). 
+- Looking at these correlations + using your knowledge of the experiment (e.g., spacing of measurements), comment on the suitability of the correlation structures VC, CS, UN, AR(1).
+
+## Task 3 - Discussion and possible solution
+
+Table: Correlation and covariance matrix
 
 ```{r}
-1 + 1
+all2 %>% pivot_wider(id_cols=subject,names_from = time, values_from = c(basval,change)) %>% 
+  select(-c(basval_2,basval_3)) -> all2.w
+
+cor(all2.w[-1]) 
+cov(all2.w[-1])
 ```

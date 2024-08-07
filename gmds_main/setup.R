@@ -25,7 +25,7 @@ all2 <- all %>%
     aval = change + basval,
     avisit = dplyr::recode(as.character(time), "1" = "Week 2", "2" = "Week 4", "3" = "Week 8"),
     avisit = factor(avisit, levels = c("Week 2", "Week 4", "Week 8")),
-    week = as.numeric(dplyr::recode(as.character(time), "1" = "2", "2" = "4", "3" = "8")),
+    week = ifelse(time==3,8,time*2),
     subject = factor(subject),
     group = factor(trt, levels = 1:2, labels = c("Arm 1","Arm 2"))
   )
@@ -39,7 +39,16 @@ low <- haven::read_sas("data/low2.sas7bdat") %>%
 
 colnames(low) <- tolower(colnames(low))
 
-high <- haven::read_sas("data/high2.sas7bdat") %>%
-  dplyr::mutate(
-    aval = change + basval
-  )
+high <- haven::read_sas("data/high2.sas7bdat") 
+colnames(high) <- tolower(colnames(high))
+
+high2 <- high %>% group_by(patient) %>% 
+dplyr::mutate(
+  aval = change + basval,
+  drop=max(week),
+  group = factor(trt, levels = 1:2, labels = c("Arm 1","Arm 2")),
+  avisit = dplyr::recode(as.character(week), "1" = "Week 1", "2" = "Week 2", "4" = "Week 4", "6" = "Week 6", "8" = "Week 8"),
+  avisit = factor(avisit, levels = c("Week 1", "Week 2", "Week 4", "Week 6", "Week 8")),
+  dropgr = dplyr::recode(as.character(drop), "1" = "W1", "2" = "W2", "4" = "W4", "6" = "W6", "8" = "W8"),
+  dropgr = factor(dropgr, levels=c("W1","W2","W4","W6","W8"))
+)
