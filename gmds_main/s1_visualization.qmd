@@ -67,7 +67,7 @@ ggplot(data = all2, aes(x = week, y = change, group=subject)) +
 
 ```{r}
 #| label: fig-mean
-#| fig-cap: "Mean change from baseline by treatment group"
+#| fig-cap: "Mean HAMD17 change from baseline by treatment group"
 ggplot(data = all2, aes(x = week, y = change)) +  
   geom_point(aes(colour=factor(group))) + ylab("Change from baseline HAMD17") +
   scale_x_continuous(name="Visit [week]", breaks=c(2,4,8)) +
@@ -88,6 +88,25 @@ head(high2)
 - trajectories for different drop-out groups
 
 ### Task 2 Discussion, possible solution
+```{r}
+#| label: fig-traj
+#| fig-cap: "Individual trajectories of HAMD17 by treatment group"
+ggplot(data = high2, aes(x = week, y = change, group=patient)) + 
+  geom_point() + geom_line() + facet_grid(.~group) +
+  ylab("Change from baseline HAMD17") + scale_x_continuous(name="Visit [week]", breaks=c(1,2,4,6,8))
+```
+
+```{r}
+#| label: fig-traj
+#| fig-cap: "Visit-wise mean HAMD17 changes from baseline by treatment group and drop-out"
+ggplot(data = high2, aes(x = week, y = change, group=patient)) + 
+  geom_point(col="lightgray") + geom_line(col="lightgray") + facet_grid(.~group) +
+  ylab("Change from baseline HAMD17") + scale_x_continuous(name="Visit [week]", breaks=c(1,2,4,6,8)) +
+  stat_summary(aes(group = dropgr, colour=factor(dropgr)), geom = "line", fun.y = mean,
+               size = 1) +
+  stat_summary(aes(group = dropgr, colour=factor(dropgr)), geom = "point", fun.y = mean,
+               shape=17,size = 2)
+```
 
 # Correlation structure, covariance matrices
 - model within-subject error correlation
@@ -180,7 +199,7 @@ Table: Correlation and covariance matrix
 
 ```{r}
 all2 %>% pivot_wider(id_cols=subject,names_from = time, values_from = c(basval,change)) %>% 
-  select(-basval_2) %>% select(-basval_3) -> all2.w
+  select(-c(basval_2,basval_3)) -> all2.w
 
 cor(all2.w[-1]) 
 cov(all2.w[-1])
