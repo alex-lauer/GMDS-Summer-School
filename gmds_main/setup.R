@@ -48,5 +48,7 @@ dplyr::mutate(
   drop=max(week),
   group = factor(trt, levels = 1:2, labels = c("Arm 1","Arm 2")),
   avisit = dplyr::recode(as.character(week), "1" = "Week 1", "2" = "Week 2", "4" = "Week 4", "6" = "Week 6", "8" = "Week 8"),
-  avisit = factor(avisit, levels = c("Week 1", "Week 2", "Week 4", "Week 6", "Week 8"))
+  avisit = factor(avisit, levels = c("Week 1", "Week 2", "Week 4", "Week 6", "Week 8")),
+  dropgr = dplyr::recode(as.character(drop), "1" = "W1", "2" = "W2", "4" = "W4", "6" = "W6", "8" = "W8"),
+  dropgr = factor(dropgr, levels=c("W1","W2","W4","W6","W8"))
 )
