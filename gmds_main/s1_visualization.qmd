@@ -14,22 +14,29 @@ source("setup.R")
 - Our interest is in the change from baseline.
 
 Datasets used in this course:
-Example data is taken from [@mallinckrodt2016]. Contain data on the HAMD17 (Hamilton 17-item rating scale for depression). 
-Two treatement arms are included: drug vs. placebo.
-Assessments were taken at baseline and weeks 1, 2, 4, 6, and 8
+- Example data is taken from [@mallinckrodt2016]. The authors generated data sets based on two nearly identically designed antidepressant clinical trials by randomly selecting subjects from the original data.
+- Contain data on the continuous variable HAMD17 (Hamilton 17-item rating scale for depression). 
+- Two treatement arms are included: placebo (arm 1) vs. drug (arm 2).
+- Assessments were taken at baseline and weeks 1, 2, 4, 6, and 8.
 
 There are 3 data sets created from the original data:
-- Data *all2* Subsample of the large dataset with n=50, visits: weeks 2, 4, 8
-- Data *high2* Large dataset with n=100, high dropout = 70% (drug), 60% (placebo)
-- Data *low2* Large dataset with n=100, low dropout = 18%
+- Data *all2* = Subsample of the large dataset with n=50, visits: weeks 2, 4, 8
+- Data *high2* = Large dataset with n=100, high dropout = 70% (drug), 60% (placebo)
+- Data *low2* = Large dataset with n=100, low dropout = 18%
 
 ## Data set all2
+- Small data set with n=50 subjects.
+- 1st version: complete data where all subjects adhered to the originally assigend study medication, variable *change*
+- 2nd version = missing data: identical to the first except some data were missing (drop-out), variable *chgdrop* 
+
 Looking at the variables in the data set
 
 ```{r}
 head(all2)
 ```
+
 ### Task 1 - Exploration of data set all2 - 15 minutes working time
+Only consider the complete data, variable *change*
 - Are the data balanced and equally spaced?
 - Number of observations by week?
 - Summary statistics for HAMD17 (change from baseline) by week.
@@ -38,10 +45,8 @@ head(all2)
 - Plot trajectories separately by gender. Comment on the plots.
 
 ### Task 1 Discussion, possible solution
-TO DO: Datensatz aufbereiten, Label, Time=Faktor (t)
-Alex: library gtsummary okay? Oder sollen wir es anders machen
 
-Table: Summary statistics for HAMD17 by treatment and week in the all2 dataset
+Table: Summary statistics for HAMD17 by treatment and week in the all2 data set
 
 ```{r}
 all2 %>%
@@ -76,9 +81,12 @@ ggplot(data = all2, aes(x = week, y = change)) +
   stat_summary(aes(group = group, colour=factor(group)), geom = "point", fun.y = mean,
                shape=17,size = 2)
 ```
+
 ## Data set high2
+- Large data set with n=100 subjects.
+- Note that we have no intermittent missing values but drop-outs.
+
 Looking at the variables in the data set.
-Note that we have no intermittent missing values but drop-outs.
 
 ```{r}
 head(high2)
@@ -110,8 +118,9 @@ ggplot(data = high2, aes(x = week, y = change, group=patient)) +
 ```
 
 # Correlation structure, covariance matrices
-- model within-subject error correlation
-- different residual covariance structures can be implemented
+- Longitudinal data allows to exploit the correlation between otucomes wihtin subjects regardless of whether or not focues is on a single landmark time point.
+- Model within-subject error correlation
+- Different residual covariance structures can be implemented
 
 ## Overview - different covariance matrices
 - Variance components (VC) independence structure
@@ -191,8 +200,8 @@ UN is the most flexible (complex) structure and can fail to run especially if on
 Choose a reasonable covaraiance structure which is the best compromise between model fit and complexity. E.g. use AIC as it penalises more complex models. 
 
 ## Task 3 - Exploration of correlation in the data
-- Compute the empirical correlations between measurement timepoints (e.g. correlation between baseline and post-baseline changes). 
-- Looking at these correlations + using your knowledge of the experiment (e.g., spacing of measurement), comment on the suitability of the correlation structures VC, CS, UN, AR(1).
+- Compute the empirical correlations between measurement timepoints in the all2 data set (e.g. correlation between baseline and post-baseline changes). 
+- Looking at these correlations + using your knowledge of the experiment (e.g., spacing of measurements), comment on the suitability of the correlation structures VC, CS, UN, AR(1).
 
 ## Task 3 - Discussion and possible solution
 
