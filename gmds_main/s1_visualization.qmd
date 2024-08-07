@@ -77,7 +77,8 @@ ggplot(data = all2, aes(x = week, y = change)) +
                shape=17,size = 2)
 ```
 ## Data set high2
-Looking at the variables in the data set
+Looking at the variables in the data set.
+Note that we have no intermittent missing values but drop-outs.
 
 ```{r}
 head(high2)
