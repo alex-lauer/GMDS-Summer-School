@@ -251,28 +251,64 @@ then the transformed residuals are given by
 $$
 r^* =  L^{-1}(y - X\beta)\,.
 $$
-Note to self: `chol(m)` returns $L'$.
+In the `mmrm` package, transformed residuals can be derived using the `type = "normalized"` option.
 
 Residual plots overall and by visit
 
+-   histogram of transformed residuals
 -   predicted vs. actual values
 -   predicted vs. residuals
 -   standardized residuals vs. theoretic quantiles
 
-How? What can/ should be seen?
+**Exercise**: Which visualisations can you think of that make sense to assess the goodness of fit here? Create a new `tibble` (or `data.frame`) containing the variables of importance and try plotting them in a meaningful way. Discuss the results within your group.
+
+**Solution**:
+
+To avoid repetition, let us first save the important variables to perform fit diagnostics in a `tibble`.
+
+```{r}
+df_residuals <- dplyr::tibble(
+  residuals = residuals(fit_cat_time, type = "normalized"),
+  predictions = fitted(fit_cat_time),
+  all2
+)
+```
+
+We can firstly look into a histogram of transformed residuals. The shape should resemble the density function of normal distribution with mean zero and positive variance. Superimposing the density function with mean and SD derived from the model residuals, let's us see that this is indeed the case. We can also detect a slight skewness to the right.
 
 ```{r}
 #| message: false
 library(ggplot2)
 
-dplyr::tibble(
-  residuals = residuals(fit_cat_time),
-  predictions = fitted.values(fit_cat_time)
-) %>% 
+df_residuals %>% 
+  ggplot(aes(x = residuals)) +
+  geom_histogram(aes(y = after_stat(density)), fill='lightgray', col='black') +
+  stat_function(fun = dnorm, args = list(mean=mean(df_residuals$residuals), sd=sd(df_residuals$residuals)), col='red', lwd=1) +
+  ggtitle(
+    label = "Histogram of transformed residuals",
+    subtitle = "Normal density with mean and SD of residuals superimposed"
+  )
+```
+
+Alternatively, we can create a Q-Q-Plot of ...
+
+```{r}
+#| message: false
+
+```
+
+
+
+```{r}
+#| message: false
+df_residuals %>% 
   ggplot(aes(x = predictions, y = residuals)) +
-  geom_point(color = "blue") +
-  geom_smooth(method = lm, color = "red") +
-  geom_hline(yintercept = 0, show.legend = FALSE, linetype = 2)
+  geom_point() +
+  geom_smooth(method = lm, color = "blue") +
+  geom_hline(yintercept = 0, show.legend = FALSE, linetype = 2) +
+  ggtitle(
+    label = "Residual Plot of predicted values vs. transformed residuals"
+  )
   
 ```
 
@@ -281,6 +317,18 @@ What do we see?
 -   The points in the plot look well dispersed and symmetric around zero. The fitted line shows no departure from zero.
 
 -   There is no systematic trend, but a rather random scatter.
+
+
+```{r}
+#| message: false
+df_residuals %>% 
+  ggplot(aes(x = predictions, y = change)) +
+  geom_point() +
+  geom_smooth(method = lm, color = "blue")
+```
+
+
+
 
 ### Addendum on RS&I Models
 
