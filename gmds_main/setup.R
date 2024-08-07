@@ -43,3 +43,8 @@ high <- haven::read_sas("data/high2.sas7bdat") %>%
   dplyr::mutate(
     aval = change + basval
   )
+
+colnames(high) <- tolower(colnames(high))
+
+high2 <- high %>% group_by(patient) %>% 
+dplyr::mutate(drop=max(week))
