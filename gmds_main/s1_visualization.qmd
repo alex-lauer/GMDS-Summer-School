@@ -82,6 +82,36 @@ ggplot(data = all2, aes(x = week, y = change)) +
                shape=17,size = 2)
 ```
 
+```{r}
+#| label: fig-meansex
+#| fig-cap: "Mean HAMD17 change from baseline by treatment group stratified by sex"
+ggplot(data = all2, aes(x = week, y = change)) +  facet_grid(.~gender) +
+  geom_point(aes(colour=factor(group))) + ylab("Change from baseline HAMD17") +
+  scale_x_continuous(name="Visit [week]", breaks=c(2,4,8)) +
+  stat_summary(aes(group = group, colour=factor(group)), geom = "line", fun.y = mean,
+               size = 1) +
+  stat_summary(aes(group = group, colour=factor(group)), geom = "point", fun.y = mean,
+               shape=17,size = 2)
+```
+
+### Data set all2 with drop-out
+- 2nd version = missing data: identical to the first except some data were missing (drop-out), variable *chgdrop*
+- This version is later relevant when considering missing data. Thus, have a short look at the data. 
+
+Table: Summary statistics for HAMD17 by treatment and week in the all2 data set with drop-outs
+
+```{r}
+all2 %>%
+  select(chgdrop, group, avisit) %>%
+  tbl_strata(strata=group, 
+             ~.x %>% 
+               tbl_summary(by = avisit,
+                           statistic = list(
+      all_continuous() ~ "{mean} ({sd})"), 
+      digits = all_continuous() ~ 2 ) 
+)
+```
+
 ## Data set high2
 - Large data set with n=100 subjects.
 - Note that we have no intermittent missing values but drop-outs.
@@ -98,22 +128,21 @@ head(high2)
 
 ### Task 2 Discussion, possible solution
 ```{r}
-#| label: fig-traj2
-#| fig-cap: "Individual trajectories of HAMD17 by treatment group"
-ggplot(data = high2, aes(x = week, y = change, group=patient)) + 
-  geom_point() + geom_line() + facet_grid(.~group) +
-  ylab("Change from baseline HAMD17") + scale_x_continuous(name="Visit [week]", breaks=c(1,2,4,6,8))
+#| label: fig-box
+#| fig-cap: "Distribution of HAMD17 change from baseline by treatment group at each visit"
+ggplot(data = high2, aes(x = avisit, y = change, fill=group)) + 
+  geom_boxplot() + ylab("Change from baseline HAMD17") + xlab("Visit")
 ```
 
 ```{r}
-#| label: fig-traj3
+#| label: fig-traj2
 #| fig-cap: "Visit-wise mean HAMD17 changes from baseline by treatment group and drop-out"
 ggplot(data = high2, aes(x = week, y = change, group=patient)) + 
   geom_point(col="lightgray") + geom_line(col="lightgray") + facet_grid(.~group) +
   ylab("Change from baseline HAMD17") + scale_x_continuous(name="Visit [week]", breaks=c(1,2,4,6,8)) +
-  stat_summary(aes(group = dropgr, colour=factor(dropgr)), geom = "line", fun.y = mean,
+  stat_summary(aes(group = dropout_grp, colour=factor(dropout_grp)), geom = "line", fun.y = mean,
                size = 1) +
-  stat_summary(aes(group = dropgr, colour=factor(dropgr)), geom = "point", fun.y = mean,
+  stat_summary(aes(group = dropout_grp, colour=factor(dropout_grp)), geom = "point", fun.y = mean,
                shape=17,size = 2)
 ```
 
