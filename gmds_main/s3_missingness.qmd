@@ -8,6 +8,11 @@ source("setup.R")
 
 So far, we conducted all our analyses on the basis of complete data. This is a blissful, yet highly unusual setting.
 
+Missingness patterns:
+
+-   Monotonic/ dropout
+-   Intermittend
+
 Our dataset contains a second variable `chgdrop`, which is subject to missingness. Let's rerun our initial MMRM with `chgdrop` as dependent variable, baseline value, visit, baseline by visit interaction and treatment by visit interaction as fixed effects and an unstructured covariance matrix for visits within each subject.
 
 This formulation is very similar to the one at the beginning of the former chapter. How do the results differ in terms of LS Means of change from baseline by treatment arm over time?
@@ -19,7 +24,7 @@ fit_cat_time <- mmrm::mmrm(
   control = mmrm_control(method = "Kenward-Roger")
 )
 
-summary(fit_cat_time)
+# summary(fit_cat_time)
 
 model_lsmeans <- emmeans::emmeans(fit_cat_time, ~trt*avisit, weights = "proportional")
 model_lsmeans
@@ -65,15 +70,6 @@ levels(all2_miss$aval) <- c("Baseline", levels(all2_miss$aval))
 
 all2_miss %>% 
   filter(!is.na(chgdrop)) %>% 
-  dplyr::group_by(subject) %>% 
-  dplyr::mutate(
-    dropout_grp = dplyr::case_when(
-      max(time) == 1 ~ "Week 2 Dropout",
-      max(time) == 2 ~ "Week 4 Dropout",
-      max(time) == 3 ~ "Completer"
-    ),
-    .groups = "drop"
-  ) %>% 
   dplyr::group_by(avisit, week, trt, dropout_grp) %>% 
   dplyr::summarise(
     mn = mean(chgdrop),
@@ -108,3 +104,5 @@ all2_miss %>%
 ```
 
 ## Missing data handling II (analytic approaches)
+
+### Complete Case Analyses

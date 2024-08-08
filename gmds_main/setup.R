@@ -20,7 +20,20 @@ library(gtsummary)
 all <- haven::read_sas("data/all2.sas7bdat")
 colnames(all) <- tolower(colnames(all))
 
+drp_grp <- all %>%
+  dplyr::filter(!is.na(chgdrop)) %>%
+  dplyr::group_by(subject) %>%
+  dplyr::summarise(
+    dropout_grp = dplyr::case_when(
+      max(time) == 1 ~ "Week 2 Dropout",
+      max(time) == 2 ~ "Week 4 Dropout",
+      max(time) == 3 ~ "Completer"
+    ),
+    .groups = "drop"
+  )
+
 all2 <- all %>%
+  dplyr::full_join(., drp_grp, by = "subject") %>%
   dplyr::mutate(
     aval = change + basval,
     avisit = dplyr::recode(as.character(time), "1" = "Week 2", "2" = "Week 4", "3" = "Week 8"),
@@ -30,6 +43,7 @@ all2 <- all %>%
     group = factor(trt, levels = 1:2, labels = c("Arm 1","Arm 2"))
   )
 
+rm(drp_grp)
 
 ### Larger dataset with low dropout rate
 low <- haven::read_sas("data/low2.sas7bdat") %>%
@@ -39,10 +53,10 @@ low <- haven::read_sas("data/low2.sas7bdat") %>%
 
 colnames(low) <- tolower(colnames(low))
 
-high <- haven::read_sas("data/high2.sas7bdat") 
+high <- haven::read_sas("data/high2.sas7bdat")
 colnames(high) <- tolower(colnames(high))
 
-high2 <- high %>% group_by(patient) %>% 
+high2 <- high %>% group_by(patient) %>%
 dplyr::mutate(
   aval = change + basval,
   drop=max(week),
@@ -51,4 +65,5 @@ dplyr::mutate(
   avisit = factor(avisit, levels = c("Week 1", "Week 2", "Week 4", "Week 6", "Week 8")),
   dropgr = dplyr::recode(as.character(drop), "1" = "W1", "2" = "W2", "4" = "W4", "6" = "W6", "8" = "W8"),
   dropgr = factor(dropgr, levels=c("W1","W2","W4","W6","W8"))
-)
+) #%>%
+  #rename(subject = patient)
