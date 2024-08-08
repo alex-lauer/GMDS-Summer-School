@@ -140,10 +140,10 @@ head(high2)
 
 ### Task 2 Discussion, possible solution
 
-Table: Summary statistics for HAMD17 by treatment and week in the all2 data set
+Table: Summary statistics for HAMD17 by treatment and week in the high2 data set
 
 ```{r}
-all2 %>%
+high2 %>%
   select(change, group, avisit) %>%
   tbl_strata(strata=group, 
              ~.x %>% 
