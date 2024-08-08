@@ -13,6 +13,7 @@ library(mmrm)
 library(emmeans)
 library(gtsummary)
 # library(mlmi)
+# library(rbmi)
 
 ### Load data
 
@@ -56,14 +57,16 @@ colnames(low) <- tolower(colnames(low))
 high <- haven::read_sas("data/high2.sas7bdat")
 colnames(high) <- tolower(colnames(high))
 
-high2 <- high %>% group_by(patient) %>%
+high2 <- high %>% dplyr::group_by(patient) %>%
+dplyr::mutate( drop=max(week) )
+
+high2 <- high2 %>%
 dplyr::mutate(
   aval = change + basval,
-  drop=max(week),
   group = factor(trt, levels = 1:2, labels = c("Arm 1","Arm 2")),
   avisit = dplyr::recode(as.character(week), "1" = "Week 1", "2" = "Week 2", "4" = "Week 4", "6" = "Week 6", "8" = "Week 8"),
   avisit = factor(avisit, levels = c("Week 1", "Week 2", "Week 4", "Week 6", "Week 8")),
-  dropgr = dplyr::recode(as.character(drop), "1" = "W1", "2" = "W2", "4" = "W4", "6" = "W6", "8" = "W8"),
-  dropgr = factor(dropgr, levels=c("W1","W2","W4","W6","W8"))
+  dropout_grp = dplyr::recode(as.character(drop), "1" = "Week 1 Drop", "2" = "Week 2 Drop", "4" = "Week 4 Drop", "6" = "Week 6 Drop", "8" = "Completer"),
+  dropout_grp = factor(dropout_grp, levels=c("Week 1 Drop","Week 2 Drop","Week 4 Drop","Week 6 Drop","Completer"))
 ) #%>%
   #rename(subject = patient)
