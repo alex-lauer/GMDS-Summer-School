@@ -50,10 +50,10 @@ We apply these two methods here as well to compare results.
 - Different options to handle missing outcome data for reference-based imputation were described: e.g. copy reference, copy increments in reference, jump to reference (Paper Carpenter 2013)
 
 ### Delta-based multiple imputation
-- Impute data assuming all unobserved subjects having a poorer or better response than those observed, by adding or subtracting a delta parameter $\delta$ to the expected value of the MAR imputed values. 
+- Impute data assuming all unobserved subjects having a poorer or better response than those observed, by adding or subtracting a delta parameter $\delta$ to the expected value of the e.g. MAR imputed values. 
 - Delta can be implemented in all treatment groups, or in only one group, or may vary by treatment group or an alternative specified factor.
-- Choice of values for the sensitivity parameter $\delta$: often selected by the analyst. Better: selection by content experts.
-- Steps: 1. missing values are imputed using standard MI procedure under MAR, 2. imputed values are shifted by adding some fixed value $\delta$ to reflect the MNAR mechanism, 3. analysis with standard statistical methods including Rubin's rule to combine results
+- Choice of values for the sensitivity parameter $\delta$: selection by content experts.
+- Steps: 1. missing values are imputed using standard MI procedure e.g. under MAR (but can also be under MNAR e.g. combinded with copy reference approach), 2. imputed values are shifted by adding some fixed value $\delta$ to reflect the MNAR mechanism, 3. analysis with standard statistical methods including Rubin's rule to combine results
 
 ## Practical part
 - Take the *high2* data set
