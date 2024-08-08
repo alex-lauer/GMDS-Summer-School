@@ -147,7 +147,15 @@ head(high2)
 Table: Summary statistics for HAMD17 by treatment and week in the high2 data set
 
 ```{r}
-1+1
+high2 %>% ungroup() %>%
+  select(change, group, avisit) %>%
+  tbl_strata(strata=group, 
+             ~.x %>% 
+               tbl_summary(by = avisit,
+                           statistic = list(
+                             all_continuous() ~ "{mean} ({sd})"), 
+                           digits = all_continuous() ~ 2 ) 
+  )
 ```
 
 Figure: Distribution of HAMD17 change from baseline
