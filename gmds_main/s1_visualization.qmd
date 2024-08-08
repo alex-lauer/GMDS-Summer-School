@@ -87,7 +87,11 @@ ggplot(data = all2, aes(x = week, y = change)) +
 Frequency for sex per treatment group
 
 ```{r}
-table(all2$trt, all2$gender)
+all2 %>% filter(time==1) %>%
+  tbl_summary(
+    include = c(gender),
+    by = group
+  )
 ```
 
 Figure: Mean change from baseline stratified by sex
@@ -143,15 +147,7 @@ head(high2)
 Table: Summary statistics for HAMD17 by treatment and week in the high2 data set
 
 ```{r}
-high2 %>%
-  select(change, group, avisit) %>%
-  tbl_strata(strata=group, 
-             ~.x %>% 
-               tbl_summary(by = avisit,
-                           statistic = list(
-      all_continuous() ~ "{mean} ({sd})"), 
-      digits = all_continuous() ~ 2 ) 
-)
+1+1
 ```
 
 Figure: Distribution of HAMD17 change from baseline
