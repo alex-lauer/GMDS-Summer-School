@@ -40,9 +40,9 @@ Only consider the complete data, variable *change*
 - Are the data balanced and equally spaced?
 - Number of observations by week?
 - Summary statistics for HAMD17 (change from baseline) by week.
-- Plot trajectories for each individual, different colors for each treatment group (or panels). Add mean to your plot. ODER Mean plot separat evtl. mit CI
-- Generate and interpret the group-wise boxplots of the change from baseline.
-- Plot trajectories separately by gender. Comment on the plots.
+- Plot trajectories for each individual, different colors for each treatment group (or panels). 
+- Add mean to your plot or generate new plot with mean change from baseline by treatment group. 
+- Plot mean change from baseline for each treatment group stratified by sex. Comment on the plots.
 
 ### Task 1 Discussion, possible solution
 
@@ -60,7 +60,7 @@ all2 %>%
 )
 ```
 
-Figure: trajectories
+Figure: individual trajectories stratified by treatment group
 
 ```{r}
 #| label: fig-traj
@@ -69,6 +69,8 @@ ggplot(data = all2, aes(x = week, y = change, group=subject)) +
   geom_point() + geom_line() + facet_grid(.~group) + ylab("Change from baseline HAMD17") +
   scale_x_continuous(name="Visit [week]", breaks=c(2,4,8))
 ```
+
+Figure: Mean change from baseline for each treatment group stratified by sex
 
 ```{r}
 #| label: fig-mean
@@ -81,6 +83,14 @@ ggplot(data = all2, aes(x = week, y = change)) +
   stat_summary(aes(group = group, colour=factor(group)), geom = "point", fun.y = mean,
                shape=17,size = 2)
 ```
+
+Frequency for sex per treatment group
+
+```{r}
+table(all2$trt, all2$gender)
+```
+
+Figure: Mean change from baseline stratified by sex
 
 ```{r}
 #| label: fig-meansex
@@ -123,16 +133,37 @@ head(high2)
 ```
 
 ### Task 2 - Exploration of data set high2 - 15 minutes working time
-- drop-outs, last visit for each subject
-- trajectories for different drop-out groups
+- Drop-outs, last visit for each subject: number of observations by week. 
+- Summary statistics for HAMD17 change.
+- Generate and interpret the group-wise boxplots of the change from baseline.
+- Mean change from baseline for different drop-out groups (by treatment). Comment on the plot.
 
 ### Task 2 Discussion, possible solution
+
+Table: Summary statistics for HAMD17 by treatment and week in the all2 data set
+
+```{r}
+all2 %>%
+  select(change, group, avisit) %>%
+  tbl_strata(strata=group, 
+             ~.x %>% 
+               tbl_summary(by = avisit,
+                           statistic = list(
+      all_continuous() ~ "{mean} ({sd})"), 
+      digits = all_continuous() ~ 2 ) 
+)
+```
+
+Figure: Distribution of HAMD17 change from baseline
+
 ```{r}
 #| label: fig-box
 #| fig-cap: "Distribution of HAMD17 change from baseline by treatment group at each visit"
 ggplot(data = high2, aes(x = avisit, y = change, fill=group)) + 
   geom_boxplot() + ylab("Change from baseline HAMD17") + xlab("Visit")
 ```
+
+Figure: Mean HAMD17 changes by drop-out group
 
 ```{r}
 #| label: fig-traj2
@@ -162,7 +193,7 @@ Selected covariance structures for data with three assessment times (t=3) are sh
 
 ### Independence structure (VC)
 Constant variance. It is assumed to be no correlation between assessments (residuals are independent across time).
-$$ \begin{bmatrix}
+$$ R = \begin{bmatrix}
    \sigma^2   & 0  & 0  \\
    0  & \sigma^2   & 0 \\
    0  & 0  & \sigma^2
