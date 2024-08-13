@@ -25,16 +25,23 @@ Purpose: talk about sensitivity analyses with respect to missing data
 
 Note that, when implemented in similar manners, MI and MMRM have similar assumptions and yield similar results. Thus, MI implemented similarly to MMRM is not a sensitivity analysis!
 
-## Missing covariates (baseline data)
-- Missing baseline value of the outcome: MI or use of mean imputation (Paper: ), 
-- MMRM not efficient or potential biased estimates as subjects with missing covariates are excluded from the analysis 
+## Missing covariates (baseline data) only
+- Missing baseline value of the outcome (and other covariates) is a common situation 
+- MMRM not efficient or potential biased estimates as subjects with missing covariates are excluded from the analysis
+- @kayembe2022 compared different methods e.g. unadjusted analysis, complete case, mean imputation, MI: mean imputation seems to be appropriate as long as the covariates are measured before randomization (produces unbiased treatment effect estimates with good coverage, easy to implement)
+
+Now, we consider the situation as in our data sets: no intermittent missing values, baseline observed, drop-outs = monotone missing pattern
 
 ## Sensitivity analyses - Simple approaches
-In general, not recommended for use. Methods are of histroic interest and provide a useful starting point.
+In general, not recommended for use. Methods are of historic interest and provide a useful starting point.
 - Last observation carried forward (LOCF): used in the past, justified as it was thought that it provides conservative estimates.
-- Complete case (observed case/completers analysis): creates selection bias, may cause overestimation of within group effects particularly at the last scheduled visit.
+- Complete case CC (observed case/completers analysis): creates selection bias, may cause overestimation of within group effects particularly at the last scheduled visit.
 
 We apply these two methods here as well to compare results.
+
+Application:
+- LOCF: all patients, consider data set with baseline value of the outcome and last observation of the outcome, apply ANCOVA
+- CC: only patients with visit week 8 observed
 
 ## Sensitivity analyses - Handling nonignorable missingness (MNAR)
 - Assumption of MAR is often reasonable, but possibility of data missing not at random (MNAR) is difficult to rule out.
@@ -42,12 +49,13 @@ We apply these two methods here as well to compare results.
 - Analysis under MNAR: these methods are heavily assumption driven and the assumptions are not testable as we do not have the missing data.
 - Consider a sensitivity analysis framework allowing assessment of robustness of results to the various assumptions.
 - MNAR methods: different possibilies e.g. class of pattern-mixture models
-- MI can be used to explore departures from MAR (for analysis under a MNAR assumption). This is referred to as controlled MI and includes delta-based MI and reference-based MI (belong to the class of pattern mixture models). Data is imputed under an alternative MNAR distribution that reflects a contextually relevant scenario for the unobserved data. The imputed data sets are then analysed as with standard MI. 
+- MI can be used to explore departures from MAR (for analysis under a MNAR assumption). This is referred to as controlled MI and includes delta-based MI and reference-based MI (belong to the class of pattern mixture models). Data is imputed under an alternative MNAR distribution that reflects a relevant scenario for the unobserved data. The imputed data sets are then analysed as with standard MI. 
 
 ### Reference-based multiple imputation
 - Has recieved increasing attention in clinical trials as it provides an attractive approach for a sensitivity analysis because missing data assumptions are framed in an intuitive way. The departure from MAR is captured in a qualitative way, making the formulation of the problem intuitive.
 - For example, a plausible MNAR mechanism in a placebo‐controlled trial is to assume that subjects in the experimental arm who dropped out stop taking their treatment and have similar outcomes to those in the placebo arm.
-- Different options to handle missing outcome data for reference-based imputation were described: e.g. copy reference, copy increments in reference, jump to reference (Paper Carpenter 2013)
+- Remember: MI under MAR assumes that the outcome distribution of patients with missing data is the same as the outcome distribution of patients with complete data, conditional on relevant covariates. However, if most patients withdraw from the study after treatment discontinuation, then this is not plausible, as patients who withdraw from the study treatment are expected to have a worse otucome than patinets who stay on study treatment. Thus, addressing missing data under a MAR assumption estimates a hypothetical estimand and not a treatment policy estimand.
+- Different options to handle missing outcome data for reference-based imputation were described (@carpenter2013): e.g. jump to reference (J2R), copy reference (CR), copy increments in reference (CIR) 
 
 ### Delta-based multiple imputation
 - Impute data assuming all unobserved subjects having a poorer or better response than those observed, by adding or subtracting a delta parameter $\delta$ to the expected value of the e.g. MAR imputed values. 
