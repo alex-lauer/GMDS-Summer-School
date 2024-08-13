@@ -42,7 +42,7 @@ Only consider the complete data, variable *change*
 - Summary statistics for HAMD17 (change from baseline) by week.
 - Plot trajectories for each individual, different colors for each treatment group (or panels). 
 - Add mean to your plot or generate new plot with mean change from baseline by treatment group. 
-- Plot mean change from baseline for each treatment group stratified by sex. Comment on the plots.
+- Plot mean change from baseline for each treatment group stratified by sex. Comment on the plot.
 
 ### Task 1 Discussion, possible solution
 
@@ -70,7 +70,7 @@ ggplot(data = all2, aes(x = week, y = change, group=subject)) +
   scale_x_continuous(name="Visit [week]", breaks=c(2,4,8))
 ```
 
-Figure: Mean change from baseline for each treatment group stratified by sex
+Figure: Mean change from baseline for each treatment group
 
 ```{r}
 #| label: fig-mean
