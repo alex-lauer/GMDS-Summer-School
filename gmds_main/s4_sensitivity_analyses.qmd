@@ -28,7 +28,7 @@ Note that, when implemented in similar manners, MI and MMRM have similar assumpt
 ## Missing covariates (baseline data) only
 - Missing baseline value of the outcome (and other covariates) is a common situation 
 - MMRM not efficient or potential biased estimates as subjects with missing covariates are excluded from the analysis
-- @kayembe2022 compared different methods e.g. unadjusted analysis, complete case, mean imputation, MI: mean imputation seems to be appropriate as long as the covariates are measured before randomization (produces unbiased treatment effect estimates with good coverage, easy to implement)
+- [@kayembe2022] compared different methods e.g. unadjusted analysis, complete case, mean imputation, MI: mean imputation seems to be appropriate as long as the covariates are measured before randomization (produces unbiased treatment effect estimates with good coverage, easy to implement)
 
 Now, we consider the situation as in our data sets: no intermittent missing values, baseline observed, drop-outs = monotone missing pattern
 
@@ -55,12 +55,25 @@ Application:
 - Has recieved increasing attention in clinical trials as it provides an attractive approach for a sensitivity analysis because missing data assumptions are framed in an intuitive way. The departure from MAR is captured in a qualitative way, making the formulation of the problem intuitive.
 - For example, a plausible MNAR mechanism in a placebo‐controlled trial is to assume that subjects in the experimental arm who dropped out stop taking their treatment and have similar outcomes to those in the placebo arm.
 - Remember: MI under MAR assumes that the outcome distribution of patients with missing data is the same as the outcome distribution of patients with complete data, conditional on relevant covariates. However, if most patients withdraw from the study after treatment discontinuation, then this is not plausible, as patients who withdraw from the study treatment are expected to have a worse otucome than patinets who stay on study treatment. Thus, addressing missing data under a MAR assumption estimates a hypothetical estimand and not a treatment policy estimand.
-- Different options to handle missing outcome data for reference-based imputation were described (@carpenter2013): e.g. jump to reference (J2R), copy reference (CR), copy increments in reference (CIR) 
+- Different options to handle missing outcome data for reference-based imputation were described [@carpenter2013]: e.g. jump to reference (J2R), copy reference (CR), copy increments in reference (CIR) 
+
+Jump to reference
+J2R assumes that after treatment discontinuation, the patient’s mean outcome distribution is that of a reference group, usually the control group. This is a very extreme assumption, as this implies that any ecacy of the drug vanishes immediately after discontinuation - may be plausible for symptomatic treatments.
+
+Copy reference
+CR assumes that the patient’s outcome distribution both before and after treatment discontinuation is the same as the distribution of the reference group. This has a milder effect than J2R: If a treatment-group patient has an outcome that is better than the reference group mean before treatment discontinuation, their imputed values after treatment discontinuation will also be better than the reference group mean.
+
+Copy increments in reference
+CIR assumes that after treatment discontinuation, the increments are the same as those from the reference group. This is much milder than J2R and CR and implies that benet gained from the treatment before discontinuation is not lost.
+
+The conventional approach to analyse data using these reference based approaches is MI, following the same steps as MI under MAR. 
+
+Software: in R, the rbmi package supports reference-based strategies [@gowerpage2022]
 
 ### Delta-based multiple imputation
 - Impute data assuming all unobserved subjects having a poorer or better response than those observed, by adding or subtracting a delta parameter $\delta$ to the expected value of the e.g. MAR imputed values. 
 - Delta can be implemented in all treatment groups, or in only one group, or may vary by treatment group or an alternative specified factor.
-- Choice of values for the sensitivity parameter $\delta$: selection by content experts.
+- Choice of values for the sensitivity parameter $\delta$: e.g. selection by content experts.
 - Steps: 1. missing values are imputed using standard MI procedure e.g. under MAR (but can also be under MNAR e.g. combinded with copy reference approach), 2. imputed values are shifted by adding some fixed value $\delta$ to reflect the MNAR mechanism, 3. analysis with standard statistical methods including Rubin's rule to combine results
 
 ## Practical part
