@@ -20,7 +20,60 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -161,7 +214,7 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#purpose-of-sensitivity-analyses" id="toc-purpose-of-sensitivity-analyses" class="nav-link active" data-scroll-target="#purpose-of-sensitivity-analyses"><span class="header-section-number">5.1</span> Purpose of sensitivity analyses</a></li>
   <li><a href="#mmrm-vs.-mi" id="toc-mmrm-vs.-mi" class="nav-link" data-scroll-target="#mmrm-vs.-mi"><span class="header-section-number">5.2</span> MMRM vs.&nbsp;MI</a></li>
-  <li><a href="#missing-covariates-baseline-data" id="toc-missing-covariates-baseline-data" class="nav-link" data-scroll-target="#missing-covariates-baseline-data"><span class="header-section-number">5.3</span> Missing covariates (baseline data)</a></li>
+  <li><a href="#missing-covariates-baseline-data-only" id="toc-missing-covariates-baseline-data-only" class="nav-link" data-scroll-target="#missing-covariates-baseline-data-only"><span class="header-section-number">5.3</span> Missing covariates (baseline data) only</a></li>
   <li><a href="#sensitivity-analyses---simple-approaches" id="toc-sensitivity-analyses---simple-approaches" class="nav-link" data-scroll-target="#sensitivity-analyses---simple-approaches"><span class="header-section-number">5.4</span> Sensitivity analyses - Simple approaches</a></li>
   <li><a href="#sensitivity-analyses---handling-nonignorable-missingness-mnar" id="toc-sensitivity-analyses---handling-nonignorable-missingness-mnar" class="nav-link" data-scroll-target="#sensitivity-analyses---handling-nonignorable-missingness-mnar"><span class="header-section-number">5.5</span> Sensitivity analyses - Handling nonignorable missingness (MNAR)</a>
   <ul class="collapse">
@@ -222,17 +275,20 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <p>Note that, when implemented in similar manners, MI and MMRM have similar assumptions and yield similar results. Thus, MI implemented similarly to MMRM is not a sensitivity analysis!</p>
 </section>
-<section id="missing-covariates-baseline-data" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="missing-covariates-baseline-data"><span class="header-section-number">5.3</span> Missing covariates (baseline data)</h2>
+<section id="missing-covariates-baseline-data-only" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="missing-covariates-baseline-data-only"><span class="header-section-number">5.3</span> Missing covariates (baseline data) only</h2>
 <ul>
-<li>Missing baseline value of the outcome: MI or use of mean imputation (Paper: ),</li>
+<li>Missing baseline value of the outcome (and other covariates) is a common situation</li>
 <li>MMRM not efficient or potential biased estimates as subjects with missing covariates are excluded from the analysis</li>
+<li><span class="citation" data-cites="kayembe2022">(<a href="references.html#ref-kayembe2022" role="doc-biblioref">Kayembe and Breukelen 2022</a>)</span> compared different methods e.g.&nbsp;unadjusted analysis, complete case, mean imputation, MI: mean imputation seems to be appropriate as long as the covariates are measured before randomization (produces unbiased treatment effect estimates with good coverage, easy to implement)</li>
 </ul>
+<p>Now, we consider the situation as in our data sets: no intermittent missing values, baseline observed, drop-outs = monotone missing pattern</p>
 </section>
 <section id="sensitivity-analyses---simple-approaches" class="level2" data-number="5.4">
 <h2 data-number="5.4" class="anchored" data-anchor-id="sensitivity-analyses---simple-approaches"><span class="header-section-number">5.4</span> Sensitivity analyses - Simple approaches</h2>
-<p>In general, not recommended for use. Methods are of histroic interest and provide a useful starting point. - Last observation carried forward (LOCF): used in the past, justified as it was thought that it provides conservative estimates. - Complete case (observed case/completers analysis): creates selection bias, may cause overestimation of within group effects particularly at the last scheduled visit.</p>
+<p>In general, not recommended for use. Methods are of historic interest and provide a useful starting point. - Last observation carried forward (LOCF): used in the past, justified as it was thought that it provides conservative estimates. - Complete case CC (observed case/completers analysis): creates selection bias, may cause overestimation of within group effects particularly at the last scheduled visit.</p>
 <p>We apply these two methods here as well to compare results.</p>
+<p>Application: - LOCF: all patients, consider data set with baseline value of the outcome and last observation of the outcome, apply ANCOVA - CC: only patients with visit week 8 observed</p>
 </section>
 <section id="sensitivity-analyses---handling-nonignorable-missingness-mnar" class="level2" data-number="5.5">
 <h2 data-number="5.5" class="anchored" data-anchor-id="sensitivity-analyses---handling-nonignorable-missingness-mnar"><span class="header-section-number">5.5</span> Sensitivity analyses - Handling nonignorable missingness (MNAR)</h2>
@@ -241,37 +297,59 @@ ul.task-list li input[type="checkbox"] {
 <li>Thus, analysis under MNAR needed.</li>
 <li>Analysis under MNAR: these methods are heavily assumption driven and the assumptions are not testable as we do not have the missing data.</li>
 <li>Consider a sensitivity analysis framework allowing assessment of robustness of results to the various assumptions.</li>
-<li>MNAR methods: different possibilies e.g.&nbsp;class of pattern-mixture models</li>
-<li>MI can be used to explore departures from MAR (for analysis under a MNAR assumption). This is referred to as controlled MI and includes delta-based MI and reference-based MI (belong to the class of pattern mixture models). Data is imputed under an alternative MNAR distribution that reflects a contextually relevant scenario for the unobserved data. The imputed data sets are then analysed as with standard MI.</li>
+<li>MNAR methods: different possibilities e.g.&nbsp;class of pattern-mixture models. The pattern-mixture model allows missing outcomes to be imputed under a chosen scenario and in this way can be used to complete the data set and apply the primary analysis to this completed data set.</li>
+<li>MI can be used to explore departures from MAR (for analysis under a MNAR assumption). This is referred to as controlled MI and includes delta-based MI and reference-based MI (belong to the class of pattern mixture models). Data is imputed under an alternative MNAR distribution that reflects a relevant scenario for the unobserved data. The imputed data sets are then analysed as with standard MI.</li>
 </ul>
 <section id="reference-based-multiple-imputation" class="level3" data-number="5.5.1">
 <h3 data-number="5.5.1" class="anchored" data-anchor-id="reference-based-multiple-imputation"><span class="header-section-number">5.5.1</span> Reference-based multiple imputation</h3>
 <ul>
 <li>Has recieved increasing attention in clinical trials as it provides an attractive approach for a sensitivity analysis because missing data assumptions are framed in an intuitive way. The departure from MAR is captured in a qualitative way, making the formulation of the problem intuitive.</li>
 <li>For example, a plausible MNAR mechanism in a placebo‐controlled trial is to assume that subjects in the experimental arm who dropped out stop taking their treatment and have similar outcomes to those in the placebo arm.</li>
-<li>Different options to handle missing outcome data for reference-based imputation were described: e.g.&nbsp;copy reference, copy increments in reference, jump to reference (Paper Carpenter 2013)</li>
+<li>Remember: MI under MAR assumes that the outcome distribution of patients with missing data is the same as the outcome distribution of patients with complete data, conditional on relevant covariates. However, if most patients withdraw from the study after treatment discontinuation, then this is not plausible, as patients who withdraw from the study treatment are expected to have a worse otucome than patinets who stay on study treatment. Thus, addressing missing data under a MAR assumption estimates a hypothetical estimand and not a treatment policy estimand.</li>
+<li>Different options to handle missing outcome data for reference-based imputation were described <span class="citation" data-cites="carpenter2013">(<a href="references.html#ref-carpenter2013" role="doc-biblioref">Carpenter and Kenward 2013</a>)</span>: e.g.&nbsp;jump to reference (J2R), copy reference (CR), copy increments in reference (CIR)</li>
 </ul>
+<p>Jump to reference J2R assumes that after treatment discontinuation, the patient’s mean outcome distribution is that of a reference group, usually the control group. This is a very extreme assumption, as this implies that any efficacy of the drug vanishes immediately after discontinuation - may be plausible for symptomatic treatments.</p>
+<p>Copy reference CR assumes that the patient’s outcome distribution both before and after treatment discontinuation is the same as the distribution of the reference group. This has a milder effect than J2R: If a treatment-group patient has an outcome that is better than the reference group mean before treatment discontinuation, their imputed values after treatment discontinuation will also be better than the reference group mean.</p>
+<p>Copy increments in reference CIR assumes that after treatment discontinuation, the increments are the same as those from the reference group. This is much milder than J2R and CR and implies that benefit gained from the treatment before discontinuation is not lost.</p>
+<p>The conventional approach to analyse data using these reference based approaches is MI, following the same steps as MI under MAR.</p>
+<p>Software, R: the rbmi package supports reference-based strategies <span class="citation" data-cites="gowerpage2022">(<a href="references.html#ref-gowerpage2022" role="doc-biblioref">Gower-Page and Wolbers 2022</a>)</span></p>
 </section>
 <section id="delta-based-multiple-imputation" class="level3" data-number="5.5.2">
 <h3 data-number="5.5.2" class="anchored" data-anchor-id="delta-based-multiple-imputation"><span class="header-section-number">5.5.2</span> Delta-based multiple imputation</h3>
 <ul>
-<li>Impute data assuming all unobserved subjects having a poorer or better response than those observed, by adding or subtracting a delta parameter <span class="math inline">\(\delta\)</span> to the expected value of the MAR imputed values.</li>
+<li>Impute data assuming all unobserved subjects having a poorer or better response than those observed, by adding or subtracting a delta parameter <span class="math inline">\(\delta\)</span> to the expected value of the e.g.&nbsp;MAR imputed values.</li>
 <li>Delta can be implemented in all treatment groups, or in only one group, or may vary by treatment group or an alternative specified factor.</li>
-<li>Choice of values for the sensitivity parameter <span class="math inline">\(\delta\)</span>: often selected by the analyst. Better: selection by content experts.</li>
-<li>Steps: 1. missing values are imputed using standard MI procedure under MAR, 2. imputed values are shifted by adding some fixed value <span class="math inline">\(\delta\)</span> to reflect the MNAR mechanism, 3. analysis with standard statistical methods including Rubin’s rule to combine results</li>
+<li>Choice of values for the sensitivity parameter <span class="math inline">\(\delta\)</span>: e.g.&nbsp;selection by content experts.</li>
+<li>Steps: 1. missing values are imputed using standard MI procedure e.g.&nbsp;under MAR (but can also be under MNAR e.g.&nbsp;combinded with copy reference approach), 2. imputed values are shifted by adding some fixed value <span class="math inline">\(\delta\)</span> to reflect the MNAR mechanism, 3. analysis with standard statistical methods including Rubin’s rule to combine results</li>
 </ul>
 </section>
 </section>
 <section id="practical-part" class="level2" data-number="5.6">
 <h2 data-number="5.6" class="anchored" data-anchor-id="practical-part"><span class="header-section-number">5.6</span> Practical part</h2>
 <ul>
-<li>Take the <em>high2</em> data set</li>
-<li>Look again at the complete case analysis</li>
-<li>Apply additionally LOCF and compare results</li>
+<li>Take the <em>all2</em> (<em>high2</em>) data set</li>
+<li>Look at the complete case analysis.</li>
+<li>Apply additionally LOCF and compare results.</li>
 <li>Try MNAR method reference-based MI and/or delta-based MI. Compare with the other results.</li>
 </ul>
+<p>You can start and familiarise yourself with the <code>rbmi()</code> package using the command</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rbmi)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>?rbmi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-carpenter2013" class="csl-entry" role="listitem">
+Carpenter, Roger, J. R., and M. G. Kenward. 2013. <span>“Analysis of Longitudinal Trials with Protocol Deviation: A Framework for Relevant, Accessible Assumptions, and Inference via Multiple Imputation.”</span> <em>Journal of Biopharmaceutical Statistics</em>, October. <a href="https://doi.org/10.1080/10543406.2013.834911">https://doi.org/10.1080/10543406.2013.834911</a>.
+</div>
+<div id="ref-gowerpage2022" class="csl-entry" role="listitem">
+Gower-Page, Noci, C., and M. Wolbers. 2022. <span>“Rbmi: A r Package for Standard and Reference-Based Multiple Imputation Methods.”</span> <em>Journal of Open Source Software</em>, June. <a href="https://doi.org/10.21105/joss.04251">https://doi.org/10.21105/joss.04251</a>.
+</div>
+<div id="ref-kayembe2022" class="csl-entry" role="listitem">
+Kayembe, Jolani, M. T., and G. J. P. van Breukelen. 2022. <span>“Imputation of Missing Covariates in Randomized Controlled Trials with Continuous Outcomes: Simple, Unbiased and Efficient Methods.”</span> <em>Journal of Biopharmaceutical Statistics</em>, September. <a href="https://doi.org/10.1080/10543406.2021.2011898">https://doi.org/10.1080/10543406.2021.2011898</a>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->

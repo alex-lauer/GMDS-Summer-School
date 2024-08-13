@@ -7,13 +7,14 @@ renv::install("mmrm")
 renv::install("emmeans")
 renv::install("nlme")
 renv::install("gtsummary")
+renv::install("rbmi")
 
 library(tidyverse)
 library(mmrm)
 library(emmeans)
 library(gtsummary)
 # library(mlmi)
-# library(rbmi)
+library(rbmi)
 
 ### Load data
 
