@@ -48,7 +48,7 @@ Application:
 - Thus, analysis under MNAR needed.
 - Analysis under MNAR: these methods are heavily assumption driven and the assumptions are not testable as we do not have the missing data.
 - Consider a sensitivity analysis framework allowing assessment of robustness of results to the various assumptions.
-- MNAR methods: different possibilies e.g. class of pattern-mixture models
+- MNAR methods: different possibilities e.g. class of pattern-mixture models. The pattern-mixture model allows missing outcomes to be imputed under a chosen scenario and in this way can be used to complete the data set and apply the primary analysis to this completed data set.
 - MI can be used to explore departures from MAR (for analysis under a MNAR assumption). This is referred to as controlled MI and includes delta-based MI and reference-based MI (belong to the class of pattern mixture models). Data is imputed under an alternative MNAR distribution that reflects a relevant scenario for the unobserved data. The imputed data sets are then analysed as with standard MI. 
 
 ### Reference-based multiple imputation
@@ -68,7 +68,7 @@ CIR assumes that after treatment discontinuation, the increments are the same as
 
 The conventional approach to analyse data using these reference based approaches is MI, following the same steps as MI under MAR. 
 
-Software: in R, the rbmi package supports reference-based strategies [@gowerpage2022]
+Software, R: the rbmi package supports reference-based strategies [@gowerpage2022]
 
 ### Delta-based multiple imputation
 - Impute data assuming all unobserved subjects having a poorer or better response than those observed, by adding or subtracting a delta parameter $\delta$ to the expected value of the e.g. MAR imputed values. 
@@ -78,6 +78,6 @@ Software: in R, the rbmi package supports reference-based strategies [@gowerpage
 
 ## Practical part
 - Take the *high2* data set
-- Look again at the complete case analysis
-- Apply additionally LOCF and compare results
+- Look at the complete case analysis.
+- Apply additionally LOCF and compare results.
 - Try MNAR method reference-based MI and/or delta-based MI. Compare with the other results.
