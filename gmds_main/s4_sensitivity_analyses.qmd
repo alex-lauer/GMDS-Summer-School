@@ -77,7 +77,14 @@ Software, R: the rbmi package supports reference-based strategies [@gowerpage202
 - Steps: 1. missing values are imputed using standard MI procedure e.g. under MAR (but can also be under MNAR e.g. combinded with copy reference approach), 2. imputed values are shifted by adding some fixed value $\delta$ to reflect the MNAR mechanism, 3. analysis with standard statistical methods including Rubin's rule to combine results
 
 ## Practical part
-- Take the *high2* data set
+- Take the *all2* (*high2*) data set
 - Look at the complete case analysis.
 - Apply additionally LOCF and compare results.
 - Try MNAR method reference-based MI and/or delta-based MI. Compare with the other results.
+
+You can start and familiarise yourself with the `rbmi()` package using the command
+
+```{r}
+library(rbmi)
+?rbmi
+```
