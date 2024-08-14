@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Longitudinal Data Modeling - 6&nbsp; Inferences from binary longitudinal data</title>
+<title>Longitudinal Data Modeling - 1&nbsp; Introduction</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -30,8 +49,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./references.html" rel="next">
-<link href="./s4_sensitivity_analyses.html" rel="prev">
+<link href="./s1_visualization.html" rel="next">
+<link href="./index.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -74,7 +93,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./s5_inferences_binary.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Inferences from binary longitudinal data</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -107,7 +126,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+  <a href="./intro.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
   </div>
 </li>
@@ -137,7 +156,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./s5_inferences_binary.html" class="sidebar-item-text sidebar-link active">
+  <a href="./s5_inferences_binary.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Inferences from binary longitudinal data</span></span></a>
   </div>
 </li>
@@ -153,14 +172,23 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#workshop-structure" id="toc-workshop-structure" class="nav-link active" data-scroll-target="#workshop-structure"><span class="header-section-number">1.1</span> Workshop Structure</a></li>
+  <li><a href="#longitudinal-data" id="toc-longitudinal-data" class="nav-link" data-scroll-target="#longitudinal-data"><span class="header-section-number">1.2</span> Longitudinal Data</a></li>
+  <li><a href="#basics-about-rstudio-pre-read" id="toc-basics-about-rstudio-pre-read" class="nav-link" data-scroll-target="#basics-about-rstudio-pre-read"><span class="header-section-number">1.3</span> Basics about RStudio (pre-read)</a></li>
+  <li><a href="#example-data" id="toc-example-data" class="nav-link" data-scroll-target="#example-data"><span class="header-section-number">1.4</span> Example data</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Inferences from binary longitudinal data</span></h1>
+<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></h1>
 </div>
 
 
@@ -175,8 +203,44 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<section id="workshop-structure" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="workshop-structure"><span class="header-section-number">1.1</span> Workshop Structure</h2>
+<p>This class focuses on the longitudinal modeling of data from Patient Reported Outcomes (PROs). It is meant to be hands-on class with applications in R.</p>
+<p>Content and structure follow the book by <span class="citation" data-cites="mallinckrodt2016">(<a href="#ref-mallinckrodt2016" role="doc-biblioref">Mallinckrodt 2016</a>)</span>. We would like to extend our warmest gratitude towards Dr.&nbsp;Mallinckrodt for providing the example data for the workshop.</p>
+<p>The following topics will be covered:</p>
+<ul>
+<li><p>Welcome and Introduction (WS session 1)</p></li>
+<li><p>Exploration and visualization of longitudinal data (WS session 1/2)</p></li>
+<li><p>Inferences from longitudinal data (WS session 3 + 4)</p></li>
+<li><p>Assessment of missingness patterns (WS session 5)</p></li>
+<li><p>Sensitivity analyses to assess the impact of missingness (WS session 6)</p></li>
+<li><p>Annex: Inferences from longitudinal binary data (WS session 7)</p></li>
+</ul>
+</section>
+<section id="longitudinal-data" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="longitudinal-data"><span class="header-section-number">1.2</span> Longitudinal Data</h2>
+<p>This workshop focuses on the analysis of data observed in randomized clinical trials (RCTs). Here, patients have assessments taken at the start of their treatment and then subsequently throughout the course of the trial based on a pre-specified schedule of assessments. The measurement at the start of the treatment is usually referred to as the baseline.</p>
+<p>Researchers can be interested in</p>
+<ol type="1">
+<li><p>the occurrence of a certain event during the course of the trial, e.g.&nbsp;death or a cardiac event, or the time to the occurrence of such an event, or</p></li>
+<li><p>the longitudinal profile from multiple repeated measurements taken, with a focus on either estimates at a landmark visit or across several time points.</p></li>
+</ol>
+<p>The outcomes under point 1. can be handled via a comparison of the percentages of patients with events between treatment arms, or a time-to-event analysis. Both are out of scope of this workshop.</p>
+</section>
+<section id="basics-about-rstudio-pre-read" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="basics-about-rstudio-pre-read"><span class="header-section-number">1.3</span> Basics about RStudio (pre-read)</h2>
+<p>Alex to add pre-read (YouTube + Cheat Sheets)</p>
+</section>
+<section id="example-data" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="example-data"><span class="header-section-number">1.4</span> Example data</h2>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-mallinckrodt2016" class="csl-entry" role="listitem">
+Mallinckrodt, Craig. 2016. <em>Analyzing Longitudinal Clinical Trial Data</em>. Chapman; Hall/CRC. <a href="https://doi.org/10.1201/9781315186634">https://doi.org/10.1201/9781315186634</a>.
+</div>
+</div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -414,13 +478,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./s4_sensitivity_analyses.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sensitivity Analyses</span></span>
+      <a href="./index.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./s1_visualization.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Longitudinal Data Exploration and Visualization</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

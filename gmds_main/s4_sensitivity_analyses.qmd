@@ -1,5 +1,11 @@
 # Sensitivity Analyses
 
+```{r}
+#| include: false
+
+source("setup.R")
+```
+
 Purpose: talk about sensitivity analyses with respect to missing data
 
 -   MMRM is an appropriate choice for the primary analysis in many longitudinal clinical trials under the missing at random (MAR) assumption.

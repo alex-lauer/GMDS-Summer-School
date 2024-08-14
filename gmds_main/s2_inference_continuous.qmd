@@ -246,19 +246,9 @@ A transformation of residuals to achieve constant variance and zero correlation 
 
 $$
 R = L\,L'\,,
-$$
-then the transformed residuals are given by
-$$
+$$ then the transformed residuals are given by $$
 r^* =  L^{-1}(y - X\beta)\,.
-$$
-In the `mmrm` package, transformed residuals can be derived using the `type = "normalized"` option.
-
-Residual plots overall and by visit
-
--   histogram of transformed residuals
--   predicted vs. actual values
--   predicted vs. residuals
--   standardized residuals vs. theoretic quantiles
+$$ In the `mmrm` package, transformed residuals can be derived using the `type = "normalized"` option.
 
 **Exercise**: Which visualisations can you think of that make sense to assess the goodness of fit here? Create a new `tibble` (or `data.frame`) containing the variables of importance and try plotting them in a meaningful way. Discuss the results within your group.
 
@@ -295,8 +285,47 @@ Alternatively, we can create a Q-Q-Plot of ...
 ```{r}
 #| message: false
 
+df_residuals %>% 
+  ggplot(aes(sample = residuals)) +
+  stat_qq(color = "blue") +
+  stat_qq_line() +
+  labs(
+    x = "Quantiles (Normal distribution)",
+    y = "Transformed Residuals"
+  ) +
+  ggtitle(
+    label = "Q-Q Plot Transformed Residuals Plot"
+  )
+```
+How to interprete the Q-Q plot:
+
+We can use the following fourfold table to assess the shape characteristics derivable from this plot, depending on where the data on which end of the plot is bend compared to the linear trend line:
+
+```{r}
+#| echo: false
+library(gt)
+dplyr::tibble(
+  pts = c("Lower left corner", "Lower left corner"),
+  cat_ll = c("Above", "Below"),
+  Above = c("Skewed to the right", "Below linear trend line"),
+  Below = c("Light-tailed",  "Skewed to the left")
+) %>% 
+  gt() %>% 
+  tab_spanner(
+    label = "Upper right corner",
+    columns = c("Above", "Below")
+  ) %>% 
+  cols_label(
+    pts = " ",
+    cat_ll = " "
+  ) %>% 
+  cols_align(
+    align = "center",
+    columns = c("Above", "Below")
+  )
 ```
 
+We can see that our data is skewed to the right, as the data in the upper right corner and data in the lower left corner of the plot bend above the linear trend line. This is also a trend we can observe from the histogram.
 
 
 ```{r}
@@ -318,7 +347,6 @@ What do we see?
 
 -   There is no systematic trend, but a rather random scatter.
 
-
 ```{r}
 #| message: false
 df_residuals %>% 
@@ -326,9 +354,6 @@ df_residuals %>%
   geom_point() +
   geom_smooth(method = lm, color = "blue")
 ```
-
-
-
 
 ### Addendum on RS&I Models
 
