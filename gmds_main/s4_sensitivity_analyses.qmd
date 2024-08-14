@@ -88,7 +88,7 @@ Software, R: the rbmi package supports reference-based strategies [@gowerpage202
 -   Apply additionally LOCF and compare results.
 -   Try MNAR method reference-based MI with J2R by using the rbmi package. Compare with the other results.
 
-### Set-up to use `rbmi()`
+### Set-up to use rbmi
 Have a short look at the `rbmi()` package first.
 
 ```{r}
