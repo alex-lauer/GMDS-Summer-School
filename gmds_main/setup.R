@@ -68,6 +68,7 @@ dplyr::mutate(
   avisit = dplyr::recode(as.character(week), "1" = "Week 1", "2" = "Week 2", "4" = "Week 4", "6" = "Week 6", "8" = "Week 8"),
   avisit = factor(avisit, levels = c("Week 1", "Week 2", "Week 4", "Week 6", "Week 8")),
   dropout_grp = dplyr::recode(as.character(drop), "1" = "Week 1 Drop", "2" = "Week 2 Drop", "4" = "Week 4 Drop", "6" = "Week 6 Drop", "8" = "Completer"),
-  dropout_grp = factor(dropout_grp, levels=c("Week 1 Drop","Week 2 Drop","Week 4 Drop","Week 6 Drop","Completer"))
+  dropout_grp = factor(dropout_grp, levels=c("Week 1 Drop","Week 2 Drop","Week 4 Drop","Week 6 Drop","Completer")),
+  subject = as.factor(patient)
 ) #%>%
   #rename(subject = patient)
