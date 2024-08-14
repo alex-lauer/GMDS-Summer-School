@@ -33,15 +33,20 @@ Note that, when implemented in similar manners, MI and MMRM have similar assumpt
 -   MMRM not efficient or potential biased estimates as subjects with missing covariates are excluded from the analysis
 -   [@kayembe2022] compared different methods e.g. unadjusted analysis, complete case, mean imputation, MI: mean imputation seems to be appropriate as long as the covariates are measured before randomization (produces unbiased treatment effect estimates with good coverage, easy to implement)
 
-Now, we consider the situation as in our data sets: no intermittent missing values, baseline observed, drop-outs = monotone missing pattern
+Now, we consider the situation as in our data sets: baseline observed, no intermittent missing values, drop-outs = monotone missing pattern
 
 ## Sensitivity analyses - Simple approaches
 
-In general, not recommended for use. Methods are of historic interest and provide a useful starting point. - Last observation carried forward (LOCF): used in the past, justified as it was thought that it provides conservative estimates. - Complete case CC (observed case/completers analysis): creates selection bias, may cause overestimation of within group effects particularly at the last scheduled visit.
+In general, these simple approaches are not recommended for use. Methods are of historic interest and provide a useful starting point. Here, we consider two simple approaches.
+
+### Last observation carried forward (LOCF)
+LOCF imputes all missing values for each subject using the last observed value for that subject. Typically, under LOCF the repeated masures nature of the data is ignored and a single outcome for each subject is analyzed. LOCF was used in the past, justified as it was thought that it provides conservative estimates. However, conditions under which LOCF yield conservative estimates and maintain control of Type I error rates are not straightforward and cannot be assured at the beginning of the trial. For example, LOCF is likely to overestimate treatment benefit if dop-out in the control gorup is more frequent.
+
+### Complete case (CC) 
+Other names: observed case/ completers analysis 
+Reduce the data set selecting only those subjects with observed outcome value(s). Creates selection bias, may cause overestimation of within group effects particularly at the last scheduled visit.
 
 We apply these two methods here as well to compare results.
-
-Application: - LOCF: all patients, consider data set with baseline value of the outcome and last observation of the outcome, apply ANCOVA - CC: only patients with visit week 8 observed
 
 ## Sensitivity analyses - Handling nonignorable missingness (MNAR)
 
@@ -79,11 +84,12 @@ Software, R: the rbmi package supports reference-based strategies [@gowerpage202
 ## Practical part
 
 -   Take the *all2* (*high2*) data set
--   Look the MMRM and at the complete case (CC) analysis again (from section missingness).
+-   Look at the MMRM and at the complete case (CC) analysis again (from section missingness).
 -   Apply additionally LOCF and compare results.
 -   Try MNAR method reference-based MI with J2R by using the rbmi package. Compare with the other results.
 
-You can start and familiarise yourself with the `rbmi()` package using the command
+### Set-up to use `rbmi()`
+Have a short look at the `rbmi()` package first.
 
 ```{r}
 library(rbmi)
@@ -92,7 +98,7 @@ library(rbmi)
 vignette(topic = "quickstart", package = "rbmi")
 ```
 
-### Set-up to use rbmi
+
 
 Include code so that the participants have the correct set-up
 
