@@ -94,10 +94,12 @@ vignette(topic = "quickstart", package = "rbmi")
 
 ### Set-up to use rbmi
 
+Include code so that the participants have the correct set-up
+
 ## Solution for the practical part
 ### 1. Complete case
 ```{r}
-all2.cc <- all2 %>% dplyr::filter(drop==8)
+all2.cc <- all2 %>% dplyr::filter(dropout_grp=="Completer")
 
 fit_drop <- mmrm::mmrm(
   formula = chgdrop ~ basval*avisit + trt*avisit + us(avisit | subject),
