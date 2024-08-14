@@ -111,7 +111,7 @@ Implemented imputation strategies in rbmi:
 
 I will show how it looks like for the *all2* data set and you will then explore the methods using the *high2* data set.
 
-### Solution for all2 data set 
+### Plenum - Solution for all2 data set 
 1. Complete case
 
 ```{r}
@@ -150,6 +150,14 @@ all2.locf<-all2 %>% dplyr::filter(week==drop)
 ancova <- aov(change ~ basval + trt, data = all2.locf)
 summary(ancova)
 ancova$coefficients
+
+all2.locf %>% ungroup() %>%
+  select(change, group) %>%
+               tbl_summary(by = group,
+                           statistic = list(
+                             all_continuous() ~ "{mean} ({sd})"), 
+                           digits = all_continuous() ~ 2 ) 
+
 ```
 
 4. J2R
@@ -181,7 +189,7 @@ method <- method_bayes(
   burn_in = 200,
   burn_between = 5,
   n_samples = 100,
-  seed = 092407
+  seed = 072407
 )
 
 draw_all2<-draws(data=all2, data_ice = dat_ice, vars=set_mi, method=method, ncores = 1, quiet = FALSE)
@@ -224,3 +232,4 @@ anaObj_CIR <- analyse(
 poolObj_CIR <- pool(anaObj_CIR)
 as.data.frame(poolObj_CIR)
 ```
+### Solution for high2 data set
