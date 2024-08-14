@@ -124,6 +124,10 @@ fit_cc <- mmrm::mmrm(
 )
 
 summary(fit_cc)
+
+model_lsmeans <- emmeans::emmeans(fit_cc, ~trt*avisit, weights = "proportional")
+model_lsmeans
+
 ```
 
 2. MMRM
@@ -136,6 +140,10 @@ fit_drop <- mmrm::mmrm(
 )
 
 summary(fit_drop)
+
+model_lsmeans <- emmeans::emmeans(fit_drop, ~trt*avisit, weights = "proportional")
+model_lsmeans
+
 ```
 
 3. LOCF
@@ -208,7 +216,6 @@ anaObj <- analyse(
 
 poolObj <- pool(anaObj)
 as.data.frame(poolObj)
-
 ```
 
 5. Change from J2R to CIR
@@ -232,4 +239,116 @@ anaObj_CIR <- analyse(
 poolObj_CIR <- pool(anaObj_CIR)
 as.data.frame(poolObj_CIR)
 ```
+
 ### Solution for high2 data set
+
+First, fill in missing visits. This was not necessary in the *all2* data set.
+Note, change is the outcome variable and not chgdrop as in *all2*
+
+```{r}
+high2 <- high2 %>% ungroup()
+
+high2_expand <- expand_locf(
+  high2,
+  subject = levels(high2$subject),  
+  avisit = levels(high2$avisit),
+  vars = c("basval","trt","group"),
+  group = c("subject"),
+  order = c("subject", "avisit")
+)
+```
+
+1. MMRM
+
+```{r}
+fit_mmrm <- mmrm::mmrm(
+  formula = change ~ basval*avisit + trt*avisit + us(avisit | subject),
+  data = high2,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+summary(fit_mmrm)
+
+model_lsmeans <- emmeans::emmeans(fit_mmrm, ~trt*avisit, weights = "proportional")
+model_lsmeans
+```
+
+2. Complete case
+```{r}
+high2.cc<- high2 %>% dplyr::filter(drop==8)
+
+fit_cc <- mmrm::mmrm(
+  formula = change ~ basval*avisit + trt*avisit + us(avisit | subject),
+  data = high2.cc,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+summary(fit_cc)
+
+model_lsmeans <- emmeans::emmeans(fit_cc, ~trt*avisit, weights = "proportional")
+model_lsmeans
+```
+
+3. LOCF
+```{r}
+high2.locf<-high2 %>% dplyr::filter(week==drop)
+
+ancova <- aov(change ~ basval + trt, data = high2.locf)
+summary(ancova)
+ancova$coefficients
+
+high2.locf %>% ungroup() %>%
+  select(change, group) %>%
+  tbl_summary(by = group,
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})"), 
+              digits = all_continuous() ~ 2 )
+```
+
+4. J2R
+```{r}
+set_mi<-set_vars(
+  subjid = "subject",
+  visit = "avisit",
+  outcome = "change",
+  group = "group",
+  covariates = c("basval * avisit", "group * avisit")
+)
+
+vars_an<-set_mi
+vars_an$covariates <- "basval"
+
+dat_ice <- high2_expand %>% 
+  arrange(subject, avisit) %>% 
+  filter(is.na(change)) %>% 
+  group_by(subject) %>% 
+  slice(1) %>%
+  ungroup() %>% 
+  select(subject, avisit) %>% 
+  mutate(strategy = "JR")
+
+method <- method_bayes(
+  burn_in = 200,
+  burn_between = 5,
+  n_samples = 100,
+  seed = 072407
+)
+
+draw_high2<-draws(data=high2_expand, data_ice = dat_ice, vars=set_mi, method=method, ncores = 1, quiet = FALSE)
+
+imputeObj <- impute(
+  draw_high2,
+  references = c("Arm 1" = "Arm 1", "Arm 2" = "Arm 1")
+)
+
+imputed_high2 <- extract_imputed_dfs(imputeObj)
+
+anaObj <- analyse(
+  imputeObj,
+  vars = vars_an
+)
+
+#For method_bayes() or method_approxbayes() pooling and inference are based on Rubin’s rules.
+poolObj <- pool(anaObj)
+as.data.frame(poolObj)
+```
