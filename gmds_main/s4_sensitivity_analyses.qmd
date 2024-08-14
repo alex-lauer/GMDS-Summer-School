@@ -79,13 +79,50 @@ Software, R: the rbmi package supports reference-based strategies [@gowerpage202
 ## Practical part
 
 -   Take the *all2* (*high2*) data set
--   Look at the complete case analysis.
+-   Look the MMRM and at the complete case (CC) analysis again (from section missingness).
 -   Apply additionally LOCF and compare results.
--   Try MNAR method reference-based MI and/or delta-based MI. Compare with the other results.
+-   Try MNAR method reference-based MI with J2R by using the rbmi package. Compare with the other results.
 
 You can start and familiarise yourself with the `rbmi()` package using the command
 
 ```{r}
 library(rbmi)
 ?rbmi
+
+vignette(topic = "quickstart", package = "rbmi")
 ```
+
+### Set-up to use rbmi
+
+## Solution for the practical part
+### 1. Complete case
+```{r}
+all2.cc <- all2 %>% dplyr::filter(drop==8)
+
+fit_drop <- mmrm::mmrm(
+  formula = chgdrop ~ basval*avisit + trt*avisit + us(avisit | subject),
+  data = all2.cc,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+summary(fit_drop)
+```
+
+
+### 2. MMRM
+
+```{r}
+fit_drop <- mmrm::mmrm(
+  formula = chgdrop ~ basval*avisit + trt*avisit + us(avisit | subject),
+  data = all2,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+summary(fit_drop)
+```
+
+### 3. LOCF
+
+### 4. J2R
+
+
