@@ -124,6 +124,17 @@ summary(fit_drop)
 ```
 
 ### 3. LOCF
+```{r}
+all2 <- all2 %>% 
+  dplyr::group_by(subject) %>% 
+  dplyr::mutate( drop=max(week) )
+
+all2.locf<-all2 %>% dplyr::filter(week==drop)
+
+ancova <- aov(change ~ basval + trt, data = all2.locf)
+summary(ancova)
+ancova$coefficients
+```
 
 ### 4. J2R
 
