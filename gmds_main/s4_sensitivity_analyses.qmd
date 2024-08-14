@@ -37,16 +37,16 @@ Now, we consider the situation as in our data sets: baseline observed, no interm
 
 ## Sensitivity analyses - Simple approaches
 
-In general, these simple approaches are not recommended for use. Methods are of historic interest and provide a useful starting point. Here, we consider two simple approaches.
+In general, these simple approaches are not recommended for use. Methods are of historic interest and provide a useful starting point.
+Here, we consider two simple approaches. We will apply these two methods in the practical part to compare results.
 
 ### Last observation carried forward (LOCF)
 LOCF imputes all missing values for each subject using the last observed value for that subject. Typically, under LOCF the repeated masures nature of the data is ignored and a single outcome for each subject is analyzed. LOCF was used in the past, justified as it was thought that it provides conservative estimates. However, conditions under which LOCF yield conservative estimates and maintain control of Type I error rates are not straightforward and cannot be assured at the beginning of the trial. For example, LOCF is likely to overestimate treatment benefit if dop-out in the control gorup is more frequent.
 
 ### Complete case (CC) 
 Other names: observed case/ completers analysis 
-Reduce the data set selecting only those subjects with observed outcome value(s). Creates selection bias, may cause overestimation of within group effects particularly at the last scheduled visit.
-
-We apply these two methods here as well to compare results.
+Reduce the data set selecting only those subjects with observed outcome value(s). 
+Completers analysis may create selection bias, may cause overestimation of within group effects particularly at the last scheduled visit.
 
 ## Sensitivity analyses - Handling nonignorable missingness (MNAR)
 
@@ -61,7 +61,7 @@ We apply these two methods here as well to compare results.
 
 -   Has recieved increasing attention in clinical trials as it provides an attractive approach for a sensitivity analysis because missing data assumptions are framed in an intuitive way. The departure from MAR is captured in a qualitative way, making the formulation of the problem intuitive.
 -   For example, a plausible MNAR mechanism in a placebo‐controlled trial is to assume that subjects in the experimental arm who dropped out stop taking their treatment and have similar outcomes to those in the placebo arm.
--   Remember: MI under MAR assumes that the outcome distribution of patients with missing data is the same as the outcome distribution of patients with complete data, conditional on relevant covariates. However, if most patients withdraw from the study after treatment discontinuation, then this is not plausible, as patients who withdraw from the study treatment are expected to have a worse otucome than patinets who stay on study treatment. Thus, addressing missing data under a MAR assumption estimates a hypothetical estimand and not a treatment policy estimand.
+-   Remember: MI under MAR assumes that the outcome distribution of patients with missing data is the same as the outcome distribution of patients with complete data, conditional on relevant covariates. However, if most patients withdraw from the study after treatment discontinuation, then this is not plausible, as patients who withdraw from the study treatment are expected to have a worse otucome than patients who stay on study treatment. Thus, addressing missing data under a MAR assumption estimates a hypothetical estimand and not a treatment policy estimand.
 -   Different options to handle missing outcome data for reference-based imputation were described [@carpenter2013]: e.g. jump to reference (J2R), copy reference (CR), copy increments in reference (CIR)
 
 Jump to reference J2R assumes that after treatment discontinuation, the patient’s mean outcome distribution is that of a reference group, usually the control group. This is a very extreme assumption, as this implies that any efficacy of the drug vanishes immediately after discontinuation - may be plausible for symptomatic treatments.
@@ -83,8 +83,8 @@ Software, R: the rbmi package supports reference-based strategies [@gowerpage202
 
 ## Practical part
 
--   Take the *all2* (*high2*) data set
--   Look at the MMRM and at the complete case (CC) analysis again (from section missingness).
+-   Take the (*all2*) *high2* data set
+-   Look at the MMRM and at the complete case (CC) analysis (refer to section missingness for the *all2* data set).
 -   Apply additionally LOCF and compare results.
 -   Try MNAR method reference-based MI with J2R by using the rbmi package. Compare with the other results.
 
@@ -97,27 +97,36 @@ library(rbmi)
 
 vignette(topic = "quickstart", package = "rbmi")
 ```
+The workflow is based on 4 core functions:
+- draws() - fits the imputation models, different methods possible, we will use method_bayes() for MI based on Bayesian posterior parameter draws from MCMC sampling
+- impute() - creates multiple imputed data sets
+- analyse() - analyses each of the multiple imputed data sets, default = ancova, other options possible
+- pool() - combines the results across imputed data sets, for method_bayes (see above) inference is based on Rubin's rule
 
+Implemented imputation strategies in rbmi:
+- Missing at Random (MAR)
+- Jump to Reference (JR)
+- Copy Reference (CR)
+- Copy Increments in Reference (CIR)
 
+I will show how it looks like for the *all2* data set and you will then explore the methods using the *high2* data set.
 
-Include code so that the participants have the correct set-up
+### Solution for all2 data set 
+1. Complete case
 
-## Solution for the practical part
-### 1. Complete case
 ```{r}
 all2.cc <- all2 %>% dplyr::filter(dropout_grp=="Completer")
 
-fit_drop <- mmrm::mmrm(
+fit_cc <- mmrm::mmrm(
   formula = chgdrop ~ basval*avisit + trt*avisit + us(avisit | subject),
   data = all2.cc,
   control = mmrm_control(method = "Kenward-Roger")
 )
 
-summary(fit_drop)
+summary(fit_cc)
 ```
 
-
-### 2. MMRM
+2. MMRM
 
 ```{r}
 fit_drop <- mmrm::mmrm(
@@ -129,7 +138,8 @@ fit_drop <- mmrm::mmrm(
 summary(fit_drop)
 ```
 
-### 3. LOCF
+3. LOCF
+
 ```{r}
 all2 <- all2 %>% 
   dplyr::group_by(subject) %>% 
@@ -142,6 +152,75 @@ summary(ancova)
 ancova$coefficients
 ```
 
-### 4. J2R
+4. J2R
+```{r}
+# Define the names of key variables in the data set
+set_mi<-set_vars(
+  subjid = "subject",
+  visit = "avisit",
+  outcome = "chgdrop",
+  group = "group",
+  covariates = c("basval * avisit", "group * avisit")
+)
 
+vars_an<-set_mi
+vars_an$covariates <- "basval"
 
+# Define the imputation strategy for each subject with at least one missing observation
+dat_ice <- all2 %>% 
+  arrange(subject, avisit) %>% 
+  filter(is.na(chgdrop)) %>% 
+  group_by(subject) %>% 
+  slice(1) %>%
+  ungroup() %>% 
+  select(subject, avisit) %>% 
+  mutate(strategy = "JR")
+
+# Define the imputation method
+method <- method_bayes(
+  burn_in = 200,
+  burn_between = 5,
+  n_samples = 100,
+  seed = 092407
+)
+
+draw_all2<-draws(data=all2, data_ice = dat_ice, vars=set_mi, method=method, ncores = 1, quiet = FALSE)
+
+imputeObj <- impute(
+  draw_all2,
+  references = c("Arm 1" = "Arm 1", "Arm 2" = "Arm 1")
+)
+
+imputed_all2 <- extract_imputed_dfs(imputeObj)
+
+anaObj <- analyse(
+  imputeObj,
+  vars = vars_an
+)
+
+poolObj <- pool(anaObj)
+as.data.frame(poolObj)
+
+```
+
+5. Change from J2R to CIR
+Use the additional argument update_strategies in the impute function.
+
+```{r}
+dat_ice_CIR <- dat_ice %>% 
+  mutate(strategy = ifelse(strategy == "JR", "CIR", strategy))
+
+imputeObj_CIR <- impute(
+  draw_all2,
+  references = c("Arm 1" = "Arm 1", "Arm 2" = "Arm 1"),
+  update_strategy = dat_ice_CIR
+)
+
+anaObj_CIR <- analyse(
+  imputeObj_CIR,
+  vars = vars_an
+)
+
+poolObj_CIR <- pool(anaObj_CIR)
+as.data.frame(poolObj_CIR)
+```
