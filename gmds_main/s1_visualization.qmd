@@ -13,9 +13,16 @@ source("setup.R")
 -   Repeated observations may or may not be taken at regular times (balanced, fixed occasions, do not differ between subjects).
 -   Our interest is in the change from baseline.
 
-Datasets used in this course: - Example data is taken from [@mallinckrodt2016]. The authors generated data sets based on two nearly identically designed antidepressant clinical trials by randomly selecting subjects from the original data. - Contain data on the continuous variable HAMD17 (Hamilton 17-item rating scale for depression). - Two treatement arms are included: placebo (arm 1) vs. drug (arm 2). - Assessments were taken at baseline and weeks 1, 2, 4, 6, and 8.
+Datasets used in this course:
+-  Example data is taken from [@mallinckrodt2016]. The authors generated data sets based on two nearly identically designed antidepressant clinical trials by randomly selecting subjects from the original data.
+-  Contain data on the continuous variable HAMD17 (Hamilton 17-item rating scale for depression).
+-  Two treatement arms are included: placebo (arm 1) vs. drug (arm 2).
+-  Assessments were taken at baseline and weeks 1, 2, 4, 6, and 8.
 
-There are 3 data sets created from the original data: - Data *all2* = Subsample of the large dataset with n=50, visits: weeks 2, 4, 8 - Data *high2* = Large dataset with n=100, high dropout = 70% (drug), 60% (placebo) - Data *low2* = Large dataset with n=100, low dropout = 18%
+There are 3 data sets created from the original data:
+1.  Data *all2* = Subsample of the large dataset with n=50, visits: weeks 2, 4, 8
+2.  Data *high2* = Large dataset with n=100, high dropout = 70% (drug), 60% (placebo)
+3.  Data *low2* = Large dataset with n=100, low dropout = 18%
 
 ## Data set all2
 
@@ -31,7 +38,12 @@ head(all2)
 
 ### Task 1 - Exploration of data set all2 - 15 minutes working time
 
-Only consider the complete data, variable *change* - Are the data balanced and equally spaced? - Number of observations by week? - Summary statistics for HAMD17 (change from baseline) by week. - Plot trajectories for each individual, different colors for each treatment group (or panels). - Add mean to your plot or generate new plot with mean change from baseline by treatment group. - Plot mean change from baseline for each treatment group stratified by sex. Comment on the plot.
+Only consider the complete data, variable *change*
+-  Are the data balanced and equally spaced?
+-  Number of observations by week? - Summary statistics for HAMD17 (change from baseline) by week.
+-  Plot trajectories for each individual, different colors for each treatment group (or panels).
+-  Add mean to your plot or generate new plot with mean change from baseline by treatment group.
+-  Plot mean change from baseline for each treatment group stratified by sex. Comment on the plot.
 
 ### Task 1 Discussion, possible solution
 
