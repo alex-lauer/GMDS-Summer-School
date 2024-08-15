@@ -147,7 +147,7 @@ head(high2)
 
 ### Task 2 - Exploration of data set high2 - 15 minutes working time
 
--   Drop-outs, last visit for each subject: number of observations by week.
+-   Explore the drop-outs e.g. number of observations by week.
 -   Summary statistics for HAMD17 change.
 -   Generate and interpret the group-wise boxplots of the change from baseline.
 -   Mean change from baseline for different drop-out groups (by treatment). Comment on the plot.
