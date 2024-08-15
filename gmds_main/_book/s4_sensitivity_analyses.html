@@ -1,0 +1,2123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Longitudinal Data Modeling - 5&nbsp; Sensitivity Analyses</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./s5_inferences_binary.html" rel="next">
+<link href="./s3_missingness.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./s4_sensitivity_analyses.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sensitivity Analyses</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Longitudinal Data Modeling</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./s1_visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Longitudinal Data Exploration and Visualization</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./s2_inference_continuous.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inference from Longitudinal Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./s3_missingness.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./s4_sensitivity_analyses.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sensitivity Analyses</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./s5_inferences_binary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Inferences from binary longitudinal data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#purpose-of-sensitivity-analyses" id="toc-purpose-of-sensitivity-analyses" class="nav-link active" data-scroll-target="#purpose-of-sensitivity-analyses"><span class="header-section-number">5.1</span> Purpose of sensitivity analyses</a></li>
+  <li><a href="#mmrm-vs.-mi" id="toc-mmrm-vs.-mi" class="nav-link" data-scroll-target="#mmrm-vs.-mi"><span class="header-section-number">5.2</span> MMRM vs.&nbsp;MI</a></li>
+  <li><a href="#missing-covariates-baseline-data-only" id="toc-missing-covariates-baseline-data-only" class="nav-link" data-scroll-target="#missing-covariates-baseline-data-only"><span class="header-section-number">5.3</span> Missing covariates (baseline data) only</a></li>
+  <li><a href="#sensitivity-analyses---simple-approaches" id="toc-sensitivity-analyses---simple-approaches" class="nav-link" data-scroll-target="#sensitivity-analyses---simple-approaches"><span class="header-section-number">5.4</span> Sensitivity analyses - Simple approaches</a>
+  <ul class="collapse">
+  <li><a href="#last-observation-carried-forward-locf" id="toc-last-observation-carried-forward-locf" class="nav-link" data-scroll-target="#last-observation-carried-forward-locf"><span class="header-section-number">5.4.1</span> Last observation carried forward (LOCF)</a></li>
+  <li><a href="#complete-case-cc" id="toc-complete-case-cc" class="nav-link" data-scroll-target="#complete-case-cc"><span class="header-section-number">5.4.2</span> Complete case (CC)</a></li>
+  </ul></li>
+  <li><a href="#sensitivity-analyses---handling-nonignorable-missingness-mnar" id="toc-sensitivity-analyses---handling-nonignorable-missingness-mnar" class="nav-link" data-scroll-target="#sensitivity-analyses---handling-nonignorable-missingness-mnar"><span class="header-section-number">5.5</span> Sensitivity analyses - Handling nonignorable missingness (MNAR)</a>
+  <ul class="collapse">
+  <li><a href="#reference-based-multiple-imputation" id="toc-reference-based-multiple-imputation" class="nav-link" data-scroll-target="#reference-based-multiple-imputation"><span class="header-section-number">5.5.1</span> Reference-based multiple imputation</a></li>
+  <li><a href="#delta-based-multiple-imputation" id="toc-delta-based-multiple-imputation" class="nav-link" data-scroll-target="#delta-based-multiple-imputation"><span class="header-section-number">5.5.2</span> Delta-based multiple imputation</a></li>
+  </ul></li>
+  <li><a href="#practical-part" id="toc-practical-part" class="nav-link" data-scroll-target="#practical-part"><span class="header-section-number">5.6</span> Practical part</a>
+  <ul class="collapse">
+  <li><a href="#set-up-to-use-rbmi" id="toc-set-up-to-use-rbmi" class="nav-link" data-scroll-target="#set-up-to-use-rbmi"><span class="header-section-number">5.6.1</span> Set-up to use rbmi</a></li>
+  <li><a href="#plenum---solution-for-all2-data-set" id="toc-plenum---solution-for-all2-data-set" class="nav-link" data-scroll-target="#plenum---solution-for-all2-data-set"><span class="header-section-number">5.6.2</span> Plenum - Solution for all2 data set</a></li>
+  <li><a href="#solution-for-high2-data-set" id="toc-solution-for-high2-data-set" class="nav-link" data-scroll-target="#solution-for-high2-data-set"><span class="header-section-number">5.6.3</span> Solution for high2 data set</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sensitivity Analyses</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Purpose: talk about sensitivity analyses with respect to missing data</p>
+<ul>
+<li>MMRM is an appropriate choice for the primary analysis in many longitudinal clinical trials under the missing at random (MAR) assumption.</li>
+<li>MMRM can handle missing values. BUT: need of baseline and at least one post-baseline value.</li>
+<li>No imputation for individual missing values but missing data is implicitly imputed.</li>
+<li>Exploit the correlation between outcomes within subjects.</li>
+<li>MAR: future outcomes for subjects who discontinued are assumed be similar to the future outcomes of subjects who continued if they had the same values of past (observed) outcomes, covariates,…</li>
+</ul>
+<section id="purpose-of-sensitivity-analyses" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="purpose-of-sensitivity-analyses"><span class="header-section-number">5.1</span> Purpose of sensitivity analyses</h2>
+<ul>
+<li>Consider sensivitiy analyses to check model assumptions e.g.&nbsp;assumption of MAR.</li>
+<li>Comparing results from sensitivity analyses: how much inference rely on the assumptions.</li>
+<li>Here, inference with regard to the treatment effect. Thus, investigate how treatment effects vary depending on assumptions (about missing data).</li>
+<li>Uncertainty from incompleteness cannot be objectively evaluated from observed data so there is a need for missing data sensitivity analyses.</li>
+</ul>
+</section>
+<section id="mmrm-vs.-mi" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="mmrm-vs.-mi"><span class="header-section-number">5.2</span> MMRM vs.&nbsp;MI</h2>
+<ul>
+<li>Flexibility in modeling treatment effects over time and the within-patient error correlation structure makes MMRM a widely useful analysis.</li>
+<li>MMRM, MI: two major approaches to missing data with good statistical properties. Both rely on MAR assumption (for MI: standard implementation).</li>
+<li>MMRM: missing values implicitly imputed, MI: missing values explicitly imputed.</li>
+<li>MMRM vs.&nbsp;MI: approximately equivalent provided the variables used in the imputation model are the same as those included in the analysis model (level of equivalence will depend on the number of imputations)</li>
+<li>MI: imputation model with at least those variables from the primary model, additional auxiliary variables can be used in the imputation model to improve the accuracy of the missing data prediction.</li>
+<li>Handling missing not at random (MNAR) possible for MI (e.g.&nbsp;reference-based imputation) but not within MMRM.</li>
+<li>MMRM does not work if missing baseline values are present. Missing baseline values can be imputed first. Additionally, at least one post-baseline value has to be observed. Alternative: LDA where baseline is part of the response vector.</li>
+</ul>
+<p>Note that, when implemented in similar manners, MI and MMRM have similar assumptions and yield similar results. Thus, MI implemented similarly to MMRM is not a sensitivity analysis!</p>
+</section>
+<section id="missing-covariates-baseline-data-only" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="missing-covariates-baseline-data-only"><span class="header-section-number">5.3</span> Missing covariates (baseline data) only</h2>
+<ul>
+<li>Missing baseline value of the outcome (and other covariates) is a common situation</li>
+<li>MMRM not efficient or potential biased estimates as subjects with missing covariates are excluded from the analysis</li>
+<li><span class="citation" data-cites="kayembe2022">(<a href="references.html#ref-kayembe2022" role="doc-biblioref">Kayembe and Breukelen 2022</a>)</span> compared different methods e.g.&nbsp;unadjusted analysis, complete case, mean imputation, MI: mean imputation seems to be appropriate as long as the covariates are measured before randomization (produces unbiased treatment effect estimates with good coverage, easy to implement)</li>
+</ul>
+<p>Now, we consider the situation as in our data sets: baseline observed, no intermittent missing values, drop-outs = monotone missing pattern</p>
+</section>
+<section id="sensitivity-analyses---simple-approaches" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="sensitivity-analyses---simple-approaches"><span class="header-section-number">5.4</span> Sensitivity analyses - Simple approaches</h2>
+<p>In general, these simple approaches are not recommended for use. Methods are of historic interest and provide a useful starting point. Here, we consider two simple approaches. We will apply these two methods in the practical part to compare results.</p>
+<section id="last-observation-carried-forward-locf" class="level3" data-number="5.4.1">
+<h3 data-number="5.4.1" class="anchored" data-anchor-id="last-observation-carried-forward-locf"><span class="header-section-number">5.4.1</span> Last observation carried forward (LOCF)</h3>
+<p>LOCF imputes all missing values for each subject using the last observed value for that subject. Typically, under LOCF the repeated masures nature of the data is ignored and a single outcome for each subject is analyzed. LOCF was used in the past, justified as it was thought that it provides conservative estimates. However, conditions under which LOCF yield conservative estimates and maintain control of Type I error rates are not straightforward and cannot be assured at the beginning of the trial. For example, LOCF is likely to overestimate treatment benefit if dop-out in the control gorup is more frequent.</p>
+</section>
+<section id="complete-case-cc" class="level3" data-number="5.4.2">
+<h3 data-number="5.4.2" class="anchored" data-anchor-id="complete-case-cc"><span class="header-section-number">5.4.2</span> Complete case (CC)</h3>
+<p>Other names: observed case/ completers analysis Reduce the data set selecting only those subjects with observed outcome value(s). Completers analysis may create selection bias, may cause overestimation of within group effects particularly at the last scheduled visit.</p>
+</section>
+</section>
+<section id="sensitivity-analyses---handling-nonignorable-missingness-mnar" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="sensitivity-analyses---handling-nonignorable-missingness-mnar"><span class="header-section-number">5.5</span> Sensitivity analyses - Handling nonignorable missingness (MNAR)</h2>
+<ul>
+<li>Assumption of MAR is often reasonable, but possibility of data missing not at random (MNAR) is difficult to rule out.</li>
+<li>Thus, analysis under MNAR needed.</li>
+<li>Analysis under MNAR: these methods are heavily assumption driven and the assumptions are not testable as we do not have the missing data.</li>
+<li>Consider a sensitivity analysis framework allowing assessment of robustness of results to the various assumptions.</li>
+<li>MNAR methods: different possibilities e.g.&nbsp;class of pattern-mixture models. The pattern-mixture model allows missing outcomes to be imputed under a chosen scenario and in this way can be used to complete the data set and apply the primary analysis to this completed data set.</li>
+<li>MI can be used to explore departures from MAR (for analysis under a MNAR assumption). This is referred to as controlled MI and includes delta-based MI and reference-based MI (belong to the class of pattern mixture models). Data is imputed under an alternative MNAR distribution that reflects a relevant scenario for the unobserved data. The imputed data sets are then analysed as with standard MI.</li>
+</ul>
+<section id="reference-based-multiple-imputation" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="reference-based-multiple-imputation"><span class="header-section-number">5.5.1</span> Reference-based multiple imputation</h3>
+<ul>
+<li>Has recieved increasing attention in clinical trials as it provides an attractive approach for a sensitivity analysis because missing data assumptions are framed in an intuitive way. The departure from MAR is captured in a qualitative way, making the formulation of the problem intuitive.</li>
+<li>For example, a plausible MNAR mechanism in a placebo‐controlled trial is to assume that subjects in the experimental arm who dropped out stop taking their treatment and have similar outcomes to those in the placebo arm.</li>
+<li>Remember: MI under MAR assumes that the outcome distribution of patients with missing data is the same as the outcome distribution of patients with complete data, conditional on relevant covariates. However, if most patients withdraw from the study after treatment discontinuation, then this is not plausible, as patients who withdraw from the study treatment are expected to have a worse otucome than patients who stay on study treatment. Thus, addressing missing data under a MAR assumption estimates a hypothetical estimand and not a treatment policy estimand.</li>
+<li>Different options to handle missing outcome data for reference-based imputation were described <span class="citation" data-cites="carpenter2013">(<a href="references.html#ref-carpenter2013" role="doc-biblioref">Carpenter and Kenward 2013</a>)</span>: e.g.&nbsp;jump to reference (J2R), copy reference (CR), copy increments in reference (CIR)</li>
+</ul>
+<p>Jump to reference J2R assumes that after treatment discontinuation, the patient’s mean outcome distribution is that of a reference group, usually the control group. This is a very extreme assumption, as this implies that any efficacy of the drug vanishes immediately after discontinuation - may be plausible for symptomatic treatments.</p>
+<p>Copy reference CR assumes that the patient’s outcome distribution both before and after treatment discontinuation is the same as the distribution of the reference group. This has a milder effect than J2R: If a treatment-group patient has an outcome that is better than the reference group mean before treatment discontinuation, their imputed values after treatment discontinuation will also be better than the reference group mean.</p>
+<p>Copy increments in reference CIR assumes that after treatment discontinuation, the increments are the same as those from the reference group. This is much milder than J2R and CR and implies that benefit gained from the treatment before discontinuation is not lost.</p>
+<p>The conventional approach to analyse data using these reference based approaches is MI, following the same steps as MI under MAR.</p>
+<p>Software, R: the rbmi package supports reference-based strategies <span class="citation" data-cites="gowerpage2022">(<a href="references.html#ref-gowerpage2022" role="doc-biblioref">Gower-Page and Wolbers 2022</a>)</span></p>
+</section>
+<section id="delta-based-multiple-imputation" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="delta-based-multiple-imputation"><span class="header-section-number">5.5.2</span> Delta-based multiple imputation</h3>
+<ul>
+<li>Impute data assuming all unobserved subjects having a poorer or better response than those observed, by adding or subtracting a delta parameter <span class="math inline">\(\delta\)</span> to the expected value of the e.g.&nbsp;MAR imputed values.</li>
+<li>Delta can be implemented in all treatment groups, or in only one group, or may vary by treatment group or an alternative specified factor.</li>
+<li>Choice of values for the sensitivity parameter <span class="math inline">\(\delta\)</span>: e.g.&nbsp;selection by content experts.</li>
+<li>Steps: 1. missing values are imputed using standard MI procedure e.g.&nbsp;under MAR (but can also be under MNAR e.g.&nbsp;combinded with copy reference approach), 2. imputed values are shifted by adding some fixed value <span class="math inline">\(\delta\)</span> to reflect the MNAR mechanism, 3. analysis with standard statistical methods including Rubin’s rule to combine results</li>
+</ul>
+</section>
+</section>
+<section id="practical-part" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="practical-part"><span class="header-section-number">5.6</span> Practical part</h2>
+<ul>
+<li>Take the (<em>all2</em>) <em>high2</em> data set</li>
+<li>Look at the MMRM and at the complete case (CC) analysis (refer to section missingness for the <em>all2</em> data set).</li>
+<li>Apply additionally LOCF and compare results.</li>
+<li>Try MNAR method reference-based MI with J2R by using the rbmi package. Compare with the other results.</li>
+</ul>
+<section id="set-up-to-use-rbmi" class="level3" data-number="5.6.1">
+<h3 data-number="5.6.1" class="anchored" data-anchor-id="set-up-to-use-rbmi"><span class="header-section-number">5.6.1</span> Set-up to use rbmi</h3>
+<p>Have a short look at the <code>rbmi()</code> package first.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rbmi)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>?rbmi</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">vignette</span>(<span class="at">topic =</span> <span class="st">"quickstart"</span>, <span class="at">package =</span> <span class="st">"rbmi"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>starting httpd help server ... done</code></pre>
+</div>
+</div>
+<p>The workflow is based on 4 core functions: - draws() - fits the imputation models, different methods possible, we will use method_bayes() for MI based on Bayesian posterior parameter draws from MCMC sampling - impute() - creates multiple imputed data sets - analyse() - analyses each of the multiple imputed data sets, default = ancova, other options possible - pool() - combines the results across imputed data sets, for method_bayes (see above) inference is based on Rubin’s rule</p>
+<p>Implemented imputation strategies in rbmi: - Missing at Random (MAR) - Jump to Reference (JR) - Copy Reference (CR) - Copy Increments in Reference (CIR)</p>
+<p>I will show how it looks like for the <em>all2</em> data set and you will then explore the methods using the <em>high2</em> data set.</p>
+</section>
+<section id="plenum---solution-for-all2-data-set" class="level3" data-number="5.6.2">
+<h3 data-number="5.6.2" class="anchored" data-anchor-id="plenum---solution-for-all2-data-set"><span class="header-section-number">5.6.2</span> Plenum - Solution for all2 data set</h3>
+<ol type="1">
+<li>Complete case</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>all2.cc <span class="ot">&lt;-</span> all2 <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(dropout_grp<span class="sc">==</span><span class="st">"Completer"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>fit_cc <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> chgdrop <span class="sc">~</span> basval<span class="sc">*</span>avisit <span class="sc">+</span> trt<span class="sc">*</span>avisit <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all2.cc,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mmrm fit
+
+Formula:     chgdrop ~ basval * avisit + trt * avisit + us(avisit | subject)
+Data:        all2.cc (used 111 observations from 37 subjects with maximum 3 
+timepoints)
+Covariance:  unstructured (6 variance parameters)
+Method:      Kenward-Roger
+Vcov Method: Kenward-Roger
+Inference:   REML
+
+Model selection criteria:
+     AIC      BIC   logLik deviance 
+   608.8    618.5   -298.4    596.8 
+
+Coefficients: 
+                     Estimate Std. Error        df t value Pr(&gt;|t|)    
+(Intercept)           1.89223    3.60558  33.99000   0.525 0.603124    
+basval               -0.31950    0.17281  33.99000  -1.849 0.073201 .  
+avisitWeek 4         -1.63943    2.46046  34.00000  -0.666 0.509708    
+avisitWeek 8        -12.36928    3.39084  34.00000  -3.648 0.000877 ***
+trt2                 -1.13978    1.56623  33.99000  -0.728 0.471768    
+basval:avisitWeek 4  -0.05179    0.11793  34.00000  -0.439 0.663301    
+basval:avisitWeek 8   0.33515    0.16252  34.00000   2.062 0.046899 *  
+avisitWeek 4:trt2    -0.99990    1.06880  34.00000  -0.936 0.356113    
+avisitWeek 8:trt2    -1.78825    1.47295  34.00000  -1.214 0.233089    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Covariance estimate:
+        Week 2  Week 4  Week 8
+Week 2 23.2319 16.8721 14.6422
+Week 4 16.8721 21.7589 17.9166
+Week 8 14.6422 17.9166 27.5347</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model_lsmeans <span class="ot">&lt;-</span> emmeans<span class="sc">::</span><span class="fu">emmeans</span>(fit_cc, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>model_lsmeans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> trt avisit emmean   SE df lower.CL upper.CL
+ 1   Week 2  -4.33 1.12 34    -6.61    -2.06
+ 2   Week 2  -5.47 1.09 34    -7.69    -3.26
+ 1   Week 4  -6.98 1.09 34    -9.19    -4.77
+ 2   Week 4  -9.12 1.06 34   -11.27    -6.97
+ 1   Week 8 -10.17 1.21 34   -12.63    -7.71
+ 2   Week 8 -13.10 1.18 34   -15.49   -10.71
+
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
+<ol start="2" type="1">
+<li>MMRM</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fit_drop <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> chgdrop <span class="sc">~</span> basval<span class="sc">*</span>avisit <span class="sc">+</span> trt<span class="sc">*</span>avisit <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all2,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_drop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mmrm fit
+
+Formula:     chgdrop ~ basval * avisit + trt * avisit + us(avisit | subject)
+Data:        all2 (used 129 observations from 50 subjects with maximum 3 
+timepoints)
+Covariance:  unstructured (6 variance parameters)
+Method:      Kenward-Roger
+Vcov Method: Kenward-Roger
+Inference:   REML
+
+Model selection criteria:
+     AIC      BIC   logLik deviance 
+   709.2    720.7   -348.6    697.2 
+
+Coefficients: 
+                     Estimate Std. Error        df t value Pr(&gt;|t|)   
+(Intercept)           1.98452    3.27498  46.99000   0.606  0.54745   
+basval               -0.31235    0.15906  46.99000  -1.964  0.05549 . 
+avisitWeek 4         -0.90712    2.44043  39.90000  -0.372  0.71208   
+avisitWeek 8        -11.82291    3.34959  36.17000  -3.530  0.00115 **
+trt2                 -1.18993    1.27272  46.99000  -0.935  0.35460   
+basval:avisitWeek 4  -0.07256    0.11799  39.85000  -0.615  0.54206   
+basval:avisitWeek 8   0.31809    0.16104  35.86000   1.975  0.05598 . 
+avisitWeek 4:trt2    -0.90513    1.00404  40.53000  -0.901  0.37266   
+avisitWeek 8:trt2    -1.70761    1.42670  38.06000  -1.197  0.23875   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Covariance estimate:
+        Week 2  Week 4  Week 8
+Week 2 20.6136 15.5273 13.4180
+Week 4 15.5273 21.6600 17.7420
+Week 8 13.4180 17.7420 27.3112</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>model_lsmeans <span class="ot">&lt;-</span> emmeans<span class="sc">::</span><span class="fu">emmeans</span>(fit_drop, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>model_lsmeans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> trt avisit emmean    SE   df lower.CL upper.CL
+ 1   Week 2  -4.10 0.900 47.0    -5.91    -2.29
+ 2   Week 2  -5.29 0.899 47.0    -7.10    -3.48
+ 1   Week 4  -6.42 0.974 46.5    -8.38    -4.46
+ 2   Week 4  -8.52 0.951 44.8   -10.43    -6.60
+ 1   Week 8  -9.73 1.142 40.4   -12.03    -7.42
+ 2   Week 8 -12.62 1.114 40.1   -14.88   -10.37
+
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
+<ol start="3" type="1">
+<li>LOCF</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>all2 <span class="ot">&lt;-</span> all2 <span class="sc">%&gt;%</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(subject) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>( <span class="at">drop=</span><span class="fu">max</span>(week) )</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>all2.locf<span class="ot">&lt;-</span>all2 <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(week<span class="sc">==</span>drop)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>ancova <span class="ot">&lt;-</span> <span class="fu">aov</span>(change <span class="sc">~</span> basval <span class="sc">+</span> trt, <span class="at">data =</span> all2.locf)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ancova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Df Sum Sq Mean Sq F value Pr(&gt;F)  
+basval       1    1.2    1.23   0.044 0.8340  
+trt          1  143.2  143.22   5.186 0.0274 *
+Residuals   47 1297.9   27.61                 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ancova<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)      basval        trt2 
+-8.60177970 -0.06455658 -3.39098716 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>all2.locf <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(change, group) <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>               <span class="fu">tbl_summary</span>(<span class="at">by =</span> group,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">statistic =</span> <span class="fu">list</span>(</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">"{mean} ({sd})"</span>), </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">digits =</span> <span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="dv">2</span> ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="drnkdzahbl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#drnkdzahbl table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#drnkdzahbl thead, #drnkdzahbl tbody, #drnkdzahbl tfoot, #drnkdzahbl tr, #drnkdzahbl td, #drnkdzahbl th {
+  border-style: none;
+}
+
+#drnkdzahbl p {
+  margin: 0;
+  padding: 0;
+}
+
+#drnkdzahbl .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#drnkdzahbl .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#drnkdzahbl .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#drnkdzahbl .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#drnkdzahbl .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#drnkdzahbl .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#drnkdzahbl .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#drnkdzahbl .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#drnkdzahbl .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#drnkdzahbl .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#drnkdzahbl .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#drnkdzahbl .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#drnkdzahbl .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#drnkdzahbl .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#drnkdzahbl .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#drnkdzahbl .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#drnkdzahbl .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#drnkdzahbl .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#drnkdzahbl .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#drnkdzahbl .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#drnkdzahbl .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#drnkdzahbl .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#drnkdzahbl .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#drnkdzahbl .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#drnkdzahbl .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#drnkdzahbl .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#drnkdzahbl .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#drnkdzahbl .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#drnkdzahbl .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#drnkdzahbl .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#drnkdzahbl .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#drnkdzahbl .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#drnkdzahbl .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#drnkdzahbl .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#drnkdzahbl .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#drnkdzahbl .gt_left {
+  text-align: left;
+}
+
+#drnkdzahbl .gt_center {
+  text-align: center;
+}
+
+#drnkdzahbl .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#drnkdzahbl .gt_font_normal {
+  font-weight: normal;
+}
+
+#drnkdzahbl .gt_font_bold {
+  font-weight: bold;
+}
+
+#drnkdzahbl .gt_font_italic {
+  font-style: italic;
+}
+
+#drnkdzahbl .gt_super {
+  font-size: 65%;
+}
+
+#drnkdzahbl .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#drnkdzahbl .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#drnkdzahbl .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#drnkdzahbl .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#drnkdzahbl .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#drnkdzahbl .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#drnkdzahbl .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="<strong>Characteristic</strong>"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Arm 1</strong>, N = 25<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Arm 1</strong>, N = 25<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Arm 2</strong>, N = 25<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Arm 2</strong>, N = 25<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left">change</td>
+<td headers="stat_1" class="gt_row gt_center">-9.88 (4.85)</td>
+<td headers="stat_2" class="gt_row gt_center">-13.24 (5.54)</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="3"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> Mean (SD)</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+</div>
+</div>
+<ol start="4" type="1">
+<li>J2R</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the names of key variables in the data set</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>set_mi<span class="ot">&lt;-</span><span class="fu">set_vars</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">subjid =</span> <span class="st">"subject"</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">visit =</span> <span class="st">"avisit"</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome =</span> <span class="st">"chgdrop"</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="st">"group"</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">covariates =</span> <span class="fu">c</span>(<span class="st">"basval * avisit"</span>, <span class="st">"group * avisit"</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>vars_an<span class="ot">&lt;-</span>set_mi</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>vars_an<span class="sc">$</span>covariates <span class="ot">&lt;-</span> <span class="st">"basval"</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the imputation strategy for each subject with at least one missing observation</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>dat_ice <span class="ot">&lt;-</span> all2 <span class="sc">%&gt;%</span> </span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(subject, avisit) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(chgdrop)) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(subject) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(subject, avisit) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">strategy =</span> <span class="st">"JR"</span>)</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the imputation method</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>method <span class="ot">&lt;-</span> <span class="fu">method_bayes</span>(</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">burn_in =</span> <span class="dv">200</span>,</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">burn_between =</span> <span class="dv">5</span>,</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_samples =</span> <span class="dv">100</span>,</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">072407</span></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>draw_all2<span class="ot">&lt;-</span><span class="fu">draws</span>(<span class="at">data=</span>all2, <span class="at">data_ice =</span> dat_ice, <span class="at">vars=</span>set_mi, <span class="at">method=</span>method, <span class="at">ncores =</span> <span class="dv">1</span>, <span class="at">quiet =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+SAMPLING FOR MODEL 'MMRM' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 0.000119 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.19 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Iteration:   1 / 700 [  0%]  (Warmup)
+Chain 1: Iteration:  70 / 700 [ 10%]  (Warmup)
+Chain 1: Iteration: 140 / 700 [ 20%]  (Warmup)
+Chain 1: Iteration: 201 / 700 [ 28%]  (Sampling)
+Chain 1: Iteration: 270 / 700 [ 38%]  (Sampling)
+Chain 1: Iteration: 340 / 700 [ 48%]  (Sampling)
+Chain 1: Iteration: 410 / 700 [ 58%]  (Sampling)
+Chain 1: Iteration: 480 / 700 [ 68%]  (Sampling)
+Chain 1: Iteration: 550 / 700 [ 78%]  (Sampling)
+Chain 1: Iteration: 620 / 700 [ 88%]  (Sampling)
+Chain 1: Iteration: 690 / 700 [ 98%]  (Sampling)
+Chain 1: Iteration: 700 / 700 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 0.14 seconds (Warm-up)
+Chain 1:                0.224 seconds (Sampling)
+Chain 1:                0.364 seconds (Total)
+Chain 1: </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>imputeObj <span class="ot">&lt;-</span> <span class="fu">impute</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  draw_all2,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">references =</span> <span class="fu">c</span>(<span class="st">"Arm 1"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>, <span class="st">"Arm 2"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>imputed_all2 <span class="ot">&lt;-</span> <span class="fu">extract_imputed_dfs</span>(imputeObj)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>anaObj <span class="ot">&lt;-</span> <span class="fu">analyse</span>(</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  imputeObj,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">vars =</span> vars_an</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>poolObj <span class="ot">&lt;-</span> <span class="fu">pool</span>(anaObj)</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(poolObj)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       parameter        est        se        lci        uci         pval
+1     trt_Week 2  -1.189928 1.2864325  -3.780746  1.4008900 3.598958e-01
+2 lsm_ref_Week 2  -4.125036 0.9088264  -5.955372 -2.2947002 4.178855e-05
+3 lsm_alt_Week 2  -5.314964 0.9088264  -7.145300 -3.4846279 5.199440e-07
+4     trt_Week 4  -1.920738 1.3711052  -4.689028  0.8475529 1.687137e-01
+5 lsm_ref_Week 4  -6.404449 0.9777849  -8.379818 -4.4290798 7.521493e-08
+6 lsm_alt_Week 4  -8.325187 0.9654627 -10.274069 -6.3763039 8.265733e-11
+7     trt_Week 8  -2.211225 1.6967275  -5.649685  1.2272346 2.005871e-01
+8 lsm_ref_Week 8  -9.656881 1.2244745 -12.142348 -7.1714149 2.770935e-09
+9 lsm_alt_Week 8 -11.868107 1.1717638 -14.238826 -9.4973871 1.948658e-12</code></pre>
+</div>
+</div>
+<ol start="5" type="1">
+<li>Change from J2R to CIR Use the additional argument update_strategies in the impute function.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dat_ice_CIR <span class="ot">&lt;-</span> dat_ice <span class="sc">%&gt;%</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">strategy =</span> <span class="fu">ifelse</span>(strategy <span class="sc">==</span> <span class="st">"JR"</span>, <span class="st">"CIR"</span>, strategy))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>imputeObj_CIR <span class="ot">&lt;-</span> <span class="fu">impute</span>(</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  draw_all2,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">references =</span> <span class="fu">c</span>(<span class="st">"Arm 1"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>, <span class="st">"Arm 2"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">update_strategy =</span> dat_ice_CIR</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>anaObj_CIR <span class="ot">&lt;-</span> <span class="fu">analyse</span>(</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  imputeObj_CIR,</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">vars =</span> vars_an</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>poolObj_CIR <span class="ot">&lt;-</span> <span class="fu">pool</span>(anaObj_CIR)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(poolObj_CIR)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       parameter        est        se        lci        uci         pval
+1     trt_Week 2  -1.189928 1.2864325  -3.780746  1.4008900 3.598958e-01
+2 lsm_ref_Week 2  -4.125036 0.9088264  -5.955372 -2.2947002 4.178855e-05
+3 lsm_alt_Week 2  -5.314964 0.9088264  -7.145300 -3.4846279 5.199440e-07
+4     trt_Week 4  -2.014793 1.3710976  -4.782582  0.7529964 1.492281e-01
+5 lsm_ref_Week 4  -6.389437 0.9827301  -8.375095 -4.4037784 8.988973e-08
+6 lsm_alt_Week 4  -8.404230 0.9687489 -10.359825 -6.4486346 7.096096e-11
+7     trt_Week 8  -2.609022 1.6166710  -5.879658  0.6616141 1.146759e-01
+8 lsm_ref_Week 8  -9.646948 1.1739906 -12.026748 -7.2671472 8.012076e-10
+9 lsm_alt_Week 8 -12.255969 1.1568184 -14.598416 -9.9135228 7.351873e-13</code></pre>
+</div>
+</div>
+</section>
+<section id="solution-for-high2-data-set" class="level3" data-number="5.6.3">
+<h3 data-number="5.6.3" class="anchored" data-anchor-id="solution-for-high2-data-set"><span class="header-section-number">5.6.3</span> Solution for high2 data set</h3>
+<p>First, fill in missing visits. This was not necessary in the <em>all2</em> data set. Note, change is the outcome variable and not chgdrop as in <em>all2</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>high2 <span class="ot">&lt;-</span> high2 <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>high2_expand <span class="ot">&lt;-</span> <span class="fu">expand_locf</span>(</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  high2,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">subject =</span> <span class="fu">levels</span>(high2<span class="sc">$</span>subject),  </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">avisit =</span> <span class="fu">levels</span>(high2<span class="sc">$</span>avisit),</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"basval"</span>,<span class="st">"trt"</span>,<span class="st">"group"</span>),</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">c</span>(<span class="st">"subject"</span>),</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"subject"</span>, <span class="st">"avisit"</span>)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol type="1">
+<li>MMRM</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fit_mmrm <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>avisit <span class="sc">+</span> trt<span class="sc">*</span>avisit <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> high2,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_mmrm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mmrm fit
+
+Formula:     change ~ basval * avisit + trt * avisit + us(avisit | subject)
+Data:        high2 (used 830 observations from 200 subjects with maximum 5 
+timepoints)
+Covariance:  unstructured (15 variance parameters)
+Method:      Kenward-Roger
+Vcov Method: Kenward-Roger
+Inference:   REML
+
+Model selection criteria:
+     AIC      BIC   logLik deviance 
+  4779.1   4828.6  -2374.6   4749.1 
+
+Coefficients: 
+                     Estimate Std. Error        df t value Pr(&gt;|t|)    
+(Intercept)           3.33421    1.12651 196.97000   2.960  0.00346 ** 
+basval               -0.27934    0.05962 196.97000  -4.685  5.2e-06 ***
+avisitWeek 2         -0.15400    1.17265 181.53000  -0.131  0.89566    
+avisitWeek 4         -1.00849    1.35934 172.12000  -0.742  0.45916    
+avisitWeek 6         -3.27037    1.53582 166.05000  -2.129  0.03470 *  
+avisitWeek 8         -3.93835    1.65523 140.95000  -2.379  0.01868 *  
+trt2                 -0.04273    0.64969 196.97000  -0.066  0.94763    
+basval:avisitWeek 2  -0.08292    0.06254 181.91000  -1.326  0.18659    
+basval:avisitWeek 4  -0.10700    0.07290 173.67000  -1.468  0.14396    
+basval:avisitWeek 6  -0.01321    0.08198 165.55000  -0.161  0.87216    
+basval:avisitWeek 8   0.01778    0.08902 143.32000   0.200  0.84197    
+avisitWeek 2:trt2    -0.61015    0.69414 181.41000  -0.879  0.38057    
+avisitWeek 4:trt2    -1.41851    0.81728 175.52000  -1.736  0.08438 .  
+avisitWeek 6:trt2    -2.31835    0.91503 165.19000  -2.534  0.01222 *  
+avisitWeek 8:trt2    -2.47738    0.99465 143.57000  -2.491  0.01389 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Covariance estimate:
+        Week 1  Week 2  Week 4  Week 6  Week 8
+Week 1 20.9961 17.1332 15.4142 15.3503 15.8717
+Week 2 17.1332 35.2157 25.8380 25.5499 24.3926
+Week 4 15.4142 25.8380 38.8771 33.0523 30.1128
+Week 6 15.3503 25.5499 33.0523 43.7638 39.3236
+Week 8 15.8717 24.3926 30.1128 39.3236 47.7371</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>model_lsmeans <span class="ot">&lt;-</span> emmeans<span class="sc">::</span><span class="fu">emmeans</span>(fit_mmrm, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>model_lsmeans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> trt avisit emmean    SE  df lower.CL upper.CL
+ 1   Week 1  -1.61 0.458 197    -2.52   -0.711
+ 2   Week 1  -1.66 0.459 197    -2.56   -0.752
+ 1   Week 2  -3.24 0.609 191    -4.44   -2.036
+ 2   Week 2  -3.89 0.613 193    -5.10   -2.681
+ 1   Week 4  -4.52 0.656 182    -5.81   -3.223
+ 2   Week 4  -5.98 0.656 182    -7.27   -4.684
+ 1   Week 6  -5.12 0.718 168    -6.53   -3.701
+ 2   Week 6  -7.48 0.715 166    -8.89   -6.067
+ 1   Week 8  -5.24 0.785 149    -6.79   -3.686
+ 2   Week 8  -7.76 0.762 139    -9.26   -6.251
+
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
+<ol start="2" type="1">
+<li>Complete case</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>high2.cc<span class="ot">&lt;-</span> high2 <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(drop<span class="sc">==</span><span class="dv">8</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>fit_cc <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>avisit <span class="sc">+</span> trt<span class="sc">*</span>avisit <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> high2.cc,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mmrm fit
+
+Formula:     change ~ basval * avisit + trt * avisit + us(avisit | subject)
+Data:        high2.cc (used 649 observations from 130 subjects with maximum 5 
+timepoints)
+Covariance:  unstructured (15 variance parameters)
+Method:      Kenward-Roger
+Vcov Method: Kenward-Roger
+Inference:   REML
+
+Model selection criteria:
+     AIC      BIC   logLik deviance 
+  3693.8   3736.9  -1831.9   3663.8 
+
+Coefficients: 
+                     Estimate Std. Error        df t value Pr(&gt;|t|)    
+(Intercept)           3.26341    1.33919 127.00000   2.437   0.0162 *  
+basval               -0.29475    0.07287 127.00000  -4.045 9.03e-05 ***
+avisitWeek 2         -0.11631    1.40264 127.74000  -0.083   0.9340    
+avisitWeek 4         -0.77525    1.56814 127.01000  -0.494   0.6219    
+avisitWeek 6         -3.27487    1.59347 127.01000  -2.055   0.0419 *  
+avisitWeek 8         -3.94403    1.69295 127.01000  -2.330   0.0214 *  
+trt2                 -0.06433    0.81571 127.00000  -0.079   0.9373    
+basval:avisitWeek 2  -0.11719    0.07647 128.03000  -1.532   0.1279    
+basval:avisitWeek 4  -0.18029    0.08533 127.01000  -2.113   0.0366 *  
+basval:avisitWeek 6  -0.10859    0.08671 127.01000  -1.252   0.2127    
+basval:avisitWeek 8  -0.06299    0.09212 127.01000  -0.684   0.4954    
+avisitWeek 2:trt2    -0.32364    0.85100 127.17000  -0.380   0.7043    
+avisitWeek 4:trt2    -1.07631    0.95516 127.01000  -1.127   0.2619    
+avisitWeek 6:trt2    -1.35403    0.97059 127.01000  -1.395   0.1654    
+avisitWeek 8:trt2    -1.65323    1.03118 127.01000  -1.603   0.1114    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Covariance estimate:
+        Week 1  Week 2  Week 4  Week 6  Week 8
+Week 1 21.0337 16.0819 13.3827 12.2436 13.2340
+Week 2 16.0819 34.0261 22.4388 20.5555 20.0298
+Week 4 13.3827 22.4388 34.9214 27.3814 25.0059
+Week 6 12.2436 20.5555 27.3814 33.6239 30.2604
+Week 8 13.2340 20.0298 25.0059 30.2604 39.6554</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>model_lsmeans <span class="ot">&lt;-</span> emmeans<span class="sc">::</span><span class="fu">emmeans</span>(fit_cc, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>model_lsmeans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> trt avisit emmean    SE  df lower.CL upper.CL
+ 1   Week 1  -1.91 0.595 127    -3.08   -0.731
+ 2   Week 1  -1.97 0.550 127    -3.06   -0.885
+ 1   Week 2  -4.08 0.756 126    -5.58   -2.585
+ 2   Week 2  -4.47 0.702 127    -5.86   -3.080
+ 1   Week 4  -5.85 0.764 127    -7.36   -4.336
+ 2   Week 4  -6.99 0.706 127    -8.38   -5.591
+ 1   Week 6  -7.09 0.749 127    -8.57   -5.607
+ 2   Week 6  -8.51 0.692 127    -9.88   -7.138
+ 1   Week 8  -6.96 0.811 127    -8.56   -5.352
+ 2   Week 8  -8.67 0.750 127   -10.16   -7.191
+
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
+<ol start="3" type="1">
+<li>LOCF</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>high2.locf<span class="ot">&lt;-</span>high2 <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(week<span class="sc">==</span>drop)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>ancova <span class="ot">&lt;-</span> <span class="fu">aov</span>(change <span class="sc">~</span> basval <span class="sc">+</span> trt, <span class="at">data =</span> high2.locf)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ancova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+basval        1    483   483.3   9.709 0.00211 **
+trt           1    241   241.4   4.851 0.02880 * 
+Residuals   197   9805    49.8                   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>ancova<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)      basval        trt2 
+  0.3536399  -0.2648315  -2.2086854 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>high2.locf <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(change, group) <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="at">by =</span> group,</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">statistic =</span> <span class="fu">list</span>(</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>                <span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">"{mean} ({sd})"</span>), </span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">digits =</span> <span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="dv">2</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="vikgwikfwo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#vikgwikfwo table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#vikgwikfwo thead, #vikgwikfwo tbody, #vikgwikfwo tfoot, #vikgwikfwo tr, #vikgwikfwo td, #vikgwikfwo th {
+  border-style: none;
+}
+
+#vikgwikfwo p {
+  margin: 0;
+  padding: 0;
+}
+
+#vikgwikfwo .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#vikgwikfwo .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#vikgwikfwo .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#vikgwikfwo .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#vikgwikfwo .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vikgwikfwo .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vikgwikfwo .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vikgwikfwo .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#vikgwikfwo .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#vikgwikfwo .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#vikgwikfwo .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#vikgwikfwo .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#vikgwikfwo .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#vikgwikfwo .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#vikgwikfwo .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#vikgwikfwo .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#vikgwikfwo .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#vikgwikfwo .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#vikgwikfwo .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vikgwikfwo .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#vikgwikfwo .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#vikgwikfwo .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#vikgwikfwo .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vikgwikfwo .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#vikgwikfwo .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#vikgwikfwo .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vikgwikfwo .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vikgwikfwo .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#vikgwikfwo .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vikgwikfwo .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#vikgwikfwo .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vikgwikfwo .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vikgwikfwo .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vikgwikfwo .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vikgwikfwo .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vikgwikfwo .gt_left {
+  text-align: left;
+}
+
+#vikgwikfwo .gt_center {
+  text-align: center;
+}
+
+#vikgwikfwo .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#vikgwikfwo .gt_font_normal {
+  font-weight: normal;
+}
+
+#vikgwikfwo .gt_font_bold {
+  font-weight: bold;
+}
+
+#vikgwikfwo .gt_font_italic {
+  font-style: italic;
+}
+
+#vikgwikfwo .gt_super {
+  font-size: 65%;
+}
+
+#vikgwikfwo .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#vikgwikfwo .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#vikgwikfwo .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#vikgwikfwo .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#vikgwikfwo .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#vikgwikfwo .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#vikgwikfwo .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="<strong>Characteristic</strong>"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Arm 1</strong>, N = 100<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Arm 1</strong>, N = 100<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Arm 2</strong>, N = 100<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Arm 2</strong>, N = 100<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left">change</td>
+<td headers="stat_1" class="gt_row gt_center">-4.22 (6.38)</td>
+<td headers="stat_2" class="gt_row gt_center">-6.72 (7.90)</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="3"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> Mean (SD)</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+</div>
+</div>
+<ol start="4" type="1">
+<li>J2R</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>set_mi<span class="ot">&lt;-</span><span class="fu">set_vars</span>(</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">subjid =</span> <span class="st">"subject"</span>,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">visit =</span> <span class="st">"avisit"</span>,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome =</span> <span class="st">"change"</span>,</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="st">"group"</span>,</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">covariates =</span> <span class="fu">c</span>(<span class="st">"basval * avisit"</span>, <span class="st">"group * avisit"</span>)</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>vars_an<span class="ot">&lt;-</span>set_mi</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>vars_an<span class="sc">$</span>covariates <span class="ot">&lt;-</span> <span class="st">"basval"</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>dat_ice <span class="ot">&lt;-</span> high2_expand <span class="sc">%&gt;%</span> </span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(subject, avisit) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(change)) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(subject) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(subject, avisit) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">strategy =</span> <span class="st">"JR"</span>)</span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>method <span class="ot">&lt;-</span> <span class="fu">method_bayes</span>(</span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">burn_in =</span> <span class="dv">200</span>,</span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">burn_between =</span> <span class="dv">5</span>,</span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_samples =</span> <span class="dv">100</span>,</span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">072407</span></span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>draw_high2<span class="ot">&lt;-</span><span class="fu">draws</span>(<span class="at">data=</span>high2_expand, <span class="at">data_ice =</span> dat_ice, <span class="at">vars=</span>set_mi, <span class="at">method=</span>method, <span class="at">ncores =</span> <span class="dv">1</span>, <span class="at">quiet =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+SAMPLING FOR MODEL 'MMRM' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 0.000245 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2.45 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Iteration:   1 / 700 [  0%]  (Warmup)
+Chain 1: Iteration:  70 / 700 [ 10%]  (Warmup)
+Chain 1: Iteration: 140 / 700 [ 20%]  (Warmup)
+Chain 1: Iteration: 201 / 700 [ 28%]  (Sampling)
+Chain 1: Iteration: 270 / 700 [ 38%]  (Sampling)
+Chain 1: Iteration: 340 / 700 [ 48%]  (Sampling)
+Chain 1: Iteration: 410 / 700 [ 58%]  (Sampling)
+Chain 1: Iteration: 480 / 700 [ 68%]  (Sampling)
+Chain 1: Iteration: 550 / 700 [ 78%]  (Sampling)
+Chain 1: Iteration: 620 / 700 [ 88%]  (Sampling)
+Chain 1: Iteration: 690 / 700 [ 98%]  (Sampling)
+Chain 1: Iteration: 700 / 700 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 0.861 seconds (Warm-up)
+Chain 1:                1.558 seconds (Sampling)
+Chain 1:                2.419 seconds (Total)
+Chain 1: </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>imputeObj <span class="ot">&lt;-</span> <span class="fu">impute</span>(</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  draw_high2,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">references =</span> <span class="fu">c</span>(<span class="st">"Arm 1"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>, <span class="st">"Arm 2"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>imputed_high2 <span class="ot">&lt;-</span> <span class="fu">extract_imputed_dfs</span>(imputeObj)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>anaObj <span class="ot">&lt;-</span> <span class="fu">analyse</span>(</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  imputeObj,</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">vars =</span> vars_an</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="co">#For method_bayes() or method_approxbayes() pooling and inference are based on Rubin’s rules.</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>poolObj <span class="ot">&lt;-</span> <span class="fu">pool</span>(anaObj)</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(poolObj)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        parameter         est        se       lci        uci         pval
+1      trt_Week 1 -0.04272539 0.6513099 -1.327240  1.2417894 9.477641e-01
+2  lsm_ref_Week 1 -1.64363730 0.4593710 -2.549610 -0.7376649 4.367614e-04
+3  lsm_alt_Week 1 -1.68636270 0.4593710 -2.592335 -0.7803903 3.118171e-04
+4      trt_Week 2 -0.56805913 0.8694895 -2.283587  1.1474688 5.143679e-01
+5  lsm_ref_Week 2 -3.29966757 0.6139776 -4.511086 -2.0882493 2.330387e-07
+6  lsm_alt_Week 2 -3.86772670 0.6154448 -5.082087 -2.6533665 2.383863e-09
+7      trt_Week 4 -1.23794505 0.9341607 -3.081702  0.6058116 1.868456e-01
+8  lsm_ref_Week 4 -4.56691815 0.6705840 -5.890893 -3.2429436 1.703692e-10
+9  lsm_alt_Week 4 -5.80486320 0.6575761 -7.102678 -4.5070482 1.090291e-15
+10     trt_Week 6 -1.69994606 1.0170780 -3.707618  0.3077255 9.647476e-02
+11 lsm_ref_Week 6 -5.21952895 0.7327090 -6.666472 -3.7725863 3.306987e-11
+12 lsm_alt_Week 6 -6.91947501 0.7414260 -8.383999 -5.4549508 9.864655e-17
+13     trt_Week 8 -1.72945373 1.1031354 -3.908286  0.4493783 1.189418e-01
+14 lsm_ref_Week 8 -5.31618579 0.8094870 -6.916486 -3.7158856 9.139985e-10
+15 lsm_alt_Week 8 -7.04563951 0.8266465 -8.680733 -5.4105457 2.995529e-14</code></pre>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-carpenter2013" class="csl-entry" role="listitem">
+Carpenter, Roger, J. R., and M. G. Kenward. 2013. <span>“Analysis of Longitudinal Trials with Protocol Deviation: A Framework for Relevant, Accessible Assumptions, and Inference via Multiple Imputation.”</span> <em>Journal of Biopharmaceutical Statistics</em>, October. <a href="https://doi.org/10.1080/10543406.2013.834911">https://doi.org/10.1080/10543406.2013.834911</a>.
+</div>
+<div id="ref-gowerpage2022" class="csl-entry" role="listitem">
+Gower-Page, Noci, C., and M. Wolbers. 2022. <span>“Rbmi: A r Package for Standard and Reference-Based Multiple Imputation Methods.”</span> <em>Journal of Open Source Software</em>, June. <a href="https://doi.org/10.21105/joss.04251">https://doi.org/10.21105/joss.04251</a>.
+</div>
+<div id="ref-kayembe2022" class="csl-entry" role="listitem">
+Kayembe, Jolani, M. T., and G. J. P. van Breukelen. 2022. <span>“Imputation of Missing Covariates in Randomized Controlled Trials with Continuous Outcomes: Simple, Unbiased and Efficient Methods.”</span> <em>Journal of Biopharmaceutical Statistics</em>, September. <a href="https://doi.org/10.1080/10543406.2021.2011898">https://doi.org/10.1080/10543406.2021.2011898</a>.
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./s3_missingness.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Missing Data</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./s5_inferences_binary.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Inferences from binary longitudinal data</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
