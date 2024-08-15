@@ -123,6 +123,7 @@ I will show how it looks like for the *all2* data set and you will then explore 
 1. Complete case
 
 ```{r}
+#| echo: false
 all2.cc <- all2 %>% dplyr::filter(dropout_grp=="Completer")
 
 fit_cc <- mmrm::mmrm(
@@ -131,42 +132,57 @@ fit_cc <- mmrm::mmrm(
   control = mmrm_control(method = "Kenward-Roger")
 )
 
-summary(fit_cc)
+#summary(fit_cc)
 
-model_lsmeans <- emmeans::emmeans(fit_cc, ~trt*avisit, weights = "proportional")
-model_lsmeans
+model_lsmeans_cc <- emmeans::emmeans(fit_cc, ~trt*avisit, weights = "proportional")
+```
 
+Table: Adjusted means for the complete case data set
+
+```{r}
+model_lsmeans_cc
 ```
 
 2. MMRM
 
 ```{r}
-fit_drop <- mmrm::mmrm(
+#| echo: false
+fit_mmrm <- mmrm::mmrm(
   formula = chgdrop ~ basval*avisit + trt*avisit + us(avisit | subject),
   data = all2,
   control = mmrm_control(method = "Kenward-Roger")
 )
 
-summary(fit_drop)
+#summary(fit_drop)
 
-model_lsmeans <- emmeans::emmeans(fit_drop, ~trt*avisit, weights = "proportional")
-model_lsmeans
+model_lsmeans_mmrm <- emmeans::emmeans(fit_mmrm, ~trt*avisit, weights = "proportional")
+```
 
+Table: Adjusted means for the all2 data set with drop out analysed with MMRM
+
+```{r}
+model_lsmeans_mmrm
 ```
 
 3. LOCF
 
 ```{r}
-all2 <- all2 %>% 
+all2.locf <- all2 %>% filter(!is.na(chgdrop)) %>%
   dplyr::group_by(subject) %>% 
   dplyr::mutate( drop=max(week) )
 
-all2.locf<-all2 %>% dplyr::filter(week==drop)
+all2.locf<-all2.locf %>% dplyr::filter(week==drop)
 
 ancova <- aov(change ~ basval + trt, data = all2.locf)
 summary(ancova)
 ancova$coefficients
+```
 
+Table: Mean values for change from baseline of LOCF analysis
+
+```{r}
+#| message: false
+#| echo: false
 all2.locf %>% ungroup() %>%
   select(change, group) %>%
                tbl_summary(by = group,
@@ -221,6 +237,7 @@ anaObj <- analyse(
   imputeObj,
   vars = vars_an
 )
+```
 
 poolObj <- pool(anaObj)
 as.data.frame(poolObj)
@@ -230,6 +247,7 @@ as.data.frame(poolObj)
 Use the additional argument update_strategies in the impute function.
 
 ```{r}
+#| output: false
 dat_ice_CIR <- dat_ice %>% 
   mutate(strategy = ifelse(strategy == "JR", "CIR", strategy))
 
@@ -244,6 +262,7 @@ anaObj_CIR <- analyse(
   vars = vars_an
 )
 
+```{r}
 poolObj_CIR <- pool(anaObj_CIR)
 as.data.frame(poolObj_CIR)
 ```
@@ -251,7 +270,7 @@ as.data.frame(poolObj_CIR)
 ### Solution for high2 data set
 
 First, fill in missing visits. This was not necessary in the *all2* data set.
-Note, change is the outcome variable and not chgdrop as in *all2*
+Note, *change* is the outcome variable and not *chgdrop* as in *all2*
 
 ```{r}
 high2 <- high2 %>% ungroup()
@@ -299,6 +318,7 @@ model_lsmeans
 
 3. LOCF
 ```{r}
+#| message: false
 high2.locf<-high2 %>% dplyr::filter(week==drop)
 
 ancova <- aov(change ~ basval + trt, data = high2.locf)
