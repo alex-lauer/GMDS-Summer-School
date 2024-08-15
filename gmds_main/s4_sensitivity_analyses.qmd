@@ -51,7 +51,9 @@ LOCF imputes all missing values for each subject using the last observed value f
 
 ### Complete case (CC) 
 Other names: observed case/ completers analysis 
+
 Reduce the data set selecting only those subjects with observed outcome value(s). 
+
 Completers analysis may create selection bias, may cause overestimation of within group effects particularly at the last scheduled visit.
 
 ## Sensitivity analyses - Handling nonignorable missingness (MNAR)
@@ -104,16 +106,16 @@ library(rbmi)
 vignette(topic = "quickstart", package = "rbmi")
 ```
 The workflow is based on 4 core functions:
-- draws() - fits the imputation models, different methods possible, we will use method_bayes() for MI based on Bayesian posterior parameter draws from MCMC sampling
-- impute() - creates multiple imputed data sets
-- analyse() - analyses each of the multiple imputed data sets, default = ancova, other options possible
-- pool() - combines the results across imputed data sets, for method_bayes (see above) inference is based on Rubin's rule
+-   draws() - fits the imputation models, different methods possible, we will use method_bayes() for MI based on Bayesian posterior parameter draws from MCMC sampling
+-   impute() - creates multiple imputed data sets
+-   analyse() - analyses each of the multiple imputed data sets, default = ancova, other options possible
+-   pool() - combines the results across imputed data sets, for method_bayes (see above) inference is based on Rubin's rule
 
 Implemented imputation strategies in rbmi:
-- Missing at Random (MAR)
-- Jump to Reference (JR)
-- Copy Reference (CR)
-- Copy Increments in Reference (CIR)
+-   Missing at Random (MAR)
+-   Jump to Reference (JR)
+-   Copy Reference (CR)
+-   Copy Increments in Reference (CIR)
 
 I will show how it looks like for the *all2* data set and you will then explore the methods using the *high2* data set.
 
