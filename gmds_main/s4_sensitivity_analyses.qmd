@@ -51,7 +51,9 @@ LOCF imputes all missing values for each subject using the last observed value f
 
 ### Complete case (CC) 
 Other names: observed case/ completers analysis 
+
 Reduce the data set selecting only those subjects with observed outcome value(s). 
+
 Completers analysis may create selection bias, may cause overestimation of within group effects particularly at the last scheduled visit.
 
 ## Sensitivity analyses - Handling nonignorable missingness (MNAR)
@@ -92,7 +94,7 @@ Software, R: the rbmi package supports reference-based strategies [@gowerpage202
 -   Take the (*all2*) *high2* data set
 -   Look at the MMRM and at the complete case (CC) analysis (refer to section missingness for the *all2* data set).
 -   Apply additionally LOCF and compare results.
--   Try MNAR method reference-based MI with J2R by using the rbmi package. Compare with the other results.
+-   Try MNAR method reference-based MI with J2R and CIR by using the rbmi package. Compare with the other results.
 
 ### Set-up to use rbmi
 Have a short look at the `rbmi()` package first.
@@ -104,16 +106,16 @@ library(rbmi)
 vignette(topic = "quickstart", package = "rbmi")
 ```
 The workflow is based on 4 core functions:
-- draws() - fits the imputation models, different methods possible, we will use method_bayes() for MI based on Bayesian posterior parameter draws from MCMC sampling
-- impute() - creates multiple imputed data sets
-- analyse() - analyses each of the multiple imputed data sets, default = ancova, other options possible
-- pool() - combines the results across imputed data sets, for method_bayes (see above) inference is based on Rubin's rule
+-   draws() - fits the imputation models, different methods possible, we will use method_bayes() for MI based on Bayesian posterior parameter draws from MCMC sampling
+-   impute() - creates multiple imputed data sets
+-   analyse() - analyses each of the multiple imputed data sets, default = ancova, other options possible
+-   pool() - combines the results across imputed data sets, for method_bayes (see above) inference is based on Rubin's rule
 
 Implemented imputation strategies in rbmi:
-- Missing at Random (MAR)
-- Jump to Reference (JR)
-- Copy Reference (CR)
-- Copy Increments in Reference (CIR)
+-   Missing at Random (MAR)
+-   Jump to Reference (JR)
+-   Copy Reference (CR)
+-   Copy Increments in Reference (CIR)
 
 I will show how it looks like for the *all2* data set and you will then explore the methods using the *high2* data set.
 
@@ -121,6 +123,7 @@ I will show how it looks like for the *all2* data set and you will then explore 
 1. Complete case
 
 ```{r}
+#| echo: false
 all2.cc <- all2 %>% dplyr::filter(dropout_grp=="Completer")
 
 fit_cc <- mmrm::mmrm(
@@ -129,42 +132,57 @@ fit_cc <- mmrm::mmrm(
   control = mmrm_control(method = "Kenward-Roger")
 )
 
-summary(fit_cc)
+#summary(fit_cc)
 
-model_lsmeans <- emmeans::emmeans(fit_cc, ~trt*avisit, weights = "proportional")
-model_lsmeans
+model_lsmeans_cc <- emmeans::emmeans(fit_cc, ~trt*avisit, weights = "proportional")
+```
 
+Table: Adjusted means for the complete case data set (all2 data with drop-out, select completer)
+
+```{r}
+model_lsmeans_cc
 ```
 
 2. MMRM
 
 ```{r}
-fit_drop <- mmrm::mmrm(
+#| echo: false
+fit_mmrm <- mmrm::mmrm(
   formula = chgdrop ~ basval*avisit + trt*avisit + us(avisit | subject),
   data = all2,
   control = mmrm_control(method = "Kenward-Roger")
 )
 
-summary(fit_drop)
+#summary(fit_drop)
 
-model_lsmeans <- emmeans::emmeans(fit_drop, ~trt*avisit, weights = "proportional")
-model_lsmeans
+model_lsmeans_mmrm <- emmeans::emmeans(fit_mmrm, ~trt*avisit, weights = "proportional")
+```
 
+Table: Adjusted means for the all2 data set with drop-out analysed with MMRM
+
+```{r}
+model_lsmeans_mmrm
 ```
 
 3. LOCF
 
 ```{r}
-all2 <- all2 %>% 
+all2.locf <- all2 %>% filter(!is.na(chgdrop)) %>%
   dplyr::group_by(subject) %>% 
   dplyr::mutate( drop=max(week) )
 
-all2.locf<-all2 %>% dplyr::filter(week==drop)
+all2.locf<-all2.locf %>% dplyr::filter(week==drop)
 
 ancova <- aov(change ~ basval + trt, data = all2.locf)
 summary(ancova)
 ancova$coefficients
+```
 
+Table: Mean values for change from baseline of LOCF analysis
+
+```{r}
+#| message: false
+#| echo: false
 all2.locf %>% ungroup() %>%
   select(change, group) %>%
                tbl_summary(by = group,
@@ -174,7 +192,7 @@ all2.locf %>% ungroup() %>%
 
 ```
 
-4. J2R
+4. J2R imputation
 ```{r}
 # Define the names of key variables in the data set
 set_mi<-set_vars(
@@ -219,7 +237,11 @@ anaObj <- analyse(
   imputeObj,
   vars = vars_an
 )
+```
 
+Table: Estimates from jump to reference J2R imputation
+
+```{r}
 poolObj <- pool(anaObj)
 as.data.frame(poolObj)
 ```
@@ -228,6 +250,7 @@ as.data.frame(poolObj)
 Use the additional argument update_strategies in the impute function.
 
 ```{r}
+#| output: false
 dat_ice_CIR <- dat_ice %>% 
   mutate(strategy = ifelse(strategy == "JR", "CIR", strategy))
 
@@ -241,7 +264,11 @@ anaObj_CIR <- analyse(
   imputeObj_CIR,
   vars = vars_an
 )
+```
 
+Table: Estimates from copy increments in reference CIR imputation
+
+```{r}
 poolObj_CIR <- pool(anaObj_CIR)
 as.data.frame(poolObj_CIR)
 ```
@@ -249,7 +276,7 @@ as.data.frame(poolObj_CIR)
 ### Solution for high2 data set
 
 First, fill in missing visits. This was not necessary in the *all2* data set.
-Note, change is the outcome variable and not chgdrop as in *all2*
+Note, *change* is the outcome variable and not *chgdrop* as in *all2*
 
 ```{r}
 high2 <- high2 %>% ungroup()
@@ -297,6 +324,7 @@ model_lsmeans
 
 3. LOCF
 ```{r}
+#| message: false
 high2.locf<-high2 %>% dplyr::filter(week==drop)
 
 ancova <- aov(change ~ basval + trt, data = high2.locf)

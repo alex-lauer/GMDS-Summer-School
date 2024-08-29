@@ -13,9 +13,16 @@ source("setup.R")
 -   Repeated observations may or may not be taken at regular times (balanced, fixed occasions, do not differ between subjects).
 -   Our interest is in the change from baseline.
 
-Datasets used in this course: - Example data is taken from [@mallinckrodt2016]. The authors generated data sets based on two nearly identically designed antidepressant clinical trials by randomly selecting subjects from the original data. - Contain data on the continuous variable HAMD17 (Hamilton 17-item rating scale for depression). - Two treatement arms are included: placebo (arm 1) vs. drug (arm 2). - Assessments were taken at baseline and weeks 1, 2, 4, 6, and 8.
+Datasets used in this course:
+-   Example data is taken from [@mallinckrodt2016]. The authors generated data sets based on two nearly identically designed antidepressant clinical trials by randomly selecting subjects from the original data.
+-   Contain data on the continuous variable HAMD17 (Hamilton 17-item rating scale for depression).
+-   Two treatement arms are included: placebo (arm 1) vs. drug (arm 2).
+-   Assessments were taken at baseline and weeks 1, 2, 4, 6, and 8.
 
-There are 3 data sets created from the original data: - Data *all2* = Subsample of the large dataset with n=50, visits: weeks 2, 4, 8 - Data *high2* = Large dataset with n=100, high dropout = 70% (drug), 60% (placebo) - Data *low2* = Large dataset with n=100, low dropout = 18%
+There are 3 data sets created from the original data:
+1.  Data *all2* = Subsample of the large dataset with n=50, visits: weeks 2, 4, 8
+2.  Data *high2* = Large dataset with n=100, high dropout = 70% (drug), 60% (placebo)
+3.  Data *low2* = Large dataset with n=100, low dropout = 18%
 
 ## Data set all2
 
@@ -31,13 +38,19 @@ head(all2)
 
 ### Task 1 - Exploration of data set all2 - 15 minutes working time
 
-Only consider the complete data, variable *change* - Are the data balanced and equally spaced? - Number of observations by week? - Summary statistics for HAMD17 (change from baseline) by week. - Plot trajectories for each individual, different colors for each treatment group (or panels). - Add mean to your plot or generate new plot with mean change from baseline by treatment group. - Plot mean change from baseline for each treatment group stratified by sex. Comment on the plot.
+Only consider the complete data, variable *change*
+-  Are the data balanced and equally spaced?
+-  Number of observations by week? - Summary statistics for HAMD17 (change from baseline) by week.
+-  Plot trajectories for each individual, different colors for each treatment group (or panels).
+-  Add mean to your plot or generate new plot with mean change from baseline by treatment group.
+-  Plot mean change from baseline for each treatment group stratified by sex. Comment on the plot.
 
-### Task 1 Discussion, possible solution
+### Task 1 - Discussion, possible solution
 
 Table: Summary statistics for HAMD17 by treatment and week in the all2 data set
 
 ```{r}
+#| message: false
 all2 %>%
   select(change, group, avisit) %>%
   tbl_strata(strata=group, 
@@ -64,6 +77,7 @@ Figure: Mean change from baseline for each treatment group
 ```{r}
 #| label: fig-mean
 #| fig-cap: "Mean HAMD17 change from baseline by treatment group"
+#| warning: false
 ggplot(data = all2, aes(x = week, y = change)) +  
   geom_point(aes(colour=factor(group))) + ylab("Change from baseline HAMD17") +
   scale_x_continuous(name="Visit [week]", breaks=c(2,4,8)) +
@@ -76,6 +90,7 @@ ggplot(data = all2, aes(x = week, y = change)) +
 Frequency for sex per treatment group
 
 ```{r}
+#| message: false
 all2 %>% filter(time==1) %>%
   tbl_summary(
     include = c(gender),
@@ -88,6 +103,7 @@ Figure: Mean change from baseline stratified by sex
 ```{r}
 #| label: fig-meansex
 #| fig-cap: "Mean HAMD17 change from baseline by treatment group stratified by sex"
+#| warning: false
 ggplot(data = all2, aes(x = week, y = change)) +  facet_grid(.~gender) +
   geom_point(aes(colour=factor(group))) + ylab("Change from baseline HAMD17") +
   scale_x_continuous(name="Visit [week]", breaks=c(2,4,8)) +
@@ -105,6 +121,7 @@ ggplot(data = all2, aes(x = week, y = change)) +  facet_grid(.~gender) +
 Table: Summary statistics for HAMD17 by treatment and week in the all2 data set with drop-outs
 
 ```{r}
+#| message: false
 all2 %>%
   select(chgdrop, group, avisit) %>%
   tbl_strata(strata=group, 
@@ -112,7 +129,8 @@ all2 %>%
                tbl_summary(by = avisit,
                            statistic = list(
       all_continuous() ~ "{mean} ({sd})"), 
-      digits = all_continuous() ~ 2 ) 
+      digits = all_continuous() ~ 2 ) %>%
+      modify_header(label = "**Variable**")
 )
 ```
 
@@ -129,7 +147,7 @@ head(high2)
 
 ### Task 2 - Exploration of data set high2 - 15 minutes working time
 
--   Drop-outs, last visit for each subject: number of observations by week.
+-   Explore the drop-outs e.g. number of observations by week.
 -   Summary statistics for HAMD17 change.
 -   Generate and interpret the group-wise boxplots of the change from baseline.
 -   Mean change from baseline for different drop-out groups (by treatment). Comment on the plot.
@@ -139,6 +157,7 @@ head(high2)
 Table: Summary statistics for HAMD17 by treatment and week in the high2 data set
 
 ```{r}
+#| message: false
 high2 %>% ungroup() %>%
   select(change, group, avisit) %>%
   tbl_strata(strata=group, 
@@ -146,7 +165,8 @@ high2 %>% ungroup() %>%
                tbl_summary(by = avisit,
                            statistic = list(
                              all_continuous() ~ "{mean} ({sd})"), 
-                           digits = all_continuous() ~ 2 ) 
+                           digits = all_continuous() ~ 2 ) %>%
+                modify_header(label = "**Variable**")
   )
 ```
 
@@ -267,15 +287,16 @@ UN is the most flexible (complex) structure and can fail to run especially if on
 Table: Correlation and covariance matrix
 
 ```{r}
-all2 %>% pivot_wider(id_cols=subject,names_from = time, values_from = c(basval,change)) %>% 
-  select(-c(basval_2,basval_3)) -> all2.w
+all2.w <- all2 %>% 
+  pivot_wider(id_cols=subject,names_from = time, values_from = c(basval,change)) %>% 
+  select(-c(basval_2,basval_3))
 
 cor(all2.w[-1]) 
 cov(all2.w[-1])
 ```
 
 
-# Taking a step back: Consequences of Ignoring Correlation among Longitudinal Data
+## Taking a step back: Consequences of Ignoring Correlation among Longitudinal Data
 
 This technical detour is motivated by [@fitzmaurice2011]. Let us assume we are only interested in the first two responses in a clinical study, say Visit 1 (Baseline) and Visit 2. Out interest lies in an assessment of mean changes over time (for the sake of simplicity in a single treatment group only), i.e. we wish to estimate
 
