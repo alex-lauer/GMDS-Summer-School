@@ -212,7 +212,14 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#categorical-time" id="toc-categorical-time" class="nav-link active" data-scroll-target="#categorical-time"><span class="header-section-number">3.1</span> Categorical Time</a></li>
+  <li><a href="#categorical-time" id="toc-categorical-time" class="nav-link active" data-scroll-target="#categorical-time"><span class="header-section-number">3.1</span> Categorical Time</a>
+  <ul class="collapse">
+  <li><a href="#unstructured-us" id="toc-unstructured-us" class="nav-link" data-scroll-target="#unstructured-us"><span class="header-section-number">3.1.1</span> Unstructured (US)</a></li>
+  <li><a href="#compound-symmetry-cs" id="toc-compound-symmetry-cs" class="nav-link" data-scroll-target="#compound-symmetry-cs"><span class="header-section-number">3.1.2</span> Compound Symmetry (CS)</a></li>
+  <li><a href="#toeplitz-toep" id="toc-toeplitz-toep" class="nav-link" data-scroll-target="#toeplitz-toep"><span class="header-section-number">3.1.3</span> Toeplitz (TOEP)</a></li>
+  <li><a href="#spatial-power-sp_exp" id="toc-spatial-power-sp_exp" class="nav-link" data-scroll-target="#spatial-power-sp_exp"><span class="header-section-number">3.1.4</span> Spatial Power (SP_EXP)</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">3.1.5</span> Conclusion</a></li>
+  </ul></li>
   <li><a href="#continuous-time" id="toc-continuous-time" class="nav-link" data-scroll-target="#continuous-time"><span class="header-section-number">3.2</span> Continuous Time</a></li>
   <li><a href="#baseline-as-a-response-clda-lda" id="toc-baseline-as-a-response-clda-lda" class="nav-link" data-scroll-target="#baseline-as-a-response-clda-lda"><span class="header-section-number">3.3</span> Baseline as a Response (cLDA + LDA)</a></li>
   <li><a href="#adjusted-ls-means-from-mmrms" id="toc-adjusted-ls-means-from-mmrms" class="nav-link" data-scroll-target="#adjusted-ls-means-from-mmrms"><span class="header-section-number">3.4</span> (Adjusted) LS Means from MMRMs</a>
@@ -288,7 +295,11 @@ y = X\beta\,+\,\varepsilon\,.
 <li><p>How do different choices for covariance matrices change the results? What is the difference on the estimation procedure?</p></li>
 <li><p>You can obtain a summary of the fit results via <code>summary(fit_cat_time)</code>. How do you interpret the fit summary?</p></li>
 <li><p>Look at the structure of the fit summary and try to extract the estimate of the <span class="math inline">\(R\)</span> matrix.</p></li>
+<li><p>How do other choices of variance-covariance structures influence the estimation?</p></li>
 </ul>
+<section id="unstructured-us" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="unstructured-us"><span class="header-section-number">3.1.1</span> Unstructured (US)</h3>
+<p>Unstructured corresponds to a saturated variance-covariance matrix and involves the estimation of <span class="math inline">\(m\,(m+1)/2\)</span> variance components, where <span class="math inline">\(m\)</span> is the number of follow-up visits. In our case, we can see that a total of 6 variance parameters were estimated.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>fit_cat_time <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>avisit <span class="sc">+</span> trt<span class="sc">*</span>avisit <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
@@ -380,28 +391,182 @@ Week 8 12.27661 17.66478 27.61271</code></pre>
 </div>
 </div>
 </section>
+<section id="compound-symmetry-cs" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="compound-symmetry-cs"><span class="header-section-number">3.1.2</span> Compound Symmetry (CS)</h3>
+<p>We can choose different types of covariance structures by modification of the model formula.</p>
+<p>The compound symmetry structure assumes equal variances (diagonal elements are all equal) and equal covariances (off-diagonal elements are all equal). From the model summary we can see that two variance-covariance parameters are estimated.</p>
+<p>This model is the most simple choice of repeated measures variance-covariance modeling. In most cases, it is overly simplistic, but can be a good fallback option in case of model non-convergence (especially when prespecification of analysis methods is required).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit_cat_time_cs <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>avisit <span class="sc">+</span> trt<span class="sc">*</span>avisit <span class="sc">+</span> <span class="fu">cs</span>(avisit <span class="sc">|</span> subject),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all2,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cat_time_cs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mmrm fit
+
+Formula:     change ~ basval * avisit + trt * avisit + cs(avisit | subject)
+Data:        all2 (used 150 observations from 50 subjects with maximum 3 
+timepoints)
+Covariance:  compound symmetry (2 variance parameters)
+Method:      Kenward-Roger
+Vcov Method: Kenward-Roger
+Inference:   REML
+
+Model selection criteria:
+     AIC      BIC   logLik deviance 
+   827.2    831.0   -411.6    823.2 
+
+Coefficients: 
+                     Estimate Std. Error        df t value Pr(&gt;|t|)    
+(Intercept)           1.98452    3.48848  76.39000   0.569 0.571107    
+basval               -0.31235    0.16943  76.39000  -1.844 0.069126 .  
+avisitWeek 4         -0.90862    2.91606  94.00000  -0.312 0.756042    
+avisitWeek 8        -10.58630    2.91606  94.00000  -3.630 0.000461 ***
+trt2                 -1.18993    1.35569  76.39000  -0.878 0.382845    
+basval:avisitWeek 4  -0.08542    0.14163  94.00000  -0.603 0.547856    
+basval:avisitWeek 8   0.24779    0.14163  94.00000   1.750 0.083448 .  
+avisitWeek 4:trt2    -0.80100    1.13324  94.00000  -0.707 0.481424    
+avisitWeek 8:trt2    -2.20106    1.13324  94.00000  -1.942 0.055098 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Covariance estimate:
+        Week 2  Week 4  Week 8
+Week 2 23.1948 15.0832 15.0832
+Week 4 15.0832 23.1948 15.0832
+Week 8 15.0832 15.0832 23.1948</code></pre>
+</div>
+</div>
+</section>
+<section id="toeplitz-toep" class="level3" data-number="3.1.3">
+<h3 data-number="3.1.3" class="anchored" data-anchor-id="toeplitz-toep"><span class="header-section-number">3.1.3</span> Toeplitz (TOEP)</h3>
+<p>Use of the Toeplitz structure is not a very sensible choice here, as visits are not equally spaced, i.e.&nbsp;the difference between baseline and time1, and time1 and time2 is 2 weeks, respectively, while the difference between time2 and time3 is 4 weeks. Toeplitz thus ignores the differences in time spacing.</p>
+<p>We can see that the covariance estimates for responses at Week 2 (time1) and Week 4 (time2) are the same as the ones for responses at Week 4 (time2) and Week 8 (time3), although their time difference doubles.</p>
+<p>The same line of reasoning for the lack of sensibility of the Toeplitz structure can be applied to the autoregressive structure (AR(1)). The example is not shown here.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit_cat_time_toep <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>avisit <span class="sc">+</span> trt<span class="sc">*</span>avisit <span class="sc">+</span> <span class="fu">toep</span>(avisit <span class="sc">|</span> subject),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all2,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cat_time_toep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mmrm fit
+
+Formula:     change ~ basval * avisit + trt * avisit + toep(avisit | subject)
+Data:        all2 (used 150 observations from 50 subjects with maximum 3 
+timepoints)
+Covariance:  Toeplitz (3 variance parameters)
+Method:      Kenward-Roger
+Vcov Method: Kenward-Roger
+Inference:   REML
+
+Model selection criteria:
+     AIC      BIC   logLik deviance 
+   818.6    824.3   -406.3    812.6 
+
+Coefficients: 
+                     Estimate Std. Error        df t value Pr(&gt;|t|)   
+(Intercept)           1.98452    3.52061  74.67000   0.564  0.57466   
+basval               -0.31235    0.17099  74.67000  -1.827  0.07174 . 
+avisitWeek 4         -0.90862    2.56351  92.39000  -0.354  0.72381   
+avisitWeek 8        -10.58630    3.43000  56.08000  -3.086  0.00315 **
+trt2                 -1.18993    1.36818  74.67000  -0.870  0.38724   
+basval:avisitWeek 4  -0.08542    0.12450  92.39000  -0.686  0.49436   
+basval:avisitWeek 8   0.24779    0.16659  56.08000   1.487  0.14249   
+avisitWeek 4:trt2    -0.80100    0.99623  92.39000  -0.804  0.42344   
+avisitWeek 8:trt2    -2.20106    1.33297  56.08000  -1.651  0.10428   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Covariance estimate:
+        Week 2  Week 4  Week 8
+Week 2 23.6312 17.3491 12.3576
+Week 4 17.3491 23.6312 17.3491
+Week 8 12.3576 17.3491 23.6312</code></pre>
+</div>
+</div>
+</section>
+<section id="spatial-power-sp_exp" class="level3" data-number="3.1.4">
+<h3 data-number="3.1.4" class="anchored" data-anchor-id="spatial-power-sp_exp"><span class="header-section-number">3.1.4</span> Spatial Power (SP_EXP)</h3>
+<p>The choice of the spatial power variance-covariance structure makes sense here, as the visits are not equally spaced. In this case, two parameters are estimated. The first parameter is the variance (diagonal elements) and second one is the time difference between subsequent visits.</p>
+<p>Note that in this example, we need to use the numeric week variable, as spatial power requires the information about the distance of subsequent visits in the estimation of the variance-covariance matrix.</p>
+<p>We can see from the fit summary, that the covariance displayed is a 2 * 2 square matrix. As the distance will be used to derive the corresponding element in that matrix, unit distance is used here.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fit_cat_time_sp <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>avisit <span class="sc">+</span> trt<span class="sc">*</span>avisit <span class="sc">+</span> <span class="fu">sp_exp</span>(week <span class="sc">|</span> subject),</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all2,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cat_time_sp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mmrm fit
+
+Formula:     change ~ basval * avisit + trt * avisit + sp_exp(week | subject)
+Data:        all2 (used 150 observations from 50 subjects with maximum 3 
+timepoints)
+Covariance:  spatial exponential (2 variance parameters)
+Method:      Kenward-Roger
+Vcov Method: Kenward-Roger
+Inference:   REML
+
+Model selection criteria:
+     AIC      BIC   logLik deviance 
+   818.5    822.4   -407.3    814.5 
+
+Coefficients: 
+                     Estimate Std. Error        df t value Pr(&gt;|t|)   
+(Intercept)           1.98452    3.54179  76.71000   0.560  0.57690   
+basval               -0.31235    0.17202  76.71000  -1.816  0.07331 . 
+avisitWeek 4         -0.90862    2.24976  84.19000  -0.404  0.68733   
+avisitWeek 8        -10.58630    3.52591 117.26000  -3.002  0.00327 **
+trt2                 -1.18993    1.37641  76.71000  -0.865  0.39000   
+basval:avisitWeek 4  -0.08542    0.10927  84.19000  -0.782  0.43653   
+basval:avisitWeek 8   0.24779    0.17125 117.26000   1.447  0.15057   
+avisitWeek 4:trt2    -0.80100    0.87430  84.19000  -0.916  0.36220   
+avisitWeek 8:trt2    -2.20106    1.37024 117.26000  -1.606  0.11089   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Covariance estimate:
+        0       1
+0 23.9079 21.3749
+1 21.3749 23.9079</code></pre>
+</div>
+</div>
+</section>
+<section id="conclusion" class="level3" data-number="3.1.5">
+<h3 data-number="3.1.5" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">3.1.5</span> Conclusion</h3>
+<p>While the unstructured variance-covariance matrix provides the highest degree of flexibility, we can see from the AIC and BIC estimates that spatial power in our example provides and even better fit in comparison to the model complexity. Note that this is also true for the Toeplitz structure, but we rejected this approach as the unequal spacing of visits renders this approach nonsensible.</p>
+</section>
+</section>
 <section id="continuous-time" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="continuous-time"><span class="header-section-number">3.2</span> Continuous Time</h2>
 <p>Time as continuous effect -&gt; single df for time and trt-by-time interaction</p>
 <p>Modeling: - Need avisit for structure of covariance matrix - Implicit assumption is for the covariance between values for two timepoints to be equal, regardless of the specific timing</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit_cont_time <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>time <span class="sc">+</span> trt<span class="sc">*</span>time <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> all2<span class="sc">$</span>time,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all2,</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fit_cont_time <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>week <span class="sc">+</span> trt<span class="sc">*</span>week <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> all2<span class="sc">$</span>week,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all2,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Quadratic trend</p>
+<p>Can also apply non-linear transformations of time variable, in case the anticipated effect is not necessarily linear in time:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>all2<span class="sc">$</span>timesq <span class="ot">&lt;-</span> all2<span class="sc">$</span>time<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>fit_cont_timesq <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>timesq <span class="sc">+</span> trt<span class="sc">*</span>timesq <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> all2<span class="sc">$</span>time,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all2,</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>all2<span class="sc">$</span>timesq <span class="ot">&lt;-</span> all2<span class="sc">$</span>week<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>fit_cont_timesq <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>timesq <span class="sc">+</span> trt<span class="sc">*</span>timesq <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> all2<span class="sc">$</span>week,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> all2,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>model checks - residuals per time point</p>
 </section>
@@ -413,15 +578,15 @@ Week 8 12.27661 17.66478 27.61271</code></pre>
 <p>LS Means are means of the dependent variable adjusted for covariates in the statistical model. We can obtain LS Means estimates and contrasts allowing for a treatment comparison using the <code>emmeans</code> package.</p>
 <p><strong>Example</strong>: Calculate the observed (raw) means of changes along with number of patients by treatment group from the dataset <code>all2</code> overall and by visit. Then take the model <code>fit_cat_time</code> and derive the respective LS Means from the model. What do you observe?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Raw means</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>all2 <span class="sc">%&gt;%</span> </span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(group) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">N =</span> dplyr<span class="sc">::</span><span class="fu">n</span>(),</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(change),</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Raw means</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>all2 <span class="sc">%&gt;%</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(group) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">N =</span> dplyr<span class="sc">::</span><span class="fu">n</span>(),</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(change),</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 3
   group     N  Mean
@@ -429,13 +594,13 @@ Week 8 12.27661 17.66478 27.61271</code></pre>
 1 Arm 1    75 -6.96
 2 Arm 2    75 -9.03</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>all2 <span class="sc">%&gt;%</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(group, avisit) <span class="sc">%&gt;%</span> </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">N =</span> dplyr<span class="sc">::</span><span class="fu">n</span>(),</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(change),</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>all2 <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(group, avisit) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">N =</span> dplyr<span class="sc">::</span><span class="fu">n</span>(),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(change),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
   group avisit     N   Mean
@@ -450,16 +615,16 @@ Week 8 12.27661 17.66478 27.61271</code></pre>
 </div>
 <p>The respective LS Means from the model with time as a fixed factor yields the following estimates:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">ref_grid</span>(fit_cat_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">ref_grid</span>(fit_cat_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'emmGrid' object with variables:
     basval = 19.56
     avisit = Week 2, Week 4, Week 8
     trt = 1, 2</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>NOTE: Results may be misleading due to involvement in interactions</code></pre>
 </div>
@@ -471,7 +636,7 @@ Week 8 12.27661 17.66478 27.61271</code></pre>
 Results are averaged over the levels of: avisit 
 Confidence level used: 0.95 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt<span class="sc">*</span>avisit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt<span class="sc">*</span>avisit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> trt avisit emmean    SE df lower.CL upper.CL
  1   Week 2  -4.13 0.899 47    -5.93    -2.32
@@ -504,8 +669,8 @@ Confidence level used: 0.95 </code></pre>
 <p><strong>Solution</strong>:</p>
 <p>We first calculate the LS Means, using the different <code>weights</code> options and find they are indeed identical.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># These will yield the same results:</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt, <span class="at">weights =</span> <span class="st">"equal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># These will yield the same results:</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt, <span class="at">weights =</span> <span class="st">"equal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>NOTE: Results may be misleading due to involvement in interactions</code></pre>
 </div>
@@ -517,7 +682,7 @@ Confidence level used: 0.95 </code></pre>
 Results are averaged over the levels of: avisit 
 Confidence level used: 0.95 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>NOTE: Results may be misleading due to involvement in interactions</code></pre>
 </div>
@@ -529,7 +694,7 @@ Confidence level used: 0.95 </code></pre>
 Results are averaged over the levels of: avisit 
 Confidence level used: 0.95 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"equal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"equal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> trt avisit emmean    SE df lower.CL upper.CL
  1   Week 2  -4.13 0.899 47    -5.93    -2.32
@@ -541,7 +706,7 @@ Confidence level used: 0.95 </code></pre>
 
 Confidence level used: 0.95 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> trt avisit emmean    SE df lower.CL upper.CL
  1   Week 2  -4.13 0.899 47    -5.93    -2.32
@@ -556,8 +721,8 @@ Confidence level used: 0.95 </code></pre>
 </div>
 <p>Now we can update the model to include the covariate <code>gender</code>. We can specify this a new model using the <code>mmrm()</code> function again, or simply use <code>update()</code> to add the new covariate to the model. Either way is fine, and a look into the model formula from the fit summary shows the two approaches work interchangeably.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fit_cat_time2 <span class="ot">&lt;-</span> <span class="fu">update</span>(fit_cat_time, . <span class="sc">~</span> . <span class="sc">+</span> gender)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cat_time2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>fit_cat_time2 <span class="ot">&lt;-</span> <span class="fu">update</span>(fit_cat_time, . <span class="sc">~</span> . <span class="sc">+</span> gender)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cat_time2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>mmrm fit
 
@@ -599,8 +764,8 @@ Week 8 12.0002 18.1813 28.8384</code></pre>
 </div>
 <p>A look into the reference grid shows us the new factor levels for <code>gender</code>. Note that <code>gender</code> itself will not be included in the <code>emmeans()</code> statement, but the output indicates the averaging over its levels (same for the levels of <code>avisit</code>)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reference grid shows us the new levels</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">ref_grid</span>(fit_cat_time2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reference grid shows us the new levels</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">ref_grid</span>(fit_cat_time2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'emmGrid' object with variables:
     basval = 19.56
@@ -608,20 +773,21 @@ Week 8 12.0002 18.1813 28.8384</code></pre>
     trt = 1, 2
     gender = F, M</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># These two won't yield the same results</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time2, <span class="sc">~</span>trt, <span class="at">weights =</span> <span class="st">"equal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>NOTE: Results may be misleading due to involvement in interactions</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># These two won't yield the same results</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time2, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"equal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> trt emmean    SE   df lower.CL upper.CL
- 1    -7.13 0.840 45.8    -8.82    -5.44
- 2    -8.48 0.896 46.4   -10.28    -6.68
+<pre><code> trt avisit emmean    SE   df lower.CL upper.CL
+ 1   Week 2  -4.36 0.869 45.7    -6.11    -2.61
+ 2   Week 2  -4.71 0.923 46.8    -6.57    -2.85
+ 1   Week 4  -6.94 0.920 46.4    -8.79    -5.09
+ 2   Week 4  -8.09 0.972 48.1   -10.04    -6.13
+ 1   Week 8 -10.10 1.063 45.5   -12.24    -7.96
+ 2   Week 8 -12.65 1.108 48.2   -14.88   -10.42
 
-Results are averaged over the levels of: avisit, gender 
+Results are averaged over the levels of: gender 
 Confidence level used: 0.95 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time2, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fit_cat_time2, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> trt avisit emmean    SE   df lower.CL upper.CL
  1   Week 2  -4.55 0.890 46.2    -6.34    -2.75
@@ -637,7 +803,7 @@ Confidence level used: 0.95 </code></pre>
 </div>
 <p>The following frequency table shows the imbalance in the distribution of the <code>gender</code> variable. We can see that Treatment 1 has more men than women, whereas Treatment 2 has more women than men.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(all2<span class="sc">$</span>trt, all2<span class="sc">$</span>gender)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(all2<span class="sc">$</span>trt, all2<span class="sc">$</span>gender)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   
      F  M
@@ -649,6 +815,83 @@ Confidence level used: 0.95 </code></pre>
 </section>
 <section id="contrasts" class="level3" data-number="3.4.2">
 <h3 data-number="3.4.2" class="anchored" data-anchor-id="contrasts"><span class="header-section-number">3.4.2</span> Contrasts</h3>
+<p>Most of the times, the quantity we are truly interested in when reading out a study, is the contrast between treatment arms. This contrast can be built either based on LS Means at some landmark time point, or as a longitudinal (linear) combination of LS Means from multiple time points.</p>
+<p>We can use the <code>pairs()</code> or the <code>contrast()</code> functions, where the latter provides more flexibility for the calculation of linear combinations from multiple time points.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>lsmns <span class="ot">&lt;-</span> emmeans<span class="sc">::</span><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(lsmns, <span class="at">reverse =</span> <span class="cn">TRUE</span>, <span class="at">adjust =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> contrast                  estimate    SE   df t.ratio p.value
+ trt2 Week 2 - trt1 Week 2    -1.19 1.273 47.0  -0.935  0.3546
+ trt1 Week 4 - trt1 Week 2    -2.58 0.659 47.0  -3.917  0.0003
+ trt1 Week 4 - trt2 Week 2    -1.39 1.284 61.3  -1.082  0.2835
+ trt2 Week 4 - trt1 Week 2    -4.57 1.284 61.3  -3.559  0.0007
+ trt2 Week 4 - trt2 Week 2    -3.38 0.659 47.0  -5.133  &lt;.0001
+ trt2 Week 4 - trt1 Week 4    -1.99 1.296 47.0  -1.536  0.1313
+ trt1 Week 8 - trt1 Week 2    -5.74 0.950 47.0  -6.043  &lt;.0001
+ trt1 Week 8 - trt2 Week 2    -4.55 1.370 73.3  -3.321  0.0014
+ trt1 Week 8 - trt1 Week 4    -3.16 0.716 47.0  -4.416  0.0001
+ trt1 Week 8 - trt2 Week 4    -1.17 1.381 61.1  -0.846  0.4007
+ trt2 Week 8 - trt1 Week 2    -9.13 1.370 73.3  -6.664  &lt;.0001
+ trt2 Week 8 - trt2 Week 2    -7.94 0.950 47.0  -8.361  &lt;.0001
+ trt2 Week 8 - trt1 Week 4    -6.55 1.381 61.1  -4.742  &lt;.0001
+ trt2 Week 8 - trt2 Week 4    -4.56 0.716 47.0  -6.373  &lt;.0001
+ trt2 Week 8 - trt1 Week 8    -3.39 1.462 47.0  -2.319  0.0248</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="do">### This is the same as the following</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>prs <span class="ot">&lt;-</span> <span class="fu">contrast</span>(lsmns, <span class="at">method =</span> <span class="st">"revpairwise"</span>, <span class="at">adjust =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note that both <code>pairs()</code> and <code>contrast()</code> provide multiple options for fine-tuning. We chose <code>adjust = NULL</code> in order to not perform any multiplicity adjustment (default method would have been the Tukey method). We also chose <code>reverse = TRUE</code> to reverse the order of comparisons performed by <code>pairs()</code>, as the default would have given us the contrast for Treatment 1 - Treatment 2. Consequently, we applied <code>method = "revpairwise"</code> in the <code>contrast()</code> function.</p>
+<p>We can obtain the coefficients in the calculation of the contrasts via <code>coef()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(prs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            trt avisit c.1 c.2 c.3 c.4 c.5 c.6 c.7 c.8 c.9 c.10 c.11 c.12 c.13
+trt1 Week 2   1 Week 2  -1  -1   0  -1   0   0  -1   0   0    0   -1    0    0
+trt2 Week 2   2 Week 2   1   0  -1   0  -1   0   0  -1   0    0    0   -1    0
+trt1 Week 4   1 Week 4   0   1   1   0   0  -1   0   0  -1    0    0    0   -1
+trt2 Week 4   2 Week 4   0   0   0   1   1   1   0   0   0   -1    0    0    0
+trt1 Week 8   1 Week 8   0   0   0   0   0   0   1   1   1    1    0    0    0
+trt2 Week 8   2 Week 8   0   0   0   0   0   0   0   0   0    0    1    1    1
+            c.14 c.15
+trt1 Week 2    0    0
+trt2 Week 2    0    0
+trt1 Week 4    0    0
+trt2 Week 4   -1    0
+trt1 Week 8    0   -1
+trt2 Week 8    1    1</code></pre>
+</div>
+</div>
+<p>The output above is probably more than we wanted. We are only interested in contrasts between Treatments 1 and 2 at the same time points. Here <code>contrast()</code> provides more flexibility. Instead of parsing a string with the name of a method to the <code>method</code> argument, we provide a named list of coefficients. These coefficients are identical with the onces we can see in the coefficient matrix above. We can use it as a guide.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  lsmns, </span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">list</span>(</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Difference Trt 2 - Trt 1 at Week 4"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Difference Trt 2 - Trt 1 at Week 8"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>  ), </span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">adjust =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> contrast                           estimate   SE df t.ratio p.value
+ Difference Trt 2 - Trt 1 at Week 4    -1.99 1.30 47  -1.536  0.1313
+ Difference Trt 2 - Trt 1 at Week 8    -3.39 1.46 47  -2.319  0.0248</code></pre>
+</div>
+</div>
+<p>This way of computing LS Means from our MMRM allows us to calculate all kinds of linear combinations of LS Means. Assume we were interested in the longitudinal mean of changes from baseline averaged over Weeks 2, 4 and 8. This would look like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  lsmns, </span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">list</span>(</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Difference Trt 2 - Trt 1 Averaged over Weeks 2, 4 and 8"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)<span class="sc">/</span><span class="dv">3</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  ), </span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">adjust =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> contrast                                                estimate   SE df
+ Difference Trt 2 - Trt 1 Averaged over Weeks 2, 4 and 8    -2.19 1.18 47
+ t.ratio p.value
+  -1.850  0.0705</code></pre>
+</div>
+</div>
 </section>
 </section>
 <section id="fit-diagnostics" class="level2" data-number="3.5">
@@ -664,7 +907,8 @@ r := y - X\hat\beta\,,
 <p>As per our modeling assumptions, <span class="math inline">\(\varepsilon\)</span> should follow a normal distribution with mean zero. The mean of the residuals is zero and therefore identical with the mean of the error term. For the covariance of the residuals however, the variance-covariance matrix of <span class="math inline">\(\varepsilon\)</span> only serves us as an approximation (as suggested by <span class="citation" data-cites="fitzmaurice2011">(<a href="references.html#ref-fitzmaurice2011" role="doc-biblioref">Fitzmaurice 2011</a>)</span> for all ‘practical applications’):</p>
 <p><span class="math display">\[
 Cov(r) \approx Cov(\varepsilon) = R\,.
-\]</span> This assumption has several implications on the residual diagnostics:</p>
+\]</span></p>
+<p>This assumption has several implications on the residual diagnostics:</p>
 <ul>
 <li><p>The variance is not necessarily constant. Plotting the fitted values versus the residuals might therefore lead to a non-constant range. An examination of the residual variance or autocorrelation among residuals is therefore not very meaningful.</p></li>
 <li><p>Residuals from analyses of longitudinal data can exhibit correlation with the covariates. Scatterplots of residuals versus selected covariates can therefore reveal systematic trends (which normally should not be the case).</p></li>
@@ -675,65 +919,552 @@ R = L\,L'\,,
 \]</span> then the transformed residuals are given by <span class="math display">\[
 r^* =  L^{-1}(y - X\beta)\,.
 \]</span> In the <code>mmrm</code> package, transformed residuals can be derived using the <code>type = "normalized"</code> option.</p>
-<p>Residual plots overall and by visit</p>
-<ul>
-<li>histogram of transformed residuals</li>
-<li>predicted vs.&nbsp;actual values</li>
-<li>predicted vs.&nbsp;residuals</li>
-<li>standardized residuals vs.&nbsp;theoretic quantiles</li>
-</ul>
 <p><strong>Exercise</strong>: Which visualisations can you think of that make sense to assess the goodness of fit here? Create a new <code>tibble</code> (or <code>data.frame</code>) containing the variables of importance and try plotting them in a meaningful way. Discuss the results within your group.</p>
 <p><strong>Solution</strong>:</p>
 <p>To avoid repetition, let us first save the important variables to perform fit diagnostics in a <code>tibble</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>df_residuals <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">tibble</span>(</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">residuals =</span> <span class="fu">residuals</span>(fit_cat_time, <span class="at">type =</span> <span class="st">"normalized"</span>),</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">predictions =</span> <span class="fu">fitted</span>(fit_cat_time),</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  all2</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>df_residuals <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">tibble</span>(</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">residuals =</span> <span class="fu">residuals</span>(fit_cat_time, <span class="at">type =</span> <span class="st">"normalized"</span>),</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">predictions =</span> <span class="fu">fitted</span>(fit_cat_time),</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>  all2</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can firstly look into a histogram of transformed residuals. The shape should resemble the density function of normal distribution with mean zero and positive variance. Superimposing the density function with mean and SD derived from the model residuals, let’s us see that this is indeed the case. We can also detect a slight skewness to the right.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>df_residuals <span class="sc">%&gt;%</span> </span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> residuals)) <span class="sc">+</span></span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">fill=</span><span class="st">'lightgray'</span>, <span class="at">col=</span><span class="st">'black'</span>) <span class="sc">+</span></span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean=</span><span class="fu">mean</span>(df_residuals<span class="sc">$</span>residuals), <span class="at">sd=</span><span class="fu">sd</span>(df_residuals<span class="sc">$</span>residuals)), <span class="at">col=</span><span class="st">'red'</span>, <span class="at">lwd=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(</span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"Histogram of transformed residuals"</span>,</span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Normal density with mean and SD of residuals superimposed"</span></span>
-<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>df_residuals <span class="sc">%&gt;%</span> </span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> residuals)) <span class="sc">+</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">fill=</span><span class="st">'lightgray'</span>, <span class="at">col=</span><span class="st">'black'</span>) <span class="sc">+</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean=</span><span class="fu">mean</span>(df_residuals<span class="sc">$</span>residuals), <span class="at">sd=</span><span class="fu">sd</span>(df_residuals<span class="sc">$</span>residuals)), <span class="at">col=</span><span class="st">'red'</span>, <span class="at">lwd=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"Histogram of transformed residuals"</span>,</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Normal density with mean and SD of residuals superimposed"</span></span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="s2_inference_continuous_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+<p><img src="s2_inference_continuous_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Alternatively, we can create a Q-Q-Plot of …</p>
+<p>Alternatively, we can create a Q-Q-Plot</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>df_residuals <span class="sc">%&gt;%</span> </span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> predictions, <span class="at">y =</span> residuals)) <span class="sc">+</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>, <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(</span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"Residual Plot of predicted values vs. transformed residuals"</span></span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>df_residuals <span class="sc">%&gt;%</span> </span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> residuals)) <span class="sc">+</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>(<span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Quantiles (Normal distribution)"</span>,</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Transformed Residuals"</span></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(</span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"Q-Q Plot Transformed Residuals Plot"</span></span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="s2_inference_continuous_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+<p><img src="s2_inference_continuous_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>How to interprete the Q-Q plot:</p>
+<p>We can use the following fourfold table to assess the shape characteristics derivable from this plot, depending on where the data on which end of the plot is bend compared to the linear trend line:</p>
+<div class="cell">
+<div class="cell-output-display">
+
+<div id="slmksoajel" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#slmksoajel table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#slmksoajel thead, #slmksoajel tbody, #slmksoajel tfoot, #slmksoajel tr, #slmksoajel td, #slmksoajel th {
+  border-style: none;
+}
+
+#slmksoajel p {
+  margin: 0;
+  padding: 0;
+}
+
+#slmksoajel .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#slmksoajel .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#slmksoajel .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#slmksoajel .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#slmksoajel .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#slmksoajel .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#slmksoajel .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#slmksoajel .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#slmksoajel .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#slmksoajel .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#slmksoajel .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#slmksoajel .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#slmksoajel .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#slmksoajel .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#slmksoajel .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#slmksoajel .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#slmksoajel .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#slmksoajel .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#slmksoajel .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#slmksoajel .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#slmksoajel .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#slmksoajel .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#slmksoajel .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#slmksoajel .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#slmksoajel .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#slmksoajel .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#slmksoajel .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#slmksoajel .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#slmksoajel .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#slmksoajel .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#slmksoajel .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#slmksoajel .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#slmksoajel .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#slmksoajel .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#slmksoajel .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#slmksoajel .gt_left {
+  text-align: left;
+}
+
+#slmksoajel .gt_center {
+  text-align: center;
+}
+
+#slmksoajel .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#slmksoajel .gt_font_normal {
+  font-weight: normal;
+}
+
+#slmksoajel .gt_font_bold {
+  font-weight: bold;
+}
+
+#slmksoajel .gt_font_italic {
+  font-style: italic;
+}
+
+#slmksoajel .gt_super {
+  font-size: 65%;
+}
+
+#slmksoajel .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#slmksoajel .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#slmksoajel .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#slmksoajel .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#slmksoajel .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#slmksoajel .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#slmksoajel .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    
+    <tr class="gt_col_headings gt_spanner_row">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" scope="col" id=" "> </th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" scope="col" id=" "> </th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="2" scope="colgroup" id="Upper right corner">
+        <span class="gt_column_spanner">Upper right corner</span>
+      </th>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="Above">Above</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="Below">Below</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="l1" class="gt_row gt_left">Lower left corner</td>
+<td headers="l2" class="gt_row gt_left">Above</td>
+<td headers="Above" class="gt_row gt_center">Skewed to the Right</td>
+<td headers="Below" class="gt_row gt_center">Light-tailed</td></tr>
+    <tr><td headers="l1" class="gt_row gt_left">Lower left Corner</td>
+<td headers="l2" class="gt_row gt_left">Below</td>
+<td headers="Above" class="gt_row gt_center">Heavy-tailed</td>
+<td headers="Below" class="gt_row gt_center">Skewed to the Left</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+<p>We can see that our data is skewed to the right, as the data in the upper right corner and data in the lower left corner of the plot bend above the linear trend line. This is also a trend we can observe from the histogram.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>df_residuals <span class="sc">%&gt;%</span> </span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> predictions, <span class="at">y =</span> residuals)) <span class="sc">+</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>, <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"Residual Plot of predicted values vs. transformed residuals"</span></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="s2_inference_continuous_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>What do we see?</p>
 <ul>
 <li><p>The points in the plot look well dispersed and symmetric around zero. The fitted line shows no departure from zero.</p></li>
 <li><p>There is no systematic trend, but a rather random scatter.</p></li>
+<li><p>There are a couple of outliers.</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>df_residuals <span class="sc">%&gt;%</span> </span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> predictions, <span class="at">y =</span> change)) <span class="sc">+</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">color =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>df_residuals <span class="sc">%&gt;%</span> </span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> predictions, <span class="at">y =</span> change)) <span class="sc">+</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">color =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="s2_inference_continuous_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+<p><img src="s2_inference_continuous_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <section id="addendum-on-rsi-models" class="level3" data-number="3.5.1">

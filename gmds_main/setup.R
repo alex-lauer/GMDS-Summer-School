@@ -2,17 +2,14 @@
 
 ### Load libraries
 
-renv::install("tidyverse")
-renv::install("mmrm")
-renv::install("emmeans")
-renv::install("nlme")
-renv::install("gtsummary")
+# install.packages("tidyverse", "mmrm", "emmeans", "gtsummary", "gt", "rbmi")
 
 library(tidyverse)
 library(mmrm)
 library(emmeans)
 library(gtsummary)
-# library(mlmi)
+library(gt)
+library(rbmi)
 
 ### Load data
 
