@@ -212,7 +212,10 @@ div.csl-indent {
   <ul>
   <li><a href="#missing-data-mechanisms" id="toc-missing-data-mechanisms" class="nav-link active" data-scroll-target="#missing-data-mechanisms"><span class="header-section-number">4.1</span> Missing Data Mechanisms</a></li>
   <li><a href="#missing-data-handling-i-descriptive-stats-visualisations" id="toc-missing-data-handling-i-descriptive-stats-visualisations" class="nav-link" data-scroll-target="#missing-data-handling-i-descriptive-stats-visualisations"><span class="header-section-number">4.2</span> Missing data handling I (descriptive stats + visualisations)</a></li>
-  <li><a href="#missing-data-handling-ii-analytic-approaches" id="toc-missing-data-handling-ii-analytic-approaches" class="nav-link" data-scroll-target="#missing-data-handling-ii-analytic-approaches"><span class="header-section-number">4.3</span> Missing data handling II (analytic approaches)</a></li>
+  <li><a href="#missing-data-handling-ii-analytic-approaches" id="toc-missing-data-handling-ii-analytic-approaches" class="nav-link" data-scroll-target="#missing-data-handling-ii-analytic-approaches"><span class="header-section-number">4.3</span> Missing data handling II (analytic approaches)</a>
+  <ul class="collapse">
+  <li><a href="#complete-case-analyses" id="toc-complete-case-analyses" class="nav-link" data-scroll-target="#complete-case-analyses"><span class="header-section-number">4.3.1</span> Complete Case Analyses</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -237,6 +240,11 @@ div.csl-indent {
 </header>
 
 <p>So far, we conducted all our analyses on the basis of complete data. This is a blissful, yet highly unusual setting.</p>
+<p>Missingness patterns:</p>
+<ul>
+<li>Monotonic/ dropout</li>
+<li>Intermittend</li>
+</ul>
 <p>Our dataset contains a second variable <code>chgdrop</code>, which is subject to missingness. Let’s rerun our initial MMRM with <code>chgdrop</code> as dependent variable, baseline value, visit, baseline by visit interaction and treatment by visit interaction as fixed effects and an unstructured covariance matrix for visits within each subject.</p>
 <p>This formulation is very similar to the one at the beginning of the former chapter. How do the results differ in terms of LS Means of change from baseline by treatment arm over time?</p>
 <div class="cell">
@@ -246,44 +254,10 @@ div.csl-indent {
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cat_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>mmrm fit
-
-Formula:     chgdrop ~ basval * avisit + trt * avisit + us(avisit | subject)
-Data:        all2 (used 129 observations from 50 subjects with maximum 3 
-timepoints)
-Covariance:  unstructured (6 variance parameters)
-Method:      Kenward-Roger
-Vcov Method: Kenward-Roger
-Inference:   REML
-
-Model selection criteria:
-     AIC      BIC   logLik deviance 
-   709.2    720.7   -348.6    697.2 
-
-Coefficients: 
-                     Estimate Std. Error        df t value Pr(&gt;|t|)   
-(Intercept)           1.98452    3.27498  46.99000   0.606  0.54745   
-basval               -0.31235    0.15906  46.99000  -1.964  0.05549 . 
-avisitWeek 4         -0.90712    2.44043  39.90000  -0.372  0.71208   
-avisitWeek 8        -11.82291    3.34959  36.17000  -3.530  0.00115 **
-trt2                 -1.18993    1.27272  46.99000  -0.935  0.35460   
-basval:avisitWeek 4  -0.07256    0.11799  39.85000  -0.615  0.54206   
-basval:avisitWeek 8   0.31809    0.16104  35.86000   1.975  0.05598 . 
-avisitWeek 4:trt2    -0.90513    1.00404  40.53000  -0.901  0.37266   
-avisitWeek 8:trt2    -1.70761    1.42670  38.06000  -1.197  0.23875   
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Covariance estimate:
-        Week 2  Week 4  Week 8
-Week 2 20.6136 15.5273 13.4180
-Week 4 15.5273 21.6600 17.7420
-Week 8 13.4180 17.7420 27.3112</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>model_lsmeans <span class="ot">&lt;-</span> emmeans<span class="sc">::</span><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>model_lsmeans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(fit_cat_time)</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>model_lsmeans <span class="ot">&lt;-</span> emmeans<span class="sc">::</span><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>model_lsmeans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> trt avisit emmean    SE   df lower.CL upper.CL
  1   Week 2  -4.10 0.900 47.0    -5.91    -2.29
@@ -295,13 +269,13 @@ Week 8 13.4180 17.7420 27.3112</code></pre>
 
 Confidence level used: 0.95 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">contrast</span>(</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Difference in LS Means at Week 8"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>),</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Difference in longitudinal LS Means to Week 8"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)<span class="sc">/</span><span class="dv">3</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(fit_cat_time, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">contrast</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Difference in LS Means at Week 8"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Difference in longitudinal LS Means to Week 8"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)<span class="sc">/</span><span class="dv">3</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> contrast                                      estimate   SE   df t.ratio
  Difference in LS Means at Week 8                 -2.90 1.60 40.3  -1.814
@@ -335,6 +309,8 @@ Confidence level used: 0.95 </code></pre>
 </section>
 <section id="missing-data-handling-ii-analytic-approaches" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="missing-data-handling-ii-analytic-approaches"><span class="header-section-number">4.3</span> Missing data handling II (analytic approaches)</h2>
+<section id="complete-case-analyses" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="complete-case-analyses"><span class="header-section-number">4.3.1</span> Complete Case Analyses</h3>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
@@ -345,6 +321,7 @@ Craig Mallinckrodt, Ilya Lipkovich. 2016. <em>Analyzing Longitudinal Clinical Tr
 Roderick JA Little, Donald B. Rubin. 2019. <em>Statistical Analysis with Missing Data</em>. Vol. 3. USA: New York, Wiley. <a href="https://doi.org/10.1002/9781119482260">https://doi.org/10.1002/9781119482260</a>.
 </div>
 </div>
+</section>
 </section>
 
 </main> <!-- /main -->
