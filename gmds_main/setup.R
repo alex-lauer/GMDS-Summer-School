@@ -2,19 +2,12 @@
 
 ### Load libraries
 
-renv::install("tidyverse")
-renv::install("mmrm")
-renv::install("emmeans")
-renv::install("nlme")
-renv::install("gtsummary")
-renv::install("rbmi")
-renv::install("gt")
+# install.packages(c("tidyverse", "mmrm", "emmeans", "nlme", "gtsummary", "rbmi", "gt"))
 
 library(tidyverse)
 library(mmrm)
 library(emmeans)
 library(gtsummary)
-# library(mlmi)
 library(rbmi)
 library(gt)
 
@@ -50,18 +43,20 @@ all2 <- all %>%
 rm(drp_grp)
 
 ### Larger dataset with low dropout rate
-low <- haven::read_sas("data/low2.sas7bdat") %>%
-  dplyr::mutate(
-    aval = change + basval
-  )
-
-colnames(low) <- tolower(colnames(low))
+### To be deleted
+# low <- haven::read_sas("data/low2.sas7bdat") %>%
+#   dplyr::mutate(
+#     aval = change + basval
+#   )
+#
+# colnames(low) <- tolower(colnames(low))
+### To be deleted
 
 high <- haven::read_sas("data/high2.sas7bdat")
 colnames(high) <- tolower(colnames(high))
 
 high2 <- high %>% dplyr::group_by(patient) %>%
-dplyr::mutate( drop=max(week) )
+dplyr::mutate( drop=max(week), .groups = "drop")
 
 high2 <- high2 %>%
 dplyr::mutate(
@@ -72,5 +67,4 @@ dplyr::mutate(
   dropout_grp = dplyr::recode(as.character(drop), "1" = "Week 1 Drop", "2" = "Week 2 Drop", "4" = "Week 4 Drop", "6" = "Week 6 Drop", "8" = "Completer"),
   dropout_grp = factor(dropout_grp, levels=c("Week 1 Drop","Week 2 Drop","Week 4 Drop","Week 6 Drop","Completer")),
   subject = as.factor(patient)
-) #%>%
-  #rename(subject = patient)
+)

@@ -44,7 +44,7 @@ $$
 
 ## Categorical Time
 
-You can start and familiarise yourself with the main function `mmrm()` using the command
+In the following sections we will use the package `mmrm` [@mmrm]. You can start and familiarise yourself with the main function `mmrm()` using the command
 
 ```{r}
 library(mmrm)
@@ -64,6 +64,13 @@ Two inputs are strictly required to get `mmrm()` to work:
 -   You can obtain a summary of the fit results via `summary(fit_cat_time)`. How do you interpret the fit summary?
 
 -   Look at the structure of the fit summary and try to extract the estimate of the $R$ matrix.
+
+-   How do other choices of covariance structures influence the estimation?
+
+### Unstructured (US)
+
+Unstructured corresponds to a saturated variance-covariance matrix and involves the estimation of $m\,(m+1)/2$ variance components, where $m$ is the number of follow-up visits. In our case, we can see that a total of 6 variance parameters were estimated.
+
 
 ```{r}
 fit_cat_time <- mmrm::mmrm(
@@ -87,6 +94,64 @@ and then extract the covariance matrix
 summary(fit_cat_time)$varcor
 ```
 
+### Compound Symmetry (CS)
+
+We can choose different types of covariance structures by modification of the model formula.
+
+The compound symmetry structure assumes equal variances (diagonal elements are all equal) and equal covariances (off-diagonal elements are all equal). From the model summary we can see that two variance-covariance parameters are estimated.
+
+This model is the most simple choice of repeated measures variance-covariance modeling. In most cases, it is overly simplistic, but can be a good fallback option in case of model non-convergence (especially when prespecification of analysis methods is required).
+
+```{r}
+fit_cat_time_cs <- mmrm::mmrm(
+  formula = change ~ basval*avisit + trt*avisit + cs(avisit | subject),
+  data = all2,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+summary(fit_cat_time_cs)
+```
+
+### Toeplitz (TOEP)
+
+Use of the Toeplitz structure is not a very sensible choice here, as visits are not equally spaced, i.e. the difference between baseline and time1, and time1 and time2 is 2 weeks, respectively, while the difference between time2 and time3 is 4 weeks. Toeplitz thus ignores the differences in time spacing.
+
+We can see that the covariance estimates for responses at Week 2 (time1) and Week 4 (time2) are the same as the ones for responses at Week 4 (time2) and Week 8 (time3), although their time difference doubles.
+
+The same line of reasoning for the lack of sensibility of the Toeplitz structure can be applied to the autoregressive structure (AR(1)). The example is not shown here.
+
+```{r}
+fit_cat_time_toep <- mmrm::mmrm(
+  formula = change ~ basval*avisit + trt*avisit + toep(avisit | subject),
+  data = all2,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+summary(fit_cat_time_toep)
+```
+
+### Spatial Power (SP_EXP)
+
+The choice of the spatial power variance-covariance structure makes sense here, as the visits are not equally spaced. In this case, two parameters are estimated. The first parameter is the variance (diagonal elements) and second one is the time difference between subsequent visits.
+
+Note that in this example, we need to use the numeric `week` variable, as spatial power requires the information about the distance of subsequent visits in the estimation of the variance-covariance matrix.
+
+We can see from the fit summary, that the covariance displayed is a 2 * 2 square matrix. As the distance will be used to derive the corresponding element in that matrix, unit distance is used here.
+
+```{r}
+fit_cat_time_sp <- mmrm::mmrm(
+  formula = change ~ basval*avisit + trt*avisit + sp_exp(week | subject),
+  data = all2,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+summary(fit_cat_time_sp)
+```
+
+### Conclusion
+
+While the unstructured variance-covariance matrix provides the highest degree of flexibility, we can see from the AIC and BIC estimates that spatial power in our example provides and even better fit in comparison to the model complexity. Note that this is also true for the Toeplitz structure, but we rejected this approach as the unequal spacing of visits renders this approach nonsensible.
+
 ## Continuous Time
 
 Time as continuous effect -\> single df for time and trt-by-time interaction
@@ -95,28 +160,29 @@ Modeling: - Need avisit for structure of covariance matrix - Implicit assumption
 
 ```{r}
 fit_cont_time <- mmrm::mmrm(
-  formula = change ~ basval*time + trt*time + us(avisit | subject),
-  weights = all2$time,
+  formula = change ~ basval*week + trt*week + us(avisit | subject),
+  weights = all2$week,
   data = all2,
   control = mmrm_control(method = "Kenward-Roger")
 )
 
+summary (fit_cont_time)
 ```
 
-Quadratic trend
+Can also apply non-linear transformations of time variable, in case the anticipated effect is not necessarily linear in time:
 
 ```{r}
-all2$timesq <- all2$time^2
+all2$timesq <- all2$week^2
 
 fit_cont_timesq <- mmrm::mmrm(
   formula = change ~ basval*timesq + trt*timesq + us(avisit | subject),
-  weights = all2$time,
+  weights = all2$week,
   data = all2,
   control = mmrm_control(method = "Kenward-Roger")
 )
-```
 
-model checks - residuals per time point
+summary(fit_cont_timesq)
+```
 
 ## Baseline as a Response (cLDA + LDA)
 
@@ -204,7 +270,7 @@ A look into the reference grid shows us the new factor levels for `gender`. Note
 emmeans::ref_grid(fit_cat_time2)
 
 # These two won't yield the same results
-emmeans(fit_cat_time2, ~trt, weights = "equal")
+emmeans(fit_cat_time2, ~trt*avisit, weights = "equal")
 emmeans(fit_cat_time2, ~trt*avisit, weights = "proportional")
 ```
 
@@ -216,7 +282,53 @@ table(all2$trt, all2$gender)
 
 The data is no longer balanced across the covariates in the model. The `weights = "equal"` option is agnostic to this imbalance and assigns all levels equal weights, whereas the `weights = "proportional"` assigns a weight reflecting the proportional size of the stratum over which the average is taken.
 
+
+
 ### Contrasts
+
+Most of the times, the quantity we are truly interested in when reading out a study, is the contrast between treatment arms. This contrast can be built either based on LS Means at some landmark time point, or as a longitudinal (linear) combination of LS Means from multiple time points.
+
+We can use the `pairs()` or the `contrast()` functions, where the latter provides more flexibility for the calculation of linear combinations from multiple timepoints.
+
+```{r}
+lsmns <- emmeans::emmeans(fit_cat_time, ~trt*avisit, weights = "proportional")
+pairs(lsmns, reverse = TRUE, adjust = NULL)
+
+### This is the same as the following
+prs <- contrast(lsmns, method = "revpairwise", adjust = NULL)
+```
+
+Note that both `pairs()` and `contrast()` provide multiple options for fine-tuning. We chose `adjust = NULL` in order to not perform any multiplicity adjustment (default method would have been the Tukey method). We also chose `reverse = TRUE` to reverse the order of comparisons performed by `pairs()`, as the default would have given us the contrast for Treatment 1 - Treatment 2. Consequently, we applied `method = "revpairwise"` in the `contrast()` function.
+
+We can obtain the coefficients in the calculation of the contrasts via `coef()`:
+
+```{r}
+coef(prs)
+```
+
+
+The output above is probably more than we wanted. We are only interested in contrasts between Treatments 1 and 2 at the same time points. Here `contrast()` provides more flexibility. Instead of parsing a string with the name of a method to the `method` argument, we provide a named list of coefficients. These coefficients are identical with the onces we can see in the coefficient matrix above. We can use it as a guide. 
+
+```{r}
+contrast(
+  lsmns, 
+  method = list(
+    "Difference Trt 2 - Trt 1 at Week 4" = c(0, 0, -1, 1, 0, 0),
+    "Difference Trt 2 - Trt 1 at Week 8" = c(0, 0, 0, 0, -1, 1)
+  ), 
+  adjust = NULL)
+```
+This way of computing LS Means from our MMRM allows us to calculate all kinds of linear combinations of LS Means. Assume we were interested in the **longitudinal** mean of changes from baseline averaged over Weeks 2, 4 and 8. This would look like this:
+
+```{r}
+contrast(
+  lsmns, 
+  method = list(
+    "Difference Trt 2 - Trt 1 Averaged over Weeks 2, 4 and 8" = c(-1, 1, -1, 1, -1, 1)/3
+  ), 
+  adjust = NULL)
+```
+
 
 ## Fit diagnostics
 
@@ -280,7 +392,7 @@ df_residuals %>%
   )
 ```
 
-Alternatively, we can create a Q-Q-Plot of ...
+Alternatively, we can create a Q-Q-Plot.
 
 ```{r}
 #| message: false
@@ -297,6 +409,7 @@ df_residuals %>%
     label = "Q-Q Plot Transformed Residuals Plot"
   )
 ```
+
 How to interprete the Q-Q plot:
 
 We can use the following fourfold table to assess the shape characteristics derivable from this plot, depending on where the data on which end of the plot is bend compared to the linear trend line:
@@ -307,7 +420,7 @@ library(gt)
 dplyr::tibble(
   pts = c("Lower left corner", "Lower left corner"),
   cat_ll = c("Above", "Below"),
-  Above = c("Skewed to the right", "Below linear trend line"),
+  Above = c("Skewed to the right", "Heavy-tailed"),
   Below = c("Light-tailed",  "Skewed to the left")
 ) %>% 
   gt() %>% 
@@ -327,7 +440,6 @@ dplyr::tibble(
 
 We can see that our data is skewed to the right, as the data in the upper right corner and data in the lower left corner of the plot bend above the linear trend line. This is also a trend we can observe from the histogram.
 
-
 ```{r}
 #| message: false
 df_residuals %>% 
@@ -346,6 +458,8 @@ What do we see?
 -   The points in the plot look well dispersed and symmetric around zero. The fitted line shows no departure from zero.
 
 -   There is no systematic trend, but a rather random scatter.
+
+-   We can spot a couple of outliers.
 
 ```{r}
 #| message: false
