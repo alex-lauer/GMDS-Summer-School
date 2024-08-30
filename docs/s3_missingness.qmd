@@ -1,0 +1,108 @@
+# Missing Data
+
+```{r}
+#| include: false
+
+source("setup.R")
+```
+
+So far, we conducted all our analyses on the basis of complete data. This is a blissful, yet highly unusual setting.
+
+Missingness patterns:
+
+-   Monotonic/ dropout
+-   Intermittend
+
+Our dataset contains a second variable `chgdrop`, which is subject to missingness. Let's rerun our initial MMRM with `chgdrop` as dependent variable, baseline value, visit, baseline by visit interaction and treatment by visit interaction as fixed effects and an unstructured covariance matrix for visits within each subject.
+
+This formulation is very similar to the one at the beginning of the former chapter. How do the results differ in terms of LS Means of change from baseline by treatment arm over time?
+
+```{r}
+fit_cat_time <- mmrm::mmrm(
+  formula = chgdrop ~ basval*avisit + trt*avisit + us(avisit | subject),
+  data = all2,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+# summary(fit_cat_time)
+
+model_lsmeans <- emmeans::emmeans(fit_cat_time, ~trt*avisit, weights = "proportional")
+model_lsmeans
+
+emmeans::emmeans(fit_cat_time, ~trt*avisit, weights = "proportional") %>% 
+  contrast(
+    list(
+      "Difference in LS Means at Week 8" = c(0, 0, 0, 0, -1, 1),
+      "Difference in longitudinal LS Means to Week 8" = c(-1, 1, -1, 1, -1, 1)/3
+    )
+  )
+```
+
+To understand the nature of the differences between the model using `change` as a response variable and the one with `chgdrop`, we need to look closer into the extent of missing data and understand its nature.
+
+## Missing Data Mechanisms
+
+To understand the nature of missing data in our clinical trial, we consider the following taxonomy, introduced by [@little19]. We differentiate between the following three types of missing data:
+
+-   **Missing Completely at Random (MCAR)**: Conditional on all covariates in our analysis, the probability of missingness does not depend on either observed or unobserved values of the response variable.
+
+-   **Missing at Random (MAR)**: Conditional on all covariates and observed response values in our analysis, the probability of missingness does not depend on the unobserved values of the response variable.
+
+-   **Missing not at Random (MNAR)**: Conditional on all covariates and observed response values in our analysis, the probability of missingness does depend on the unobserved values of the response variable.
+
+[@mallinckrodt2020] give the following interpretation around the three types of missingness:
+
+"*With MCAR, the outcome variable is not related to the probability of dropout (after taking into account covariates). In MAR, the observed values of the outcome variable are related to the probability of dropout, but the unobserved outcomes are not (after taking into account covariates and observed outcomes). In MNAR the unobserved outcomes are related to the probability of dropout even after the observed outcomes and covariates have been taken into account.*"
+
+The following two sections outline handling strategies for missing data. However, the best approach to handle missing data is to minimise its extent. While the occurence of missing data can rarely be avoided at all (think about the collection of questionnaire data in oncology studies and the missing data after subjects die), it is important to pursue an "as complete as can be" data collection.
+
+Baseline and screening data are of utmost importance in a pursuit of data completeness. If a screening value is missing, but was meant to be used as a covariate, this subjects' whole data will be dropped from the analysis even if all responses were observed. If the baseline response variable was missing we are unable to compute a change from baseline, which also leads to the loss of this subjects' data in the model (although LDA models are still able to provide an estimate) even if all post-baseline values were observed.
+
+## Missing data handling I (descriptive stats + visualisations)
+
+```{r}
+#| echo: false
+library(ggplot2)
+
+all2_miss <- all2
+
+levels(all2_miss$aval) <- c("Baseline", levels(all2_miss$aval))
+
+all2_miss %>% 
+  filter(!is.na(chgdrop)) %>% 
+  dplyr::group_by(avisit, week, trt, dropout_grp) %>% 
+  dplyr::summarise(
+    mn = mean(chgdrop),
+    .groups = "drop"
+  ) %>% 
+  dplyr::bind_rows(
+    .,
+    tidyr::expand_grid("dropout_grp" = c("Week 2 Dropout", "Week 4 Dropout", "Completer"), "trt" = c("1", "2"), avisit = "Baseline", week = 0, "mn" = 0)
+  ) %>% 
+  ggplot(aes(x = week, y = mn, color = interaction(trt, dropout_grp))) +
+  geom_line() +
+  geom_point(aes(shape = dropout_grp), size = 4) +
+  scale_shape_manual(
+    name = "Dropout", 
+    labels = c("Trt 1 Week 2 Dropout", "Trt 1 Week 4 Dropout", "Trt 1 Completer",
+               "Trt 2 Week 2 Dropout", "Trt 2 Week 4 Dropout", "Trt 2 Completer"),
+    values = c("C", "2", "4", "C", "2", "4")
+  ) +
+  scale_color_manual(
+    name = "Dropout",
+    labels = c("Trt 1 Week 2 Dropout", "Trt 1 Week 4 Dropout", "Trt 1 Completer",
+               "Trt 2 Week 2 Dropout", "Trt 2 Week 4 Dropout", "Trt 2 Completer"),
+    values = c("red", "blue", "red", "blue", "red", "blue")
+  ) +
+  scale_y_continuous(
+    n.breaks = 15,
+    name = "Mean Change from Baseline"
+  ) +
+  theme(
+    legend.position = "bottom"
+  )
+```
+
+## Missing data handling II (analytic approaches)
+
+### Complete Case Analyses

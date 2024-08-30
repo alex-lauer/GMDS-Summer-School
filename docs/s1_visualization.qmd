@@ -1,0 +1,313 @@
+# Longitudinal Data Exploration and Visualization
+
+```{r}
+#| include: false
+
+source("setup.R")
+```
+
+## Introduction
+
+-   Data on individuals followed over time with information collected at several time points.
+-   Clusters are the individuals who are followed over time.
+-   Repeated observations may or may not be taken at regular times (balanced, fixed occasions, do not differ between subjects).
+-   Our interest is in the change from baseline.
+
+Datasets used in this course:
+-   Example data is taken from [@mallinckrodt2016]. The authors generated data sets based on two nearly identically designed antidepressant clinical trials by randomly selecting subjects from the original data.
+-   Contain data on the continuous variable HAMD17 (Hamilton 17-item rating scale for depression).
+-   Two treatement arms are included: placebo (arm 1) vs. drug (arm 2).
+-   Assessments were taken at baseline and weeks 1, 2, 4, 6, and 8.
+
+There are 3 data sets created from the original data:
+1.  Data *all2* = Subsample of the large dataset with n=50, visits: weeks 2, 4, 8
+2.  Data *high2* = Large dataset with n=100, high dropout = 70% (drug), 60% (placebo)
+3.  Data *low2* = Large dataset with n=100, low dropout = 18%
+
+## Data set all2
+
+-   Small data set with n=50 subjects.
+-   1st version: complete data where all subjects adhered to the originally assigend study medication, variable *change*
+-   2nd version = missing data: identical to the first except some data were missing (drop-out), variable *chgdrop*
+
+Looking at the variables in the data set
+
+```{r}
+head(all2)
+```
+
+### Task 1 - Exploration of data set all2 - 15 minutes working time
+
+Only consider the complete data, variable *change*
+-  Are the data balanced and equally spaced?
+-  Number of observations by week? - Summary statistics for HAMD17 (change from baseline) by week.
+-  Plot trajectories for each individual, different colors for each treatment group (or panels).
+-  Add mean to your plot or generate new plot with mean change from baseline by treatment group.
+-  Plot mean change from baseline for each treatment group stratified by sex. Comment on the plot.
+
+### Task 1 - Discussion, possible solution
+
+Table: Summary statistics for HAMD17 by treatment and week in the all2 data set
+
+```{r}
+#| message: false
+all2 %>%
+  select(change, group, avisit) %>%
+  tbl_strata(strata=group, 
+             ~.x %>% 
+               tbl_summary(by = avisit,
+                           statistic = list(
+      all_continuous() ~ "{mean} ({sd})"), 
+      digits = all_continuous() ~ 2 ) 
+)
+```
+
+Figure: individual trajectories stratified by treatment group
+
+```{r}
+#| label: fig-traj
+#| fig-cap: "Individual trajectories of HAMD17 by treatment group"
+ggplot(data = all2, aes(x = week, y = change, group=subject)) +
+  geom_point() + geom_line() + facet_grid(.~group) + ylab("Change from baseline HAMD17") +
+  scale_x_continuous(name="Visit [week]", breaks=c(2,4,8))
+```
+
+Figure: Mean change from baseline for each treatment group
+
+```{r}
+#| label: fig-mean
+#| fig-cap: "Mean HAMD17 change from baseline by treatment group"
+#| warning: false
+ggplot(data = all2, aes(x = week, y = change)) +  
+  geom_point(aes(colour=factor(group))) + ylab("Change from baseline HAMD17") +
+  scale_x_continuous(name="Visit [week]", breaks=c(2,4,8)) +
+  stat_summary(aes(group = group, colour=factor(group)), geom = "line", fun.y = mean,
+               size = 1) +
+  stat_summary(aes(group = group, colour=factor(group)), geom = "point", fun.y = mean,
+               shape=17,size = 2)
+```
+
+Frequency for sex per treatment group
+
+```{r}
+#| message: false
+all2 %>% filter(time==1) %>%
+  tbl_summary(
+    include = c(gender),
+    by = group
+  )
+```
+
+Figure: Mean change from baseline stratified by sex
+
+```{r}
+#| label: fig-meansex
+#| fig-cap: "Mean HAMD17 change from baseline by treatment group stratified by sex"
+#| warning: false
+ggplot(data = all2, aes(x = week, y = change)) +  facet_grid(.~gender) +
+  geom_point(aes(colour=factor(group))) + ylab("Change from baseline HAMD17") +
+  scale_x_continuous(name="Visit [week]", breaks=c(2,4,8)) +
+  stat_summary(aes(group = group, colour=factor(group)), geom = "line", fun.y = mean,
+               size = 1) +
+  stat_summary(aes(group = group, colour=factor(group)), geom = "point", fun.y = mean,
+               shape=17,size = 2)
+```
+
+### Data set all2 with drop-out
+
+-   2nd version = missing data: identical to the first except some data were missing (drop-out), variable *chgdrop*
+-   This version is later relevant when considering missing data. Thus, have a short look at the data.
+
+Table: Summary statistics for HAMD17 by treatment and week in the all2 data set with drop-outs
+
+```{r}
+#| message: false
+all2 %>%
+  select(chgdrop, group, avisit) %>%
+  tbl_strata(strata=group, 
+             ~.x %>% 
+               tbl_summary(by = avisit,
+                           statistic = list(
+      all_continuous() ~ "{mean} ({sd})"), 
+      digits = all_continuous() ~ 2 ) %>%
+      modify_header(label = "**Variable**")
+)
+```
+
+## Data set high2
+
+-   Large data set with n=100 subjects.
+-   Note that we have no intermittent missing values but drop-outs.
+
+Looking at the variables in the data set.
+
+```{r}
+head(high2)
+```
+
+### Task 2 - Exploration of data set high2 - 15 minutes working time
+
+-   Explore the drop-outs e.g. number of observations by week.
+-   Summary statistics for HAMD17 change.
+-   Generate and interpret the group-wise boxplots of the change from baseline.
+-   Mean change from baseline for different drop-out groups (by treatment). Comment on the plot.
+
+### Task 2 Discussion, possible solution
+
+Table: Summary statistics for HAMD17 by treatment and week in the high2 data set
+
+```{r}
+#| message: false
+high2 %>% ungroup() %>%
+  select(change, group, avisit) %>%
+  tbl_strata(strata=group, 
+             ~.x %>% 
+               tbl_summary(by = avisit,
+                           statistic = list(
+                             all_continuous() ~ "{mean} ({sd})"), 
+                           digits = all_continuous() ~ 2 ) %>%
+                modify_header(label = "**Variable**")
+  )
+```
+
+Figure: Distribution of HAMD17 change from baseline
+
+```{r}
+#| label: fig-box
+#| fig-cap: "Distribution of HAMD17 change from baseline by treatment group at each visit"
+ggplot(data = high2, aes(x = avisit, y = change, fill=group)) + 
+  geom_boxplot() + ylab("Change from baseline HAMD17") + xlab("Visit")
+```
+
+Figure: Mean HAMD17 changes by drop-out group
+
+```{r}
+#| label: fig-traj2
+#| fig-cap: "Visit-wise mean HAMD17 changes from baseline by treatment group and drop-out"
+ggplot(data = high2, aes(x = week, y = change, group=patient)) + 
+  geom_point(col="lightgray") + geom_line(col="lightgray") + facet_grid(.~group) +
+  ylab("Change from baseline HAMD17") + scale_x_continuous(name="Visit [week]", breaks=c(1,2,4,6,8)) +
+  stat_summary(aes(group = dropout_grp, colour=factor(dropout_grp)), geom = "line", fun.y = mean,
+               size = 1) +
+  stat_summary(aes(group = dropout_grp, colour=factor(dropout_grp)), geom = "point", fun.y = mean,
+               shape=17,size = 2)
+```
+
+# Correlation structure, covariance matrices
+
+-   Longitudinal data allows to exploit the correlation between otucomes wihtin subjects regardless of whether or not focues is on a single landmark time point.
+-   Model within-subject error correlation
+-   Different residual covariance structures can be implemented
+
+## Overview - different covariance matrices
+
+-   Variance components (VC) independence structure
+-   Compound symmetry (CS) also known as exchangeable
+-   Toeplitz (TOEP)
+-   First order auto regressive (AR(1))
+-   Unstructured (UN)
+
+Selected covariance structures for data with three assessment times (t=3) are shown below. Note that with three assessment times, the number of parameters estimated for the various structures did not differ as much as would be the case with more assessment times. Thus, results from different covariance structures are more similar than would be the case with more assessment times.
+
+### Independence structure (VC)
+
+Constant variance. It is assumed to be no correlation between assessments (residuals are independent across time). $$ R = \begin{bmatrix}
+   \sigma^2   & 0  & 0  \\
+   0  & \sigma^2   & 0 \\
+   0  & 0  & \sigma^2
+   \end{bmatrix}$$
+
+### Compound symmetry (CS)
+
+Constant variance and constant covariance across all assessments. Also known as exchangeable. It requires two parameter estimates. Most simplest repeated measures (i.e., correlated errors) structure.
+
+$$ R = \begin{bmatrix}
+   \sigma^2 + \sigma_1 & \sigma_1  & \sigma_1  \\
+   \sigma_1  & \sigma^2 + \sigma_1  & \sigma_1  \\
+   \sigma_1  & \sigma_1  & \sigma^2 + \sigma_1
+   \end{bmatrix}$$
+
+### Unstructured (UN)
+
+This is the most general (saturated) model. It has t + \[t(t-1)/2\] parameters to be estimated. Here it is 3 + 3 = 6 parameters.
+
+$$ R = \begin{bmatrix}
+   \sigma_1^2 & \sigma_{21}  & \sigma_{31}  \\
+   \sigma_{21}  & \sigma_2^2   & \sigma_{32}  \\
+   \sigma_{31}  & \sigma_{32}  & \sigma_3^2
+   \end{bmatrix}$$
+
+### Toeplitz structure (TOEP)
+
+Homogenous variances and heterogenous correlations. Same correlation value is used whenever the degree of adjacency is the same e.g. correlation between times 1 and 2 = correlation between times 2 and 3. Repeated measurements are assumed to be equally spaced. TOEP requries t parameter estimates so here we have t=3 parameter.
+
+$$ R = \begin{bmatrix}
+   \sigma^2  & \sigma_1^2 & \sigma_2^2 \  \\
+   \sigma_1^2 & \sigma^2  & \sigma_1^2  \\
+   \sigma_2^2  & \sigma_1^2 & \sigma^2 
+   \end{bmatrix}$$
+
+### Autoregressive structure (AR(1))
+
+Correlation decreases as time between observations increases. Assumtpion of equal spacing between each repeated measurement must be reasonably applicable. This structure requires the estimation of two parameters.
+
+$$ R = \begin{bmatrix}
+   \sigma^2  & \sigma^2 \rho  & \sigma^2 \rho^2  \\
+   \sigma^2 \rho & \sigma^2   & \sigma^2 \rho  \\
+  \sigma^2 \rho^2  & \sigma^2 \rho  & \sigma^2 
+   \end{bmatrix}$$
+
+### Spatial Power (SP)
+
+Spatial covariance structures does not require equal spacing between measurements. Instead, as long as the distance between visits can be quantified in terms of time and/or other coordinates, the spatial covariance structure can be applied. Covariances are mathematical functions of Euclidean distances between observed measurements. Again, two parameters need to be estimated.
+
+For spatial exponential, the covariance structure is defined as follows:
+
+$$ R = \begin{bmatrix}
+   \sigma^2  & \sigma^2 \rho_{12}  & \sigma^2 \rho_{13}  \\
+   \sigma^2 \rho_{21} & \sigma^2   & \sigma^2 \rho_{23}  \\
+  \sigma^2 \rho_{31}  & \sigma^2 \rho_{32}  & \sigma^2 
+   \end{bmatrix}$$
+
+with $$ \rho_{ij}=\rho^{d_{ij}} $$ where $$d_{ij} $$ is the distance between time point i and time point j e.g. distance in weeks.
+
+## Selecting the covariance structure
+
+There are a variety of considerations when selecting the covariance structure: - number of parameters - interpretation of the structure - model fit
+
+UN is the most flexible (complex) structure and can fail to run especially if one has many repeated measures. Choose a reasonable covaraiance structure which is the best compromise between model fit and complexity. E.g. use AIC as it penalises more complex models.
+
+## Task 3 - Exploration of correlation in the data
+
+-   Compute the empirical correlations between measurement timepoints in the all2 data set (e.g. correlation between baseline and post-baseline changes).
+-   Looking at these correlations + using your knowledge of the experiment (e.g., spacing of measurements), comment on the suitability of the correlation structures VC, CS, UN, AR(1).
+
+## Task 3 - Discussion and possible solution
+
+Table: Correlation and covariance matrix
+
+```{r}
+all2.w <- all2 %>% 
+  pivot_wider(id_cols=subject,names_from = time, values_from = c(basval,change)) %>% 
+  select(-c(basval_2,basval_3))
+
+cor(all2.w[-1]) 
+cov(all2.w[-1])
+```
+
+
+## Taking a step back: Consequences of Ignoring Correlation among Longitudinal Data
+
+This technical detour is motivated by [@fitzmaurice2011]. Let us assume we are only interested in the first two responses in a clinical study, say Visit 1 (Baseline) and Visit 2. Out interest lies in an assessment of mean changes over time (for the sake of simplicity in a single treatment group only), i.e. we wish to estimate
+
+$$
+\hat\delta := \hat\mu_2 - \hat\mu_1 = \frac{1}{N} \sum_{i=1}^N (Y_{i2} - Y_{i1})\,,
+$$
+
+where $Y_{i1}$ and $Y_{i2}$ are observations from subject $i$ at Visit 1 and Visit 2, respectively. To obtain the standard error (SE) and get a notion of variability, we compute the variance of $\hat\delta$ and see that
+
+$$
+\text{Var}(\hat\delta) = \text{Var}\left(\frac{1}{N} \sum_{i=1}^N (Y_{i2} - Y_{i1})\right) = \frac{1}{N} (\sigma_1^2 + \sigma_2^2 - 2\sigma_{12})\,.
+$$
+
+The inclusion of the term $- 2\sigma_{12}$ accounts for the correlation between responses at Visit 1 and Visit 2. As data from adjacent visits is usually positively correlated, the omission of the correlation term leads to an overestimation of the variance and thus the SE associated with the treatment effect.

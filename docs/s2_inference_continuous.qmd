@@ -1,0 +1,474 @@
+# Inference from Longitudinal Data
+
+```{r}
+#| include: false
+
+source("setup.R")
+```
+
+This section will focus on the application of Mixed Model with Repeated Measures (MMRMs). Our main focus will be the modeling of the means of the data. MMRMs are generalizations of standard linear models in the way that data is allowed to be correlated between subsequent measurements from the same subject and exhibit non-constant variability.
+
+The primary assumptions for MMRMs are:
+
+-   The data are normally distributed
+
+-   The means (expected values) of the data are linear in terms of a certain set of parameters.
+
+-   The variances and covariances of the data are in terms of a different set of parameters, and they exhibit a structure matching one of those outlined in the former chapter.
+
+\[Alex to add reference to PROC MIXED\]
+
+The mixed linear model can be described via the following formula
+
+$$
+y_i = X_i\beta\,+\,Z_i\gamma_i\,+\,\varepsilon_i\,,\, i = 1,\ldots,N
+$$
+
+where $y$ is the vector of responses (observed data, dependent variable), $\beta$ is an unknown vector of fixed effects with known design matrix $X$, $\gamma$ is an unknown vector of random effects with known design matrix $Z$, and $\varepsilon$ is an unknown random error vector. Furthermore $N$ denotes the total number of subjects in our analysis. For the sake of readability, we will omit the subject index and simplify the above formula to
+
+$$
+y = X\beta\,+\,Z\gamma\,+\,\varepsilon\,.
+$$
+
+We will further assume that $\gamma$ and $\varepsilon$ are uncorrelated Gaussian random variables with expectation $0$ and variances $G$ and $R$, respectively. Then the variance-covariance matrix of $y$ is given by
+
+$$
+\text{Var}(y) := V = ZGZ' + R\,.
+$$ In this case $ZGZ'$ comprises the random effects component, and $R$ is the within-subject component.
+
+In this workshop we will focus on the case where only the within-subject component is accounted for, via modeling of the $R$ matrix. The random effects component $Z\gamma$ will be omitted. In this case we will have $\text{Var}(y) = V = R$, resulting in a model given by
+
+$$
+y = X\beta\,+\,\varepsilon\,.
+$$
+
+## Categorical Time
+
+In the following sections we will use the package `mmrm` [@mmrm]. You can start and familiarise yourself with the main function `mmrm()` using the command
+
+```{r}
+library(mmrm)
+?mmrm
+```
+
+Two inputs are strictly required to get `mmrm()` to work:
+
+-   A model formula
+
+-   The dataset, containing the response, as well as all fixed effects and variables in the covariance matrix.
+
+**Exercise**: Fit a model `fit_cat_time` using the dataset `all2`, with change as dependent variable, baseline value, visit, baseline by visit interaction and treatment by visit interaction as fixed effects and an unstructured covariance matrix for visits within each subject.
+
+-   How do different choices for covariance matrices change the results? What is the difference on the estimation procedure?
+
+-   You can obtain a summary of the fit results via `summary(fit_cat_time)`. How do you interpret the fit summary?
+
+-   Look at the structure of the fit summary and try to extract the estimate of the $R$ matrix.
+
+-   How do other choices of covariance structures influence the estimation?
+
+### Unstructured (US)
+
+Unstructured corresponds to a saturated variance-covariance matrix and involves the estimation of $m\,(m+1)/2$ variance components, where $m$ is the number of follow-up visits. In our case, we can see that a total of 6 variance parameters were estimated.
+
+
+```{r}
+fit_cat_time <- mmrm::mmrm(
+  formula = change ~ basval*avisit + trt*avisit + us(avisit | subject),
+  data = all2,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+summary(fit_cat_time)
+```
+
+We can assess the structure of the fit summary via
+
+```{r}
+str(summary(fit_cat_time))
+```
+
+and then extract the covariance matrix
+
+```{r}
+summary(fit_cat_time)$varcor
+```
+
+### Compound Symmetry (CS)
+
+We can choose different types of covariance structures by modification of the model formula.
+
+The compound symmetry structure assumes equal variances (diagonal elements are all equal) and equal covariances (off-diagonal elements are all equal). From the model summary we can see that two variance-covariance parameters are estimated.
+
+This model is the most simple choice of repeated measures variance-covariance modeling. In most cases, it is overly simplistic, but can be a good fallback option in case of model non-convergence (especially when prespecification of analysis methods is required).
+
+```{r}
+fit_cat_time_cs <- mmrm::mmrm(
+  formula = change ~ basval*avisit + trt*avisit + cs(avisit | subject),
+  data = all2,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+summary(fit_cat_time_cs)
+```
+
+### Toeplitz (TOEP)
+
+Use of the Toeplitz structure is not a very sensible choice here, as visits are not equally spaced, i.e. the difference between baseline and time1, and time1 and time2 is 2 weeks, respectively, while the difference between time2 and time3 is 4 weeks. Toeplitz thus ignores the differences in time spacing.
+
+We can see that the covariance estimates for responses at Week 2 (time1) and Week 4 (time2) are the same as the ones for responses at Week 4 (time2) and Week 8 (time3), although their time difference doubles.
+
+The same line of reasoning for the lack of sensibility of the Toeplitz structure can be applied to the autoregressive structure (AR(1)). The example is not shown here.
+
+```{r}
+fit_cat_time_toep <- mmrm::mmrm(
+  formula = change ~ basval*avisit + trt*avisit + toep(avisit | subject),
+  data = all2,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+summary(fit_cat_time_toep)
+```
+
+### Spatial Power (SP_EXP)
+
+The choice of the spatial power variance-covariance structure makes sense here, as the visits are not equally spaced. In this case, two parameters are estimated. The first parameter is the variance (diagonal elements) and second one is the time difference between subsequent visits.
+
+Note that in this example, we need to use the numeric `week` variable, as spatial power requires the information about the distance of subsequent visits in the estimation of the variance-covariance matrix.
+
+We can see from the fit summary, that the covariance displayed is a 2 * 2 square matrix. As the distance will be used to derive the corresponding element in that matrix, unit distance is used here.
+
+```{r}
+fit_cat_time_sp <- mmrm::mmrm(
+  formula = change ~ basval*avisit + trt*avisit + sp_exp(week | subject),
+  data = all2,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+summary(fit_cat_time_sp)
+```
+
+### Conclusion
+
+While the unstructured variance-covariance matrix provides the highest degree of flexibility, we can see from the AIC and BIC estimates that spatial power in our example provides and even better fit in comparison to the model complexity. Note that this is also true for the Toeplitz structure, but we rejected this approach as the unequal spacing of visits renders this approach nonsensible.
+
+## Continuous Time
+
+Time as continuous effect -\> single df for time and trt-by-time interaction
+
+Modeling: - Need avisit for structure of covariance matrix - Implicit assumption is for the covariance between values for two timepoints to be equal, regardless of the specific timing
+
+```{r}
+fit_cont_time <- mmrm::mmrm(
+  formula = change ~ basval*week + trt*week + us(avisit | subject),
+  weights = all2$week,
+  data = all2,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+summary (fit_cont_time)
+```
+
+Can also apply non-linear transformations of time variable, in case the anticipated effect is not necessarily linear in time:
+
+```{r}
+all2$timesq <- all2$week^2
+
+fit_cont_timesq <- mmrm::mmrm(
+  formula = change ~ basval*timesq + trt*timesq + us(avisit | subject),
+  weights = all2$week,
+  data = all2,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+summary(fit_cont_timesq)
+```
+
+## Baseline as a Response (cLDA + LDA)
+
+## (Adjusted) LS Means from MMRMs
+
+LS Means are means of the dependent variable adjusted for covariates in the statistical model. We can obtain LS Means estimates and contrasts allowing for a treatment comparison using the `emmeans` package.
+
+**Example**: Calculate the observed (raw) means of changes along with number of patients by treatment group from the dataset `all2` overall and by visit. Then take the model `fit_cat_time` and derive the respective LS Means from the model. What do you observe?
+
+```{r}
+# Raw means
+
+all2 %>% 
+  dplyr::group_by(group) %>% 
+  dplyr::summarise(
+    N = dplyr::n(),
+    Mean = mean(change),
+    .groups = "drop"
+  )
+
+all2 %>% 
+  dplyr::group_by(group, avisit) %>% 
+  dplyr::summarise(
+    N = dplyr::n(),
+    Mean = mean(change),
+    .groups = "drop"
+  )
+```
+
+The respective LS Means from the model with time as a fixed factor yields the following estimates:
+
+```{r}
+library(emmeans)
+
+emmeans::ref_grid(fit_cat_time)
+emmeans(fit_cat_time, ~trt)
+
+emmeans(fit_cat_time, ~trt*avisit)
+```
+
+### Observed vs. balanced margins
+
+In the example above we have used the standard option for the weights in the calculation of LS Means. We will delve deeper into the following two options and will try to understand the difference:
+
+-   `weights = "equal"`: Each stratum induced by covariate levels is assigned the same weight in the calculation of the LS Means. This is the default option.
+
+-   `weights = "proportional"`: Each stratum induced by covariate levels is assigned a weight according to their observed proportion in the calculation of the LS Mean. This option gives each stratum a weight corresponding to its size. Estimates using this option are reflective of the balance of covariates in the data.
+
+**Exercise:** Based on the `fit_cat_time` model, compare the LS Means for the change in the response variable by treatment overall and treatment by visit interaction using the different options for `weight`. Compare the results for the two LS Means options to the observed means and to one another.
+
+Discuss the following points:
+
+-   Why is there no difference between LS Means estimates for the overall treatment effect and the treatment by visit interaction? (Hint: Create a frequency table)
+
+Now update the `fit_cat_time` model to `fit_cat_time2`, and include the covariate `gender`. Estimate the same LS Means for the change in the response variable by treatment (overall) and treatment by visit interaction.
+
+-   Why is there a difference now between results from the different LS Means options? (Hint: another frequency table can help)
+
+-   What effect could missing data have on the estimation, even in the case of `fit_cat_time`? I.e. what would happen if this data was not complete but subject to missingness, with the degree of missing data increasing over time and being disproportionate between treatment arms?
+
+**Solution**:
+
+We first calculate the LS Means, using the different `weights` options and find they are indeed identical.
+
+```{r}
+# These will yield the same results:
+emmeans(fit_cat_time, ~trt, weights = "equal")
+emmeans(fit_cat_time, ~trt, weights = "proportional")
+
+emmeans(fit_cat_time, ~trt*avisit, weights = "equal")
+emmeans(fit_cat_time, ~trt*avisit, weights = "proportional")
+```
+
+Now we can update the model to include the covariate `gender`. We can specify this a new model using the `mmrm()` function again, or simply use `update()` to add the new covariate to the model. Either way is fine, and a look into the model formula from the fit summary shows the two approaches work interchangeably.
+
+```{r}
+fit_cat_time2 <- update(fit_cat_time, . ~ . + gender)
+summary(fit_cat_time2)
+```
+
+A look into the reference grid shows us the new factor levels for `gender`. Note that `gender` itself will not be included in the `emmeans()` statement, but the output indicates the averaging over its levels (same for the levels of `avisit`)
+
+```{r}
+# Reference grid shows us the new levels
+emmeans::ref_grid(fit_cat_time2)
+
+# These two won't yield the same results
+emmeans(fit_cat_time2, ~trt*avisit, weights = "equal")
+emmeans(fit_cat_time2, ~trt*avisit, weights = "proportional")
+```
+
+The following frequency table shows the imbalance in the distribution of the `gender` variable. We can see that Treatment 1 has more men than women, whereas Treatment 2 has more women than men.
+
+```{r}
+table(all2$trt, all2$gender)
+```
+
+The data is no longer balanced across the covariates in the model. The `weights = "equal"` option is agnostic to this imbalance and assigns all levels equal weights, whereas the `weights = "proportional"` assigns a weight reflecting the proportional size of the stratum over which the average is taken.
+
+
+
+### Contrasts
+
+Most of the times, the quantity we are truly interested in when reading out a study, is the contrast between treatment arms. This contrast can be built either based on LS Means at some landmark time point, or as a longitudinal (linear) combination of LS Means from multiple time points.
+
+We can use the `pairs()` or the `contrast()` functions, where the latter provides more flexibility for the calculation of linear combinations from multiple timepoints.
+
+```{r}
+lsmns <- emmeans::emmeans(fit_cat_time, ~trt*avisit, weights = "proportional")
+pairs(lsmns, reverse = TRUE, adjust = NULL)
+
+### This is the same as the following
+prs <- contrast(lsmns, method = "revpairwise", adjust = NULL)
+```
+
+Note that both `pairs()` and `contrast()` provide multiple options for fine-tuning. We chose `adjust = NULL` in order to not perform any multiplicity adjustment (default method would have been the Tukey method). We also chose `reverse = TRUE` to reverse the order of comparisons performed by `pairs()`, as the default would have given us the contrast for Treatment 1 - Treatment 2. Consequently, we applied `method = "revpairwise"` in the `contrast()` function.
+
+We can obtain the coefficients in the calculation of the contrasts via `coef()`:
+
+```{r}
+coef(prs)
+```
+
+
+The output above is probably more than we wanted. We are only interested in contrasts between Treatments 1 and 2 at the same time points. Here `contrast()` provides more flexibility. Instead of parsing a string with the name of a method to the `method` argument, we provide a named list of coefficients. These coefficients are identical with the onces we can see in the coefficient matrix above. We can use it as a guide. 
+
+```{r}
+contrast(
+  lsmns, 
+  method = list(
+    "Difference Trt 2 - Trt 1 at Week 4" = c(0, 0, -1, 1, 0, 0),
+    "Difference Trt 2 - Trt 1 at Week 8" = c(0, 0, 0, 0, -1, 1)
+  ), 
+  adjust = NULL)
+```
+This way of computing LS Means from our MMRM allows us to calculate all kinds of linear combinations of LS Means. Assume we were interested in the **longitudinal** mean of changes from baseline averaged over Weeks 2, 4 and 8. This would look like this:
+
+```{r}
+contrast(
+  lsmns, 
+  method = list(
+    "Difference Trt 2 - Trt 1 Averaged over Weeks 2, 4 and 8" = c(-1, 1, -1, 1, -1, 1)/3
+  ), 
+  adjust = NULL)
+```
+
+
+## Fit diagnostics
+
+The following section closely follows the content in Chapter 10 in [@fitzmaurice2011].
+
+Our analysis should be concluded with a look into the fit diagnostics, more specifically, the residuals. Residuals are defined by the difference between the true responses and the fitted values from the model:
+
+$$
+r := y - X\hat\beta\,,
+$$ where $\hat\beta$ are the estimated coefficients from our model. Residuals provide an estimate of the true vector of random errors
+
+$$
+\varepsilon = y - X\beta\,.
+$$
+
+As per our modeling assumptions, $\varepsilon$ should follow a normal distribution with mean zero. The mean of the residuals is zero and therefore identical with the mean of the error term. For the covariance of the residuals however, the variance-covariance matrix of $\varepsilon$ only serves us as an approximation (as suggested by [@fitzmaurice2011] for all 'practical applications'):
+
+$$
+Cov(r) \approx Cov(\varepsilon) = R\,.
+$$ This assumption has several implications on the residual diagnostics:
+
+-   The variance is not necessarily constant. Plotting the fitted values versus the residuals might therefore lead to a non-constant range. An examination of the residual variance or autocorrelation among residuals is therefore not very meaningful.
+
+-   Residuals from analyses of longitudinal data can exhibit correlation with the covariates. Scatterplots of residuals versus selected covariates can therefore reveal systematic trends (which normally should not be the case).
+
+A transformation of residuals to achieve constant variance and zero correlation is therefore often useful. This transformation uses the so-called *Cholesky decomposition* of the variance-covariance matrix $R$. Let $L$ be a lower triangular matrix, such that
+
+$$
+R = L\,L'\,,
+$$ then the transformed residuals are given by $$
+r^* =  L^{-1}(y - X\beta)\,.
+$$ In the `mmrm` package, transformed residuals can be derived using the `type = "normalized"` option.
+
+**Exercise**: Which visualisations can you think of that make sense to assess the goodness of fit here? Create a new `tibble` (or `data.frame`) containing the variables of importance and try plotting them in a meaningful way. Discuss the results within your group.
+
+**Solution**:
+
+To avoid repetition, let us first save the important variables to perform fit diagnostics in a `tibble`.
+
+```{r}
+df_residuals <- dplyr::tibble(
+  residuals = residuals(fit_cat_time, type = "normalized"),
+  predictions = fitted(fit_cat_time),
+  all2
+)
+```
+
+We can firstly look into a histogram of transformed residuals. The shape should resemble the density function of normal distribution with mean zero and positive variance. Superimposing the density function with mean and SD derived from the model residuals, let's us see that this is indeed the case. We can also detect a slight skewness to the right.
+
+```{r}
+#| message: false
+library(ggplot2)
+
+df_residuals %>% 
+  ggplot(aes(x = residuals)) +
+  geom_histogram(aes(y = after_stat(density)), fill='lightgray', col='black') +
+  stat_function(fun = dnorm, args = list(mean=mean(df_residuals$residuals), sd=sd(df_residuals$residuals)), col='red', lwd=1) +
+  ggtitle(
+    label = "Histogram of transformed residuals",
+    subtitle = "Normal density with mean and SD of residuals superimposed"
+  )
+```
+
+Alternatively, we can create a Q-Q-Plot.
+
+```{r}
+#| message: false
+
+df_residuals %>% 
+  ggplot(aes(sample = residuals)) +
+  stat_qq(color = "blue") +
+  stat_qq_line() +
+  labs(
+    x = "Quantiles (Normal distribution)",
+    y = "Transformed Residuals"
+  ) +
+  ggtitle(
+    label = "Q-Q Plot Transformed Residuals Plot"
+  )
+```
+
+How to interprete the Q-Q plot:
+
+We can use the following fourfold table to assess the shape characteristics derivable from this plot, depending on where the data on which end of the plot is bend compared to the linear trend line:
+
+```{r}
+#| echo: false
+library(gt)
+dplyr::tibble(
+  pts = c("Lower left corner", "Lower left corner"),
+  cat_ll = c("Above", "Below"),
+  Above = c("Skewed to the right", "Heavy-tailed"),
+  Below = c("Light-tailed",  "Skewed to the left")
+) %>% 
+  gt() %>% 
+  tab_spanner(
+    label = "Upper right corner",
+    columns = c("Above", "Below")
+  ) %>% 
+  cols_label(
+    pts = " ",
+    cat_ll = " "
+  ) %>% 
+  cols_align(
+    align = "center",
+    columns = c("Above", "Below")
+  )
+```
+
+We can see that our data is skewed to the right, as the data in the upper right corner and data in the lower left corner of the plot bend above the linear trend line. This is also a trend we can observe from the histogram.
+
+```{r}
+#| message: false
+df_residuals %>% 
+  ggplot(aes(x = predictions, y = residuals)) +
+  geom_point() +
+  geom_smooth(method = lm, color = "blue") +
+  geom_hline(yintercept = 0, show.legend = FALSE, linetype = 2) +
+  ggtitle(
+    label = "Residual Plot of predicted values vs. transformed residuals"
+  )
+  
+```
+
+What do we see?
+
+-   The points in the plot look well dispersed and symmetric around zero. The fitted line shows no departure from zero.
+
+-   There is no systematic trend, but a rather random scatter.
+
+-   We can spot a couple of outliers.
+
+```{r}
+#| message: false
+df_residuals %>% 
+  ggplot(aes(x = predictions, y = change)) +
+  geom_point() +
+  geom_smooth(method = lm, color = "blue")
+```
+
+### Addendum on RS&I Models
+
+Different dosing/ assessment frequency between treatment arms in parallel design -\> oncology (chemo with fixed cycles vs immune-therapy)
