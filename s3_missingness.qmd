@@ -8,10 +8,16 @@ source("setup.R")
 
 So far, we conducted all our analyses on the basis of complete data. This is a blissful, yet highly unusual setting.
 
-Missingness patterns:
+We use the following definition for missing data, borrowed from [@little19]:
 
--   Monotonic/ dropout
--   Intermittend
+"*Missing data are unobserved values that would be meaningful for analysis if observed; in other words, a missing value hides a meaningful value.*"
+
+We distinguish the following patterns of missingness:
+
+-   **Monotonic missingness/ dropout**: All values by a subject after a certain time are missing. More specifically, if responses are missing at visit $n \in \mathbb{N}$, then responses are also missing for every subsequent visit $n + m$, for all $m \in \mathbb{N}$. *Example:* Subject drop-out from the clinical study.
+-   **Intermittend missingness**: Subjects miss one or several visits, but return for later visits. *Example:* A subject with data collected at baseline and Time 1 (Week 2), a missing value at Time 2 (Week 4) and a non-missing value at Time 3 (Week 8).
+
+Note that, following the nomenclature introduced by [@little19], we use the term missing data *pattern*, to describe which data are missing in the data matrix of subject responses, and the term missing data *mechanism*, which describes the relationship between missing and observed values in the subject responses.
 
 Our dataset contains a second variable `chgdrop`, which is subject to missingness. Let's rerun our initial MMRM with `chgdrop` as dependent variable, baseline value, visit, baseline by visit interaction and treatment by visit interaction as fixed effects and an unstructured covariance matrix for visits within each subject.
 
@@ -50,7 +56,7 @@ To understand the nature of missing data in our clinical trial, we consider the 
 
 -   **Missing not at Random (MNAR)**: Conditional on all covariates and observed response values in our analysis, the probability of missingness does depend on the unobserved values of the response variable.
 
-[@mallinckrodt2020] give the following interpretation around the three types of missingness:
+[@mallinckrodt2016] give the following interpretation around the three types of missingness:
 
 "*With MCAR, the outcome variable is not related to the probability of dropout (after taking into account covariates). In MAR, the observed values of the outcome variable are related to the probability of dropout, but the unobserved outcomes are not (after taking into account covariates and observed outcomes). In MNAR the unobserved outcomes are related to the probability of dropout even after the observed outcomes and covariates have been taken into account.*"
 

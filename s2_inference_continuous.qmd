@@ -6,7 +6,7 @@
 source("setup.R")
 ```
 
-This section will focus on the application of Mixed Model with Repeated Measures (MMRMs). Our main focus will be the modeling of the means of the data. MMRMs are generalizations of standard linear models in the way that data is allowed to be correlated between subsequent measurements from the same subject and exhibit non-constant variability.
+This section will focus on the application of Mixed Model with Repeated Measures (MMRMs). Our main focus will be the modeling of the means of the data. MMRMs are generalizations of standard linear models in the way that data is allowed to be correlated between subsequent measurements from the same subject and exhibit non-constant variability. A nice summary can be found in the user manual for the MIXED Procedure [@sas], or the [vignette](https://openpharma.github.io/mmrm/latest-tag/articles/methodological_introduction.html) for the `mmrm` package [@mmrm].
 
 The primary assumptions for MMRMs are:
 
@@ -15,8 +15,6 @@ The primary assumptions for MMRMs are:
 -   The means (expected values) of the data are linear in terms of a certain set of parameters.
 
 -   The variances and covariances of the data are in terms of a different set of parameters, and they exhibit a structure matching one of those outlined in the former chapter.
-
-\[Alex to add reference to PROC MIXED\]
 
 The mixed linear model can be described via the following formula
 
@@ -70,7 +68,6 @@ Two inputs are strictly required to get `mmrm()` to work:
 ### Unstructured (US)
 
 Unstructured corresponds to a saturated variance-covariance matrix and involves the estimation of $m\,(m+1)/2$ variance components, where $m$ is the number of follow-up visits. In our case, we can see that a total of 6 variance parameters were estimated.
-
 
 ```{r}
 fit_cat_time <- mmrm::mmrm(
@@ -136,7 +133,7 @@ The choice of the spatial power variance-covariance structure makes sense here, 
 
 Note that in this example, we need to use the numeric `week` variable, as spatial power requires the information about the distance of subsequent visits in the estimation of the variance-covariance matrix.
 
-We can see from the fit summary, that the covariance displayed is a 2 * 2 square matrix. As the distance will be used to derive the corresponding element in that matrix, unit distance is used here.
+We can see from the fit summary, that the covariance displayed is a 2 \* 2 square matrix. As the distance will be used to derive the corresponding element in that matrix, unit distance is used here.
 
 ```{r}
 fit_cat_time_sp <- mmrm::mmrm(
@@ -282,8 +279,6 @@ table(all2$trt, all2$gender)
 
 The data is no longer balanced across the covariates in the model. The `weights = "equal"` option is agnostic to this imbalance and assigns all levels equal weights, whereas the `weights = "proportional"` assigns a weight reflecting the proportional size of the stratum over which the average is taken.
 
-
-
 ### Contrasts
 
 Most of the times, the quantity we are truly interested in when reading out a study, is the contrast between treatment arms. This contrast can be built either based on LS Means at some landmark time point, or as a longitudinal (linear) combination of LS Means from multiple time points.
@@ -306,8 +301,7 @@ We can obtain the coefficients in the calculation of the contrasts via `coef()`:
 coef(prs)
 ```
 
-
-The output above is probably more than we wanted. We are only interested in contrasts between Treatments 1 and 2 at the same time points. Here `contrast()` provides more flexibility. Instead of parsing a string with the name of a method to the `method` argument, we provide a named list of coefficients. These coefficients are identical with the onces we can see in the coefficient matrix above. We can use it as a guide. 
+The output above is probably more than we wanted. We are only interested in contrasts between Treatments 1 and 2 at the same time points. Here `contrast()` provides more flexibility. Instead of parsing a string with the name of a method to the `method` argument, we provide a named list of coefficients. These coefficients are identical with the onces we can see in the coefficient matrix above. We can use it as a guide.
 
 ```{r}
 contrast(
@@ -318,6 +312,7 @@ contrast(
   ), 
   adjust = NULL)
 ```
+
 This way of computing LS Means from our MMRM allows us to calculate all kinds of linear combinations of LS Means. Assume we were interested in the **longitudinal** mean of changes from baseline averaged over Weeks 2, 4 and 8. This would look like this:
 
 ```{r}
@@ -328,7 +323,6 @@ contrast(
   ), 
   adjust = NULL)
 ```
-
 
 ## Fit diagnostics
 
@@ -469,6 +463,24 @@ df_residuals %>%
   geom_smooth(method = lm, color = "blue")
 ```
 
-### Addendum on RS&I Models
+## Addendum on Linear Mixed Effect Models
 
-Different dosing/ assessment frequency between treatment arms in parallel design -\> oncology (chemo with fixed cycles vs immune-therapy)
+In this chapter we have dealt with models where the response is modeled as a linear combination of *fixed effect* parameters $\beta$ and a random error $\varepsilon$
+
+$$
+y = X\beta\,+\,\varepsilon\,.
+$$
+
+The fixed effects in this model represent the population effects and we used the random error to model the subject-specific influences. Although we used the term mixed model for repeated measures (MMRM), this nomenclature is misleading in the way that our model does not truly deserve the term *mixed*. A true mixed model would require the involvement of *fixed* and *random* effects. The latter have previously been omitted.
+
+While we will not cover random coefficient models (also known as random slope and intercept models or RS&I models) in depth in this class, we would like to point to couple of useful features. For further reading, one can refer to Chapter 8 in [@fitzmaurice2011].
+
+The distinction between *fixed* and *random* effects in linear mixed effect models allows for modeling of both between-subject and within-subject variations.
+
+"*In addition it is not only possible to estimate parameters that describe how the mean response changes in the population of interest, it is also possible to predict how individual response trajectories change over time. For example, linear mixed effects models can be used to obtain predictions of individual growth trajectories over time.*" [@fitzmaurice2011]
+
+Linear mixed effects models therefore allow for inferences on the individual (subject) basis rather than the entirety of individuals (population).
+
+Another advantage of linear mixed models is their flexibility with respect to imbalances in longitudinal data. We are no longer bound by the restriction to have (approximately) the same number of observations per subject, i.e. the approximately the same length of follow-up, or even for the visits to be taken at the same times. This feature is especially useful whenever we are dealing with parallel design studies, involving the comparison of interventions with different dosing/ assessment frequencies.
+
+Note that the `mmrm` package so far does not allow for fitting of linear mixed effect models, in the sense that an actual *random effects* term is included in the model formula. For these kind of models, we point to the package `lme4` [@lme4].

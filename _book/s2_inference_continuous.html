@@ -227,10 +227,8 @@ div.csl-indent {
   <li><a href="#observed-vs.-balanced-margins" id="toc-observed-vs.-balanced-margins" class="nav-link" data-scroll-target="#observed-vs.-balanced-margins"><span class="header-section-number">3.4.1</span> Observed vs.&nbsp;balanced margins</a></li>
   <li><a href="#contrasts" id="toc-contrasts" class="nav-link" data-scroll-target="#contrasts"><span class="header-section-number">3.4.2</span> Contrasts</a></li>
   </ul></li>
-  <li><a href="#fit-diagnostics" id="toc-fit-diagnostics" class="nav-link" data-scroll-target="#fit-diagnostics"><span class="header-section-number">3.5</span> Fit diagnostics</a>
-  <ul class="collapse">
-  <li><a href="#addendum-on-rsi-models" id="toc-addendum-on-rsi-models" class="nav-link" data-scroll-target="#addendum-on-rsi-models"><span class="header-section-number">3.5.1</span> Addendum on RS&amp;I Models</a></li>
-  </ul></li>
+  <li><a href="#fit-diagnostics" id="toc-fit-diagnostics" class="nav-link" data-scroll-target="#fit-diagnostics"><span class="header-section-number">3.5</span> Fit diagnostics</a></li>
+  <li><a href="#addendum-on-linear-mixed-effect-models" id="toc-addendum-on-linear-mixed-effect-models" class="nav-link" data-scroll-target="#addendum-on-linear-mixed-effect-models"><span class="header-section-number">3.6</span> Addendum on Linear Mixed Effect Models</a></li>
   </ul>
 </nav>
     </div>
@@ -254,14 +252,13 @@ div.csl-indent {
 
 </header>
 
-<p>This section will focus on the application of Mixed Model with Repeated Measures (MMRMs). Our main focus will be the modeling of the means of the data. MMRMs are generalizations of standard linear models in the way that data is allowed to be correlated between subsequent measurements from the same subject and exhibit non-constant variability.</p>
+<p>This section will focus on the application of Mixed Model with Repeated Measures (MMRMs). Our main focus will be the modeling of the means of the data. MMRMs are generalizations of standard linear models in the way that data is allowed to be correlated between subsequent measurements from the same subject and exhibit non-constant variability. A nice summary can be found in the user manual for the MIXED Procedure <span class="citation" data-cites="sas">(<a href="references.html#ref-sas" role="doc-biblioref">Inc., n.d.</a>)</span>, or the <a href="https://openpharma.github.io/mmrm/latest-tag/articles/methodological_introduction.html">vignette</a> for the <code>mmrm</code> package <span class="citation" data-cites="mmrm">(<a href="references.html#ref-mmrm" role="doc-biblioref">Sabanes Bove et al. 2024</a>)</span>.</p>
 <p>The primary assumptions for MMRMs are:</p>
 <ul>
 <li><p>The data are normally distributed</p></li>
 <li><p>The means (expected values) of the data are linear in terms of a certain set of parameters.</p></li>
 <li><p>The variances and covariances of the data are in terms of a different set of parameters, and they exhibit a structure matching one of those outlined in the former chapter.</p></li>
 </ul>
-<p>[Alex to add reference to PROC MIXED]</p>
 <p>The mixed linear model can be described via the following formula</p>
 <p><span class="math display">\[
 y_i = X_i\beta\,+\,Z_i\gamma_i\,+\,\varepsilon_i\,,\, i = 1,\ldots,N
@@ -1013,7 +1010,7 @@ r^* =  L^{-1}(y - X\beta)\,.
 <p><img src="s2_inference_continuous_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Alternatively, we can create a Q-Q-Plot of …</p>
+<p>Alternatively, we can create a Q-Q-Plot.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>df_residuals <span class="sc">%&gt;%</span> </span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> residuals)) <span class="sc">+</span></span>
@@ -1035,23 +1032,23 @@ r^* =  L^{-1}(y - X\beta)\,.
 <div class="cell">
 <div class="cell-output-display">
 
-<div id="erhwjnqrja" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#erhwjnqrja table {
+<div id="zqcswitfpf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zqcswitfpf table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#erhwjnqrja thead, #erhwjnqrja tbody, #erhwjnqrja tfoot, #erhwjnqrja tr, #erhwjnqrja td, #erhwjnqrja th {
+#zqcswitfpf thead, #zqcswitfpf tbody, #zqcswitfpf tfoot, #zqcswitfpf tr, #zqcswitfpf td, #zqcswitfpf th {
   border-style: none;
 }
 
-#erhwjnqrja p {
+#zqcswitfpf p {
   margin: 0;
   padding: 0;
 }
 
-#erhwjnqrja .gt_table {
+#zqcswitfpf .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1077,12 +1074,12 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-left-color: #D3D3D3;
 }
 
-#erhwjnqrja .gt_caption {
+#zqcswitfpf .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#erhwjnqrja .gt_title {
+#zqcswitfpf .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1094,7 +1091,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-bottom-width: 0;
 }
 
-#erhwjnqrja .gt_subtitle {
+#zqcswitfpf .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1106,7 +1103,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-top-width: 0;
 }
 
-#erhwjnqrja .gt_heading {
+#zqcswitfpf .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1118,13 +1115,13 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-right-color: #D3D3D3;
 }
 
-#erhwjnqrja .gt_bottom_border {
+#zqcswitfpf .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#erhwjnqrja .gt_col_headings {
+#zqcswitfpf .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1139,7 +1136,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-right-color: #D3D3D3;
 }
 
-#erhwjnqrja .gt_col_heading {
+#zqcswitfpf .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1159,7 +1156,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   overflow-x: hidden;
 }
 
-#erhwjnqrja .gt_column_spanner_outer {
+#zqcswitfpf .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1171,15 +1168,15 @@ r^* =  L^{-1}(y - X\beta)\,.
   padding-right: 4px;
 }
 
-#erhwjnqrja .gt_column_spanner_outer:first-child {
+#zqcswitfpf .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#erhwjnqrja .gt_column_spanner_outer:last-child {
+#zqcswitfpf .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#erhwjnqrja .gt_column_spanner {
+#zqcswitfpf .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1191,11 +1188,11 @@ r^* =  L^{-1}(y - X\beta)\,.
   width: 100%;
 }
 
-#erhwjnqrja .gt_spanner_row {
+#zqcswitfpf .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#erhwjnqrja .gt_group_heading {
+#zqcswitfpf .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1221,7 +1218,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   text-align: left;
 }
 
-#erhwjnqrja .gt_empty_group_heading {
+#zqcswitfpf .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1236,15 +1233,15 @@ r^* =  L^{-1}(y - X\beta)\,.
   vertical-align: middle;
 }
 
-#erhwjnqrja .gt_from_md > :first-child {
+#zqcswitfpf .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#erhwjnqrja .gt_from_md > :last-child {
+#zqcswitfpf .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#erhwjnqrja .gt_row {
+#zqcswitfpf .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1263,7 +1260,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   overflow-x: hidden;
 }
 
-#erhwjnqrja .gt_stub {
+#zqcswitfpf .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1276,7 +1273,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   padding-right: 5px;
 }
 
-#erhwjnqrja .gt_stub_row_group {
+#zqcswitfpf .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1290,15 +1287,15 @@ r^* =  L^{-1}(y - X\beta)\,.
   vertical-align: top;
 }
 
-#erhwjnqrja .gt_row_group_first td {
+#zqcswitfpf .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#erhwjnqrja .gt_row_group_first th {
+#zqcswitfpf .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#erhwjnqrja .gt_summary_row {
+#zqcswitfpf .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1308,16 +1305,16 @@ r^* =  L^{-1}(y - X\beta)\,.
   padding-right: 5px;
 }
 
-#erhwjnqrja .gt_first_summary_row {
+#zqcswitfpf .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#erhwjnqrja .gt_first_summary_row.thick {
+#zqcswitfpf .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#erhwjnqrja .gt_last_summary_row {
+#zqcswitfpf .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1327,7 +1324,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-bottom-color: #D3D3D3;
 }
 
-#erhwjnqrja .gt_grand_summary_row {
+#zqcswitfpf .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1337,7 +1334,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   padding-right: 5px;
 }
 
-#erhwjnqrja .gt_first_grand_summary_row {
+#zqcswitfpf .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1347,7 +1344,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-top-color: #D3D3D3;
 }
 
-#erhwjnqrja .gt_last_grand_summary_row_top {
+#zqcswitfpf .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1357,11 +1354,11 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-bottom-color: #D3D3D3;
 }
 
-#erhwjnqrja .gt_striped {
+#zqcswitfpf .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#erhwjnqrja .gt_table_body {
+#zqcswitfpf .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1370,7 +1367,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-bottom-color: #D3D3D3;
 }
 
-#erhwjnqrja .gt_footnotes {
+#zqcswitfpf .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1384,7 +1381,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-right-color: #D3D3D3;
 }
 
-#erhwjnqrja .gt_footnote {
+#zqcswitfpf .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1393,7 +1390,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   padding-right: 5px;
 }
 
-#erhwjnqrja .gt_sourcenotes {
+#zqcswitfpf .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1407,7 +1404,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-right-color: #D3D3D3;
 }
 
-#erhwjnqrja .gt_sourcenote {
+#zqcswitfpf .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1415,63 +1412,63 @@ r^* =  L^{-1}(y - X\beta)\,.
   padding-right: 5px;
 }
 
-#erhwjnqrja .gt_left {
+#zqcswitfpf .gt_left {
   text-align: left;
 }
 
-#erhwjnqrja .gt_center {
+#zqcswitfpf .gt_center {
   text-align: center;
 }
 
-#erhwjnqrja .gt_right {
+#zqcswitfpf .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#erhwjnqrja .gt_font_normal {
+#zqcswitfpf .gt_font_normal {
   font-weight: normal;
 }
 
-#erhwjnqrja .gt_font_bold {
+#zqcswitfpf .gt_font_bold {
   font-weight: bold;
 }
 
-#erhwjnqrja .gt_font_italic {
+#zqcswitfpf .gt_font_italic {
   font-style: italic;
 }
 
-#erhwjnqrja .gt_super {
+#zqcswitfpf .gt_super {
   font-size: 65%;
 }
 
-#erhwjnqrja .gt_footnote_marks {
+#zqcswitfpf .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#erhwjnqrja .gt_asterisk {
+#zqcswitfpf .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#erhwjnqrja .gt_indent_1 {
+#zqcswitfpf .gt_indent_1 {
   text-indent: 5px;
 }
 
-#erhwjnqrja .gt_indent_2 {
+#zqcswitfpf .gt_indent_2 {
   text-indent: 10px;
 }
 
-#erhwjnqrja .gt_indent_3 {
+#zqcswitfpf .gt_indent_3 {
   text-indent: 15px;
 }
 
-#erhwjnqrja .gt_indent_4 {
+#zqcswitfpf .gt_indent_4 {
   text-indent: 20px;
 }
 
-#erhwjnqrja .gt_indent_5 {
+#zqcswitfpf .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1524,6 +1521,7 @@ r^* =  L^{-1}(y - X\beta)\,.
 <ul>
 <li><p>The points in the plot look well dispersed and symmetric around zero. The fitted line shows no departure from zero.</p></li>
 <li><p>There is no systematic trend, but a rather random scatter.</p></li>
+<li><p>We can spot a couple of outliers.</p></li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>df_residuals <span class="sc">%&gt;%</span> </span>
@@ -1534,20 +1532,36 @@ r^* =  L^{-1}(y - X\beta)\,.
 <p><img src="s2_inference_continuous_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<section id="addendum-on-rsi-models" class="level3" data-number="3.5.1">
-<h3 data-number="3.5.1" class="anchored" data-anchor-id="addendum-on-rsi-models"><span class="header-section-number">3.5.1</span> Addendum on RS&amp;I Models</h3>
-<p>Different dosing/ assessment frequency between treatment arms in parallel design -&gt; oncology (chemo with fixed cycles vs immune-therapy)</p>
+</section>
+<section id="addendum-on-linear-mixed-effect-models" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="addendum-on-linear-mixed-effect-models"><span class="header-section-number">3.6</span> Addendum on Linear Mixed Effect Models</h2>
+<p>In this chapter we have dealt with models where the response is modeled as a linear combination of <em>fixed effect</em> parameters <span class="math inline">\(\beta\)</span> and a random error <span class="math inline">\(\varepsilon\)</span></p>
+<p><span class="math display">\[
+y = X\beta\,+\,\varepsilon\,.
+\]</span></p>
+<p>The fixed effects in this model represent the population effects and we used the random error to model the subject-specific influences. Although we used the term mixed model for repeated measures (MMRM), this nomenclature is misleading in the way that our model does not truly deserve the term <em>mixed</em>. A true mixed model would require the involvement of <em>fixed</em> and <em>random</em> effects. The latter have previously been omitted.</p>
+<p>While we will not cover random coefficient models (also known as random slope and intercept models or RS&amp;I models) in depth in this class, we would like to point to couple of useful features. For further reading, one can refer to Chapter 8 in <span class="citation" data-cites="fitzmaurice2011">(<a href="references.html#ref-fitzmaurice2011" role="doc-biblioref">Fitzmaurice 2011</a>)</span>.</p>
+<p>The distinction between <em>fixed</em> and <em>random</em> effects in linear mixed effect models allows for modeling of both between-subject and within-subject variations.</p>
+<p>“<em>In addition it is not only possible to estimate parameters that describe how the mean response changes in the population of interest, it is also possible to predict how individual response trajectories change over time. For example, linear mixed effects models can be used to obtain predictions of individual growth trajectories over time.</em>” <span class="citation" data-cites="fitzmaurice2011">(<a href="references.html#ref-fitzmaurice2011" role="doc-biblioref">Fitzmaurice 2011</a>)</span></p>
+<p>Linear mixed effects models therefore allow for inferences on the individual (subject) basis rather than the entirety of individuals (population).</p>
+<p>Another advantage of linear mixed models is their flexibility with respect to imbalances in longitudinal data. We are no longer bound by the restriction to have (approximately) the same number of observations per subject, i.e.&nbsp;the approximately the same length of follow-up, or even for the visits to be taken at the same times. This feature is especially useful whenever we are dealing with parallel design studies, involving the comparison of interventions with different dosing/ assessment frequencies.</p>
+<p>Note that the <code>mmrm</code> package so far does not allow for fitting of linear mixed effect models, in the sense that an actual <em>random effects</em> term is included in the model formula. For these kind of models, we point to the package <code>lme4</code> <span class="citation" data-cites="lme4">(<a href="references.html#ref-lme4" role="doc-biblioref">Bates et al. 2015</a>)</span>.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-lme4" class="csl-entry" role="listitem">
+Bates, Douglas, Martin Mächler, Ben Bolker, and Steve Walker. 2015. <span>“Fitting Linear Mixed-Effects Models Using <span class="nocase">lme4</span>.”</span> <em>Journal of Statistical Software</em> 67 (1): 1–48. <a href="https://doi.org/10.18637/jss.v067.i01">https://doi.org/10.18637/jss.v067.i01</a>.
+</div>
 <div id="ref-fitzmaurice2011" class="csl-entry" role="listitem">
 Fitzmaurice, Laird, G. M. 2011. <em>Applied Longitudinal Analysis</em>. Vol. 2. USA: New York, Wiley. <a href="https://doi.org/10.1002/9781119513469">https://doi.org/10.1002/9781119513469</a>.
+</div>
+<div id="ref-sas" class="csl-entry" role="listitem">
+Inc., SAS Institute. n.d. <span>“The MIXED Procedure.”</span> <em>SAS/STAT(R) 9.2 User’s Guide, Second Edition</em>. <a href="https://support.sas.com/documentation/cdl/en/statug/63033/HTML/default/viewer.htm#mixed_toc.htm">https://support.sas.com/documentation/cdl/en/statug/63033/HTML/default/viewer.htm#mixed_toc.htm</a>.
 </div>
 <div id="ref-mmrm" class="csl-entry" role="listitem">
 Sabanes Bove, Daniel, Liming Li, Julia Dedic, Doug Kelkhoff, Kevin Kunzmann, Brian Matthew Lang, Christian Stock, et al. 2024. <em>Mmrm: Mixed Models for Repeated Measures</em>. <a href="https://openpharma.github.io/mmrm/">https://openpharma.github.io/mmrm/</a>.
 </div>
 </div>
-</section>
 </section>
 
 </main> <!-- /main -->
