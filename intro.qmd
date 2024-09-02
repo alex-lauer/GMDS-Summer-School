@@ -38,10 +38,12 @@ The outcomes under point 1. can be handled via a comparison of the percentages o
 
 ## Basics about RStudio (pre-read)
 
-Alex to add pre-read (YouTube + Cheat Sheets)
+If you are not used to working with R and RStudio so far, we recommend for you to familiarize yourself with the following useful content:
 
-## Example data
+-   [RStudio User Guide](https://docs.posit.co/ide/user/)
 
-```{r}
+-   [RStudio Cheatsheet](https://rstudio.github.io/cheatsheets/html/rstudio-ide.html)
 
-```
+-   The following two cheatsheets for [dplyr](https://rstudio.github.io/cheatsheets/html/data-transformation.html) (data wrangling) and [ggplot2](https://rstudio.github.io/cheatsheets/html/data-visualization.html) (plotting and visualizations)
+
+-   This video about [Quarto](https://www.youtube.com/watch?v=_f3latmOhew)

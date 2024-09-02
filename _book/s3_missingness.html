@@ -299,7 +299,7 @@ Confidence level used: 0.95 </code></pre>
 <li><p><strong>Missing at Random (MAR)</strong>: Conditional on all covariates and observed response values in our analysis, the probability of missingness does not depend on the unobserved values of the response variable.</p></li>
 <li><p><strong>Missing not at Random (MNAR)</strong>: Conditional on all covariates and observed response values in our analysis, the probability of missingness does depend on the unobserved values of the response variable.</p></li>
 </ul>
-<p><span class="citation" data-cites="mallinckrodt2020">(<a href="references.html#ref-mallinckrodt2020" role="doc-biblioref"><strong>mallinckrodt2020?</strong></a>)</span> give the following interpretation around the three types of missingness:</p>
+<p><span class="citation" data-cites="mallinckrodt2016">(<a href="references.html#ref-mallinckrodt2016" role="doc-biblioref">Mallinckrodt and Lipkovich 2016</a>)</span> give the following interpretation around the three types of missingness:</p>
 <p>“<em>With MCAR, the outcome variable is not related to the probability of dropout (after taking into account covariates). In MAR, the observed values of the outcome variable are related to the probability of dropout, but the unobserved outcomes are not (after taking into account covariates and observed outcomes). In MNAR the unobserved outcomes are related to the probability of dropout even after the observed outcomes and covariates have been taken into account.</em>”</p>
 <p>The following two sections outline handling strategies for missing data. However, the best approach to handle missing data is to minimise its extent. While the occurence of missing data can rarely be avoided at all (think about the collection of questionnaire data in oncology studies and the missing data after subjects die), it is important to pursue an “as complete as can be” data collection.</p>
 <p>Baseline and screening data are of utmost importance in a pursuit of data completeness. If a screening value is missing, but was meant to be used as a covariate, this subjects’ whole data will be dropped from the analysis even if all responses were observed. If the baseline response variable was missing we are unable to compute a change from baseline, which also leads to the loss of this subjects’ data in the model (although LDA models are still able to provide an estimate) even if all post-baseline values were observed.</p>
@@ -319,6 +319,9 @@ Confidence level used: 0.95 </code></pre>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-mallinckrodt2016" class="csl-entry" role="listitem">
+Mallinckrodt, Craig, and Ilya Lipkovich. 2016. <em>Analyzing Longitudinal Clinical Trial Data</em>. Chapman; Hall/CRC. <a href="https://doi.org/10.1201/9781315186634">https://doi.org/10.1201/9781315186634</a>.
+</div>
 <div id="ref-little19" class="csl-entry" role="listitem">
 Roderick JA Little, Donald B. Rubin. 2019. <em>Statistical Analysis with Missing Data</em>. Vol. 3. USA: New York, Wiley. <a href="https://doi.org/10.1002/9781119482260">https://doi.org/10.1002/9781119482260</a>.
 </div>

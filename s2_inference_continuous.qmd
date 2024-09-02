@@ -6,7 +6,7 @@
 source("setup.R")
 ```
 
-This section will focus on the application of Mixed Model with Repeated Measures (MMRMs). Our main focus will be the modeling of the means of the data. MMRMs are generalizations of standard linear models in the way that data is allowed to be correlated between subsequent measurements from the same subject and exhibit non-constant variability. A nice summary can be found in the user manual for the MIXED Procedure [@sas], or the [vignette](https://openpharma.github.io/mmrm/latest-tag/articles/methodological_introduction.html) for the `mmrm` package [@mmrm].
+This section will focus on the application of Mixed Model with Repeated Measures (MMRMs). Our main focus will be the modeling of the means of the data. MMRMs are generalizations of standard linear models in the way that data is allowed to be correlated between subsequent measurements from the same subject and exhibit non-constant variability. A nice summary can be found in the user manual for the MIXED Procedure [SAS](https://support.sas.com/documentation/cdl/en/statug/63033/HTML/default/viewer.htm#mixed_toc.htm), or the [vignette](https://openpharma.github.io/mmrm/latest-tag/articles/methodological_introduction.html) for the `mmrm` package [@mmrm].
 
 The primary assumptions for MMRMs are:
 
@@ -181,7 +181,6 @@ fit_cont_timesq <- mmrm::mmrm(
 summary(fit_cont_timesq)
 ```
 
-## Baseline as a Response (cLDA + LDA)
 
 ## (Adjusted) LS Means from MMRMs
 
@@ -463,6 +462,67 @@ df_residuals %>%
   geom_smooth(method = lm, color = "blue")
 ```
 
+## Baseline as a Response (cLDA + LDA)
+
+In the former examples we used baseline severity as a continuous covariate, which is the most common approach. In this case we treat `baseval` as a *fixed effect* and used changes from baseline as response variable in our model formula. This approach comes with a couple of caveats:
+
+-   Only subjects with a non-missing baseline and at least one non-missing follow-up response contribute to the analysis (i.e. at least one non-missing change from baseline value).
+
+-   Only subjects with complete covariate data contribute to the analysis.
+
+Hence, if `baseval` is missing for a subject, this subject will not be included in our model. [@liang_zeger] introduced the so-called LDA (longitudinal data analysis) and cLDA (constrained longitudinal data analysis) models. The basic idea behind these models is that baseline can be regarded as a response at Time 0, and can therefore be included in the vector of responses.
+
+In order to fit the model, we need to apply some data wrangling upfront and add baseline to the response column (`aval`). Note that this step is usually not required when dealing with CDISC compliant datasets, such as ADaM or SDTM.
+
+```{r}
+base <- dplyr::distinct(all2, subject, trt, basval, group, gender) %>% 
+  dplyr::mutate(
+    time = 0,
+    aval = basval,
+    avisit = "Baseline"
+  )
+
+all2_lda <- dplyr::bind_rows(all2, base) %>% 
+  dplyr::mutate(
+    avisit = forcats::fct_reorder(avisit, time)
+  )
+
+### Check Order of avisit levels:
+levels(all2_lda$avisit)
+```
+
+We can now fit a model, including `aval` as a response variable, treatment (`group`), visit (`avisit`) and a treatment-by-time interaction term:
+
+```{r}
+lda <- mmrm(
+  formula = aval ~ group*avisit + us(avisit | subject),
+  data = all2_lda,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+```
+
+The LS Mean estimates per treatment arm for mean changes to Week 8 (Time 3) are now obtained via contrasts between Week 3 and Baseline:
+
+```{r}
+lsmns <- emmeans(lda, ~group*avisit, weights = "proportional")
+contrast(
+  lsmns,
+  method = list(
+    "LS Means for Change from Baseline to Week 8 Treatment 1" = c(-1, 0, 0, 0, 0, 0, 1, 0),
+    "LS Means for Change from Baseline to Week 8 Treatment 2" = c(0, -1, 0, 0, 0, 0, 0, 1),
+    "LS Means for Difference in Changes to Week 8 btw. Treatment 2 and Treatment 1" = c(1, -1, 0, 0, 0, 0, -1, 1)
+  ), 
+  adjust = NULL
+)
+```
+A note on caveats associated with LDA models:
+
+-   In cases where the treatment effect has a rapid onset, the linearity assumption underlying the model is violated.
+
+-   Use of baseline as a response, as opposed to a covariate, ignores the predictive nature of baseline severity as an explanatory factor in the residual error.
+
+Generally, LDA models can be very useful in trials with only very few visits per patient due to the additional response value being included. In longer trials however, it is recommended to refrain from their use for the disadvantages stated above. In this case, a decent data quality should is key to avoid missing baseline data (if possible completely) and reduce the degree of missingness with regards to follow-up data as much as possible. 
+
 ## Addendum on Linear Mixed Effect Models
 
 In this chapter we have dealt with models where the response is modeled as a linear combination of *fixed effect* parameters $\beta$ and a random error $\varepsilon$
@@ -475,11 +535,11 @@ The fixed effects in this model represent the population effects and we used the
 
 While we will not cover random coefficient models (also known as random slope and intercept models or RS&I models) in depth in this class, we would like to point to couple of useful features. For further reading, one can refer to Chapter 8 in [@fitzmaurice2011].
 
-The distinction between *fixed* and *random* effects in linear mixed effect models allows for modeling of both between-subject and within-subject variations.
+The distinction between *fixed* and *random* effects in linear mixed effect models allows for modeling of both between-subject and within-subject variations. In random coefficient models (i.e. MMRMs with a non-trivial random effect) each subject is assumed to have their own (linear) rate of response over time, expressed as random slopes and intercepts.
 
 "*In addition it is not only possible to estimate parameters that describe how the mean response changes in the population of interest, it is also possible to predict how individual response trajectories change over time. For example, linear mixed effects models can be used to obtain predictions of individual growth trajectories over time.*" [@fitzmaurice2011]
 
-Linear mixed effects models therefore allow for inferences on the individual (subject) basis rather than the entirety of individuals (population).
+Linear mixed effects models therefore allow for inferences on the individual (subject) basis rather than the entirety of individuals (population). 
 
 Another advantage of linear mixed models is their flexibility with respect to imbalances in longitudinal data. We are no longer bound by the restriction to have (approximately) the same number of observations per subject, i.e. the approximately the same length of follow-up, or even for the visits to be taken at the same times. This feature is especially useful whenever we are dealing with parallel design studies, involving the comparison of interventions with different dosing/ assessment frequencies.
 
