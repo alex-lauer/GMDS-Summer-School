@@ -521,7 +521,7 @@ A note on caveats associated with LDA models:
 
 -   Use of baseline as a response, as opposed to a covariate, ignores the predictive nature of baseline severity as an explanatory factor in the residual error.
 
-Generally, LDA models can be very useful in trials with only very few visits per patient due to the additional response value being included. In longer trials however, it is recommended to refrain from their use for the disadvantages stated above. In this case, a decent data quality should is key to avoid missing baseline data (if possible completely) and reduce the degree of missingness with regards to follow-up data as much as possible. 
+Generally, LDA models can be very useful in trials with only very few visits per patient due to the additional response value being included. In longer trials however, it is recommended to refrain from their use for the disadvantages stated above. In this case, a decent data quality is key to avoid missing baseline data (if possible completely) and reduce the degree of missingness with regards to follow-up data as much as possible. 
 
 ## Addendum on Linear Mixed Effect Models
 
