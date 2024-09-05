@@ -243,14 +243,14 @@ div.csl-indent {
 </header>
 
 <p>So far, we conducted all our analyses on the basis of complete data. This is a blissful, yet highly unusual setting.</p>
-<p>We use the following definition for missing data, borrowed from <span class="citation" data-cites="little19">(<a href="#ref-little19" role="doc-biblioref">Roderick JA Little 2019</a>)</span>:</p>
+<p>We use the following definition for missing data, borrowed from <span class="citation" data-cites="little19">(<a href="references.html#ref-little19" role="doc-biblioref">Roderick JA Little 2019</a>)</span>:</p>
 <p>“<em>Missing data are unobserved values that would be meaningful for analysis if observed; in other words, a missing value hides a meaningful value.</em>”</p>
 <p>We distinguish the following patterns of missingness:</p>
 <ul>
 <li><strong>Monotonic missingness/ dropout</strong>: All values by a subject after a certain time are missing. More specifically, if responses are missing at visit <span class="math inline">\(n \in \mathbb{N}\)</span>, then responses are also missing for every subsequent visit <span class="math inline">\(n + m\)</span>, for all <span class="math inline">\(m \in \mathbb{N}\)</span>. <em>Example:</em> Subject drop-out from the clinical study.</li>
 <li><strong>Intermittend missingness</strong>: Subjects miss one or several visits, but return for later visits. <em>Example:</em> A subject with data collected at baseline and Time 1 (Week 2), a missing value at Time 2 (Week 4) and a non-missing value at Time 3 (Week 8).</li>
 </ul>
-<p>Note that, following the nomenclature introduced by <span class="citation" data-cites="little19">(<a href="#ref-little19" role="doc-biblioref">Roderick JA Little 2019</a>)</span>, we use the term missing data <em>pattern</em>, to describe which data are missing in the data matrix of subject responses, and the term missing data <em>mechanism</em>, which describes the relationship between missing and observed values in the subject responses.</p>
+<p>Note that, following the nomenclature introduced by <span class="citation" data-cites="little19">(<a href="references.html#ref-little19" role="doc-biblioref">Roderick JA Little 2019</a>)</span>, we use the term missing data <em>pattern</em>, to describe which data are missing in the data matrix of subject responses, and the term missing data <em>mechanism</em>, which describes the relationship between missing and observed values in the subject responses.</p>
 <p>Our dataset contains a second variable <code>chgdrop</code>, which is subject to missingness. Let’s rerun our initial MMRM with <code>chgdrop</code> as dependent variable, baseline value, visit, baseline by visit interaction and treatment by visit interaction as fixed effects and an unstructured covariance matrix for visits within each subject.</p>
 <p>This formulation is very similar to the one at the beginning of the former chapter. How do the results differ in terms of LS Means of change from baseline by treatment arm over time?</p>
 <div class="cell">
@@ -294,13 +294,13 @@ Confidence level used: 0.95 </code></pre>
 <p>To understand the nature of the differences between the model using <code>change</code> as a response variable and the one with <code>chgdrop</code>, we need to look closer into the extent of missing data and understand its nature.</p>
 <section id="missing-data-mechanisms" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="missing-data-mechanisms"><span class="header-section-number">4.1</span> Missing Data Mechanisms</h2>
-<p>To understand the nature of missing data in our clinical trial, we consider the following taxonomy, introduced by <span class="citation" data-cites="little19">(<a href="#ref-little19" role="doc-biblioref">Roderick JA Little 2019</a>)</span>. We differentiate between the following three types of missing data:</p>
+<p>To understand the nature of missing data in our clinical trial, we consider the following taxonomy, introduced by <span class="citation" data-cites="little19">(<a href="references.html#ref-little19" role="doc-biblioref">Roderick JA Little 2019</a>)</span>. We differentiate between the following three types of missing data:</p>
 <ul>
 <li><p><strong>Missing Completely at Random (MCAR)</strong>: Conditional on all covariates in our analysis, the probability of missingness does not depend on either observed or unobserved values of the response variable.</p></li>
 <li><p><strong>Missing at Random (MAR)</strong>: Conditional on all covariates and observed response values in our analysis, the probability of missingness does not depend on the unobserved values of the response variable.</p></li>
 <li><p><strong>Missing not at Random (MNAR)</strong>: Conditional on all covariates and observed response values in our analysis, the probability of missingness does depend on the unobserved values of the response variable.</p></li>
 </ul>
-<p><span class="citation" data-cites="mallinckrodt2016">(<a href="#ref-mallinckrodt2016" role="doc-biblioref">Mallinckrodt and Lipkovich 2016</a>)</span> give the following interpretation around the three types of missingness:</p>
+<p><span class="citation" data-cites="mallinckrodt2016">(<a href="references.html#ref-mallinckrodt2016" role="doc-biblioref">Mallinckrodt and Lipkovich 2016</a>)</span> give the following interpretation around the three types of missingness:</p>
 <p>“<em>With MCAR, the outcome variable is not related to the probability of dropout (after taking into account covariates). In MAR, the observed values of the outcome variable are related to the probability of dropout, but the unobserved outcomes are not (after taking into account covariates and observed outcomes). In MNAR the unobserved outcomes are related to the probability of dropout even after the observed outcomes and covariates have been taken into account.</em>”</p>
 <p>The following two sections outline handling strategies for missing data. However, the best approach to handle missing data is to minimise its extent. While the occurence of missing data can rarely be avoided at all (think about the collection of questionnaire data in oncology studies and the missing data after subjects die), it is important to pursue an “as complete as can be” data collection.</p>
 <p>Baseline and screening data are of utmost importance in a pursuit of data completeness. If a screening value is missing, but was meant to be used as a covariate, this subjects’ whole data will be dropped from the analysis even if all responses were observed. If the baseline response variable was missing we are unable to compute a change from baseline, which also leads to the loss of this subjects’ data in the model (although LDA models are still able to provide an estimate) even if all post-baseline values were observed.</p>
@@ -338,10 +338,10 @@ Confidence level used: 0.95 </code></pre>
 </ul>
 <p>From these numbers, we can derive the <em>available data rate</em> and the <em>compliance</em> for visit <span class="math inline">\(i\)</span> as follows:</p>
 <p><span class="math display">\[
-\begin{align}
+\begin{aligned}
 \text{Available Data Rate}_{\,i} &amp;:= 100\,\frac{\#\{\text{Subj. with assessment i completed}\}}{\#\{\text{Subj. randomized}\}}\,,\\
 \text{Compliance Rate}_{\,i} &amp;:= 100\,\frac{\#\{\text{Subj. with assessment i completed}\}}{\#\{\text{Subj. assessment i expected}\}}\,.
-\end{align}
+\end{aligned}
 \]</span> The available data rate indicates the degree of missingness due to drop-outs or deaths from the study. It shows how many of the initially randomized patients are still ongoing at a certain visit.</p>
 <p>The compliance rate indicates the degree of missingness due to skipped assessments by patients, who are still ongoing in the study and expected to provide their measurement.</p>
 <p>One can summarize compliance and available data rate by means of a table or stacked bar charts with study visits on the x-axis and percentage of patients with measurements at the respective visit, drop-out, skipped assessments, death etc. on the y-axis.</p>
@@ -537,7 +537,7 @@ Confidence level used: 0.95 </code></pre>
 <p>In principle, this method should be avoided.</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-mallinckrodt2016" class="csl-entry" role="listitem">
 Mallinckrodt, Craig, and Ilya Lipkovich. 2016. <em>Analyzing Longitudinal Clinical Trial Data</em>. Chapman; Hall/CRC. <a href="https://doi.org/10.1201/9781315186634">https://doi.org/10.1201/9781315186634</a>.
 </div>

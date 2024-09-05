@@ -148,10 +148,10 @@ Compliance tables summarize three key components to characterize missingness in 
 From these numbers, we can derive the *available data rate* and the *compliance* for visit $i$ as follows:
 
 $$
-\begin{align}
+\begin{aligned}
 \text{Available Data Rate}_{\,i} &:= 100\,\frac{\#\{\text{Subj. with assessment i completed}\}}{\#\{\text{Subj. randomized}\}}\,,\\
 \text{Compliance Rate}_{\,i} &:= 100\,\frac{\#\{\text{Subj. with assessment i completed}\}}{\#\{\text{Subj. assessment i expected}\}}\,.
-\end{align}
+\end{aligned}
 $$
 The available data rate indicates the degree of missingness due to drop-outs or deaths from the study. It shows how many of the initially randomized patients are still ongoing at a certain visit.
 

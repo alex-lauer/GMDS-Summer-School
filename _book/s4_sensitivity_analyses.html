@@ -289,7 +289,7 @@ div.csl-indent {
 <ul>
 <li>Missing baseline value of the outcome (and other covariates) is a common situation</li>
 <li>MMRM not efficient or potential biased estimates as subjects with missing covariates are excluded from the analysis</li>
-<li><span class="citation" data-cites="kayembe2022">(<a href="#ref-kayembe2022" role="doc-biblioref">Kayembe and Breukelen 2022</a>)</span> compared different methods e.g.&nbsp;unadjusted analysis, complete case, mean imputation, MI: mean imputation seems to be appropriate as long as the covariates are measured before randomization (produces unbiased treatment effect estimates with good coverage, easy to implement)</li>
+<li><span class="citation" data-cites="kayembe2022">(<a href="references.html#ref-kayembe2022" role="doc-biblioref">Kayembe and Breukelen 2022</a>)</span> compared different methods e.g.&nbsp;unadjusted analysis, complete case, mean imputation, MI: mean imputation seems to be appropriate as long as the covariates are measured before randomization (produces unbiased treatment effect estimates with good coverage, easy to implement)</li>
 </ul>
 <p>Now, we consider the situation as in our data sets: baseline observed, no intermittent missing values, drop-outs = monotone missing pattern</p>
 </section>
@@ -323,13 +323,13 @@ div.csl-indent {
 <li>Has received increasing attention in clinical trials as it provides an attractive approach for a sensitivity analysis because missing data assumptions are framed in an intuitive way. The departure from MAR is captured in a qualitative way, making the formulation of the problem intuitive.</li>
 <li>For example, a plausible MNAR mechanism in a placebo‐controlled trial is to assume that subjects in the experimental arm who dropped out stop taking their treatment and have similar outcomes to those in the placebo arm.</li>
 <li>Remember: MI under MAR assumes that the outcome distribution of patients with missing data is the same as the outcome distribution of patients with complete data, conditional on relevant covariates. However, if most patients withdraw from the study after treatment discontinuation, then this is not plausible, as patients who withdraw from the study treatment are expected to have a worse otucome than patients who stay on study treatment. Thus, addressing missing data under a MAR assumption estimates a hypothetical estimand and not a treatment policy estimand.</li>
-<li>Different options to handle missing outcome data for reference-based imputation were described <span class="citation" data-cites="carpenter2013">(<a href="#ref-carpenter2013" role="doc-biblioref">Carpenter and Kenward 2013</a>)</span>: e.g.&nbsp;jump to reference (J2R), copy reference (CR), copy increments in reference (CIR)</li>
+<li>Different options to handle missing outcome data for reference-based imputation were described <span class="citation" data-cites="carpenter2013">(<a href="references.html#ref-carpenter2013" role="doc-biblioref">Carpenter and Kenward 2013</a>)</span>: e.g.&nbsp;jump to reference (J2R), copy reference (CR), copy increments in reference (CIR)</li>
 </ul>
 <p>Jump to reference J2R assumes that after treatment discontinuation, the patient’s mean outcome distribution is that of a reference group, usually the control group. This is a very extreme assumption, as this implies that any efficacy of the drug vanishes immediately after discontinuation - may be plausible for symptomatic treatments.</p>
 <p>Copy reference CR assumes that the patient’s outcome distribution both before and after treatment discontinuation is the same as the distribution of the reference group. This has a milder effect than J2R: If a treatment-group patient has an outcome that is better than the reference group mean before treatment discontinuation, their imputed values after treatment discontinuation will also be better than the reference group mean.</p>
 <p>Copy increments in reference CIR assumes that after treatment discontinuation, the increments are the same as those from the reference group. This is much milder than J2R and CR and implies that benefit gained from the treatment before discontinuation is not lost.</p>
 <p>The conventional approach to analyse data using these reference based approaches is MI, following the same steps as MI under MAR.</p>
-<p>Software, R: the rbmi package supports reference-based strategies <span class="citation" data-cites="gowerpage2022">(<a href="#ref-gowerpage2022" role="doc-biblioref">Gower-Page and Wolbers 2022</a>)</span></p>
+<p>Software, R: the rbmi package supports reference-based strategies <span class="citation" data-cites="gowerpage2022">(<a href="references.html#ref-gowerpage2022" role="doc-biblioref">Gower-Page and Wolbers 2022</a>)</span></p>
 </section>
 <section id="delta-based-multiple-imputation" class="level3" data-number="5.5.2">
 <h3 data-number="5.5.2" class="anchored" data-anchor-id="delta-based-multiple-imputation"><span class="header-section-number">5.5.2</span> Delta-based multiple imputation</h3>
@@ -433,23 +433,23 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="cell">
 <div class="cell-output-display">
 
-<div id="gmovzvzely" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#gmovzvzely table {
+<div id="tjabfgzsrr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tjabfgzsrr table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#gmovzvzely thead, #gmovzvzely tbody, #gmovzvzely tfoot, #gmovzvzely tr, #gmovzvzely td, #gmovzvzely th {
+#tjabfgzsrr thead, #tjabfgzsrr tbody, #tjabfgzsrr tfoot, #tjabfgzsrr tr, #tjabfgzsrr td, #tjabfgzsrr th {
   border-style: none;
 }
 
-#gmovzvzely p {
+#tjabfgzsrr p {
   margin: 0;
   padding: 0;
 }
 
-#gmovzvzely .gt_table {
+#tjabfgzsrr .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -475,12 +475,12 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#gmovzvzely .gt_caption {
+#tjabfgzsrr .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#gmovzvzely .gt_title {
+#tjabfgzsrr .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -492,7 +492,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-bottom-width: 0;
 }
 
-#gmovzvzely .gt_subtitle {
+#tjabfgzsrr .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -504,7 +504,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-top-width: 0;
 }
 
-#gmovzvzely .gt_heading {
+#tjabfgzsrr .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -516,13 +516,13 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#gmovzvzely .gt_bottom_border {
+#tjabfgzsrr .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#gmovzvzely .gt_col_headings {
+#tjabfgzsrr .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -537,7 +537,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#gmovzvzely .gt_col_heading {
+#tjabfgzsrr .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -557,7 +557,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   overflow-x: hidden;
 }
 
-#gmovzvzely .gt_column_spanner_outer {
+#tjabfgzsrr .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -569,15 +569,15 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 4px;
 }
 
-#gmovzvzely .gt_column_spanner_outer:first-child {
+#tjabfgzsrr .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#gmovzvzely .gt_column_spanner_outer:last-child {
+#tjabfgzsrr .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#gmovzvzely .gt_column_spanner {
+#tjabfgzsrr .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -589,11 +589,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   width: 100%;
 }
 
-#gmovzvzely .gt_spanner_row {
+#tjabfgzsrr .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#gmovzvzely .gt_group_heading {
+#tjabfgzsrr .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -619,7 +619,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   text-align: left;
 }
 
-#gmovzvzely .gt_empty_group_heading {
+#tjabfgzsrr .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -634,15 +634,15 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   vertical-align: middle;
 }
 
-#gmovzvzely .gt_from_md > :first-child {
+#tjabfgzsrr .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#gmovzvzely .gt_from_md > :last-child {
+#tjabfgzsrr .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#gmovzvzely .gt_row {
+#tjabfgzsrr .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -661,7 +661,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   overflow-x: hidden;
 }
 
-#gmovzvzely .gt_stub {
+#tjabfgzsrr .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -674,7 +674,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 5px;
 }
 
-#gmovzvzely .gt_stub_row_group {
+#tjabfgzsrr .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -688,15 +688,15 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   vertical-align: top;
 }
 
-#gmovzvzely .gt_row_group_first td {
+#tjabfgzsrr .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#gmovzvzely .gt_row_group_first th {
+#tjabfgzsrr .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#gmovzvzely .gt_summary_row {
+#tjabfgzsrr .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -706,16 +706,16 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 5px;
 }
 
-#gmovzvzely .gt_first_summary_row {
+#tjabfgzsrr .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#gmovzvzely .gt_first_summary_row.thick {
+#tjabfgzsrr .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#gmovzvzely .gt_last_summary_row {
+#tjabfgzsrr .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -725,7 +725,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#gmovzvzely .gt_grand_summary_row {
+#tjabfgzsrr .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -735,7 +735,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 5px;
 }
 
-#gmovzvzely .gt_first_grand_summary_row {
+#tjabfgzsrr .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -745,7 +745,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#gmovzvzely .gt_last_grand_summary_row_top {
+#tjabfgzsrr .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -755,11 +755,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#gmovzvzely .gt_striped {
+#tjabfgzsrr .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#gmovzvzely .gt_table_body {
+#tjabfgzsrr .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -768,7 +768,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#gmovzvzely .gt_footnotes {
+#tjabfgzsrr .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -782,7 +782,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#gmovzvzely .gt_footnote {
+#tjabfgzsrr .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -791,7 +791,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 5px;
 }
 
-#gmovzvzely .gt_sourcenotes {
+#tjabfgzsrr .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -805,7 +805,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#gmovzvzely .gt_sourcenote {
+#tjabfgzsrr .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -813,63 +813,63 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 5px;
 }
 
-#gmovzvzely .gt_left {
+#tjabfgzsrr .gt_left {
   text-align: left;
 }
 
-#gmovzvzely .gt_center {
+#tjabfgzsrr .gt_center {
   text-align: center;
 }
 
-#gmovzvzely .gt_right {
+#tjabfgzsrr .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#gmovzvzely .gt_font_normal {
+#tjabfgzsrr .gt_font_normal {
   font-weight: normal;
 }
 
-#gmovzvzely .gt_font_bold {
+#tjabfgzsrr .gt_font_bold {
   font-weight: bold;
 }
 
-#gmovzvzely .gt_font_italic {
+#tjabfgzsrr .gt_font_italic {
   font-style: italic;
 }
 
-#gmovzvzely .gt_super {
+#tjabfgzsrr .gt_super {
   font-size: 65%;
 }
 
-#gmovzvzely .gt_footnote_marks {
+#tjabfgzsrr .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#gmovzvzely .gt_asterisk {
+#tjabfgzsrr .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#gmovzvzely .gt_indent_1 {
+#tjabfgzsrr .gt_indent_1 {
   text-indent: 5px;
 }
 
-#gmovzvzely .gt_indent_2 {
+#tjabfgzsrr .gt_indent_2 {
   text-indent: 10px;
 }
 
-#gmovzvzely .gt_indent_3 {
+#tjabfgzsrr .gt_indent_3 {
   text-indent: 15px;
 }
 
-#gmovzvzely .gt_indent_4 {
+#tjabfgzsrr .gt_indent_4 {
   text-indent: 20px;
 }
 
-#gmovzvzely .gt_indent_5 {
+#tjabfgzsrr .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -936,8 +936,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <pre><code>
 SAMPLING FOR MODEL 'MMRM' NOW (CHAIN 1).
 Chain 1: 
-Chain 1: Gradient evaluation took 0.000122 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.22 seconds.
+Chain 1: Gradient evaluation took 0.000114 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.14 seconds.
 Chain 1: Adjust your expectations accordingly!
 Chain 1: 
 Chain 1: 
@@ -954,9 +954,9 @@ Chain 1: Iteration: 620 / 700 [ 88%]  (Sampling)
 Chain 1: Iteration: 690 / 700 [ 98%]  (Sampling)
 Chain 1: Iteration: 700 / 700 [100%]  (Sampling)
 Chain 1: 
-Chain 1:  Elapsed Time: 0.139 seconds (Warm-up)
+Chain 1:  Elapsed Time: 0.14 seconds (Warm-up)
 Chain 1:                0.222 seconds (Sampling)
-Chain 1:                0.361 seconds (Total)
+Chain 1:                0.362 seconds (Total)
 Chain 1: </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>imputeObj <span class="ot">&lt;-</span> <span class="fu">impute</span>(</span>
@@ -1714,8 +1714,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <pre><code>
 SAMPLING FOR MODEL 'MMRM' NOW (CHAIN 1).
 Chain 1: 
-Chain 1: Gradient evaluation took 0.000238 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2.38 seconds.
+Chain 1: Gradient evaluation took 0.000231 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2.31 seconds.
 Chain 1: Adjust your expectations accordingly!
 Chain 1: 
 Chain 1: 
@@ -1732,9 +1732,9 @@ Chain 1: Iteration: 620 / 700 [ 88%]  (Sampling)
 Chain 1: Iteration: 690 / 700 [ 98%]  (Sampling)
 Chain 1: Iteration: 700 / 700 [100%]  (Sampling)
 Chain 1: 
-Chain 1:  Elapsed Time: 0.836 seconds (Warm-up)
-Chain 1:                1.511 seconds (Sampling)
-Chain 1:                2.347 seconds (Total)
+Chain 1:  Elapsed Time: 0.841 seconds (Warm-up)
+Chain 1:                1.515 seconds (Sampling)
+Chain 1:                2.356 seconds (Total)
 Chain 1: </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>imputeObj <span class="ot">&lt;-</span> <span class="fu">impute</span>(</span>
@@ -1773,7 +1773,7 @@ Chain 1: </code></pre>
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-carpenter2013" class="csl-entry" role="listitem">
 Carpenter, Roger, J. R., and M. G. Kenward. 2013. <span>“Analysis of Longitudinal Trials with Protocol Deviation: A Framework for Relevant, Accessible Assumptions, and Inference via Multiple Imputation.”</span> <em>Journal of Biopharmaceutical Statistics</em>, October. <a href="https://doi.org/10.1080/10543406.2013.834911">https://doi.org/10.1080/10543406.2013.834911</a>.
 </div>
