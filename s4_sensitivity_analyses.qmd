@@ -47,7 +47,9 @@ In general, these simple approaches are not recommended for use. Methods are of 
 Here, we consider two simple approaches. We will apply these two methods in the practical part to compare results.
 
 ### Last observation carried forward (LOCF)
-LOCF imputes all missing values for each subject using the last observed value for that subject. Typically, under LOCF the repeated masures nature of the data is ignored and a single outcome for each subject is analyzed. LOCF was used in the past, justified as it was thought that it provides conservative estimates. However, conditions under which LOCF yield conservative estimates and maintain control of Type I error rates are not straightforward and cannot be assured at the beginning of the trial. For example, LOCF is likely to overestimate treatment benefit if dop-out in the control gorup is more frequent.
+For each subject, LOCF imputes missing values using the last observed value for that subject. Typically, under LOCF the repeated masures nature of the data is ignored and a single outcome for each subject is analyzed.
+
+LOCF was used in the past, justified as it was thought that it provides conservative estimates. However, conditions under which LOCF yield conservative estimates and maintain control of Type I error rates are not straightforward and cannot be assured at the beginning of the trial. For example, LOCF is likely to overestimate treatment benefit if dop-out in the control gorup is more frequent.
 
 ### Complete case (CC) 
 Other names: observed case/ completers analysis 
@@ -72,15 +74,15 @@ Completers analysis may create selection bias, may cause overestimation of withi
 -   Remember: MI under MAR assumes that the outcome distribution of patients with missing data is the same as the outcome distribution of patients with complete data, conditional on relevant covariates. However, if most patients withdraw from the study after treatment discontinuation, then this is not plausible, as patients who withdraw from the study treatment are expected to have a worse otucome than patients who stay on study treatment. Thus, addressing missing data under a MAR assumption estimates a hypothetical estimand and not a treatment policy estimand.
 -   Different options to handle missing outcome data for reference-based imputation were described [@carpenter2013]: e.g. jump to reference (J2R), copy reference (CR), copy increments in reference (CIR)
 
-Jump to reference J2R assumes that after treatment discontinuation, the patient’s mean outcome distribution is that of a reference group, usually the control group. This is a very extreme assumption, as this implies that any efficacy of the drug vanishes immediately after discontinuation - may be plausible for symptomatic treatments.
+**Jump to reference** J2R assumes that after treatment discontinuation, the patient’s mean outcome distribution is that of a reference group, usually the control group. This is a very extreme assumption, as this implies that any efficacy of the drug vanishes immediately after discontinuation - may be plausible for symptomatic treatments.
 
-Copy reference CR assumes that the patient’s outcome distribution both before and after treatment discontinuation is the same as the distribution of the reference group. This has a milder effect than J2R: If a treatment-group patient has an outcome that is better than the reference group mean before treatment discontinuation, their imputed values after treatment discontinuation will also be better than the reference group mean.
+**Copy reference** CR assumes that the patient’s outcome distribution both before and after treatment discontinuation is the same as the distribution of the reference group. This has a milder effect than J2R: If a treatment-group patient has an outcome that is better than the reference group mean before treatment discontinuation, their imputed values after treatment discontinuation will also be better than the reference group mean.
 
-Copy increments in reference CIR assumes that after treatment discontinuation, the increments are the same as those from the reference group. This is much milder than J2R and CR and implies that benefit gained from the treatment before discontinuation is not lost.
+**Copy increments in reference** CIR assumes that after treatment discontinuation, the increments are the same as those from the reference group. This is much milder than J2R and CR and implies that benefit gained from the treatment before discontinuation is not lost.
 
 The conventional approach to analyse data using these reference based approaches is MI, following the same steps as MI under MAR.
 
-Software, R: the rbmi package supports reference-based strategies [@gowerpage2022]
+Software, R: e.g. the rbmi package supports reference-based strategies [@gowerpage2022]
 
 ### Delta-based multiple imputation
 
@@ -92,7 +94,7 @@ Software, R: the rbmi package supports reference-based strategies [@gowerpage202
 ## Practical part
 
 -   Take the (*all2*) *high2* data set
--   Look at the MMRM and at the complete case (CC) analysis (refer to section missingness for the *all2* data set).
+-   Look at the MMRM and at the complete case (CC) analysis (refer to section Missing Data for the *all2* data set).
 -   Apply additionally LOCF and compare results.
 -   Try MNAR method reference-based MI with J2R and CIR by using the rbmi package. Compare with the other results.
 
@@ -106,12 +108,14 @@ library(rbmi)
 vignette(topic = "quickstart", package = "rbmi")
 ```
 The workflow is based on 4 core functions:
+
 -   draws() - fits the imputation models, different methods possible, we will use method_bayes() for MI based on Bayesian posterior parameter draws from MCMC sampling
 -   impute() - creates multiple imputed data sets
 -   analyse() - analyses each of the multiple imputed data sets, default = ancova, other options possible
--   pool() - combines the results across imputed data sets, for method_bayes (see above) inference is based on Rubin's rule
+-   pool() - combines the results across imputed data sets, for method_bayes (see above) pooling and inference is based on Rubin's rule
 
 Implemented imputation strategies in rbmi:
+
 -   Missing at Random (MAR)
 -   Jump to Reference (JR)
 -   Copy Reference (CR)
@@ -143,7 +147,7 @@ Table: Adjusted means for the complete case data set (all2 data with drop-out, s
 model_lsmeans_cc
 ```
 
-2. MMRM
+2. MMRM, unstructured covariance
 
 ```{r}
 #| echo: false
@@ -194,6 +198,8 @@ all2.locf %>% ungroup() %>%
 
 4. J2R imputation
 ```{r}
+#| output: false
+
 # Define the names of key variables in the data set
 set_mi<-set_vars(
   subjid = "subject",
@@ -273,6 +279,27 @@ poolObj_CIR <- pool(anaObj_CIR)
 as.data.frame(poolObj_CIR)
 ```
 
+Now, you can first of all repeat the analysis on the *all2* data set to see if you can manage it. Or you go directly to the next step and apply methods to the *high2* data set.
+
+One starting point for the *high2* data set as the structure is a little bit different:
+
+First, fill in missing visits. This was not necessary in the *all2* data set. This can be done with the expand_locf function of the rbmi package.
+Note, *change* is the outcome variable and not *chgdrop* as in *all2*
+
+
+```{r}
+high2 <- high2 %>% ungroup()
+
+high2_expand <- expand_locf(
+  high2,
+  subject = levels(high2$subject),  
+  avisit = levels(high2$avisit),
+  vars = c("basval","trt","group"),
+  group = c("subject"),
+  order = c("subject", "avisit")
+)
+```
+
 ### Solution for high2 data set
 
 First, fill in missing visits. This was not necessary in the *all2* data set.
@@ -291,22 +318,8 @@ high2_expand <- expand_locf(
 )
 ```
 
-1. MMRM
+1. Complete case
 
-```{r}
-fit_mmrm <- mmrm::mmrm(
-  formula = change ~ basval*avisit + trt*avisit + us(avisit | subject),
-  data = high2,
-  control = mmrm_control(method = "Kenward-Roger")
-)
-
-summary(fit_mmrm)
-
-model_lsmeans <- emmeans::emmeans(fit_mmrm, ~trt*avisit, weights = "proportional")
-model_lsmeans
-```
-
-2. Complete case
 ```{r}
 high2.cc<- high2 %>% dplyr::filter(drop==8)
 
@@ -319,6 +332,22 @@ fit_cc <- mmrm::mmrm(
 summary(fit_cc)
 
 model_lsmeans <- emmeans::emmeans(fit_cc, ~trt*avisit, weights = "proportional")
+model_lsmeans
+```
+
+
+2. MMRM
+
+```{r}
+fit_mmrm <- mmrm::mmrm(
+  formula = change ~ basval*avisit + trt*avisit + us(avisit | subject),
+  data = high2,
+  control = mmrm_control(method = "Kenward-Roger")
+)
+
+summary(fit_mmrm)
+
+model_lsmeans <- emmeans::emmeans(fit_mmrm, ~trt*avisit, weights = "proportional")
 model_lsmeans
 ```
 
@@ -341,6 +370,7 @@ high2.locf %>% ungroup() %>%
 
 4. J2R
 ```{r}
+#| output: false
 set_mi<-set_vars(
   subjid = "subject",
   visit = "avisit",
@@ -381,8 +411,11 @@ anaObj <- analyse(
   imputeObj,
   vars = vars_an
 )
+```
 
-#For method_bayes() or method_approxbayes() pooling and inference are based on Rubin’s rules.
+Table: Estimates from copy jump to reference J2R imputation
+
+```{r}
 poolObj <- pool(anaObj)
 as.data.frame(poolObj)
 ```
