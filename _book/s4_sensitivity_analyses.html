@@ -298,7 +298,8 @@ div.csl-indent {
 <p>In general, these simple approaches are not recommended for use. Methods are of historic interest and provide a useful starting point. Here, we consider two simple approaches. We will apply these two methods in the practical part to compare results.</p>
 <section id="last-observation-carried-forward-locf" class="level3" data-number="5.4.1">
 <h3 data-number="5.4.1" class="anchored" data-anchor-id="last-observation-carried-forward-locf"><span class="header-section-number">5.4.1</span> Last observation carried forward (LOCF)</h3>
-<p>LOCF imputes all missing values for each subject using the last observed value for that subject. Typically, under LOCF the repeated masures nature of the data is ignored and a single outcome for each subject is analyzed. LOCF was used in the past, justified as it was thought that it provides conservative estimates. However, conditions under which LOCF yield conservative estimates and maintain control of Type I error rates are not straightforward and cannot be assured at the beginning of the trial. For example, LOCF is likely to overestimate treatment benefit if dop-out in the control gorup is more frequent.</p>
+<p>For each subject, LOCF imputes missing values using the last observed value for that subject. Typically, under LOCF the repeated masures nature of the data is ignored and a single outcome for each subject is analyzed.</p>
+<p>LOCF was used in the past, justified as it was thought that it provides conservative estimates. However, conditions under which LOCF yield conservative estimates and maintain control of Type I error rates are not straightforward and cannot be assured at the beginning of the trial. For example, LOCF is likely to overestimate treatment benefit if dop-out in the control gorup is more frequent.</p>
 </section>
 <section id="complete-case-cc" class="level3" data-number="5.4.2">
 <h3 data-number="5.4.2" class="anchored" data-anchor-id="complete-case-cc"><span class="header-section-number">5.4.2</span> Complete case (CC)</h3>
@@ -325,11 +326,11 @@ div.csl-indent {
 <li>Remember: MI under MAR assumes that the outcome distribution of patients with missing data is the same as the outcome distribution of patients with complete data, conditional on relevant covariates. However, if most patients withdraw from the study after treatment discontinuation, then this is not plausible, as patients who withdraw from the study treatment are expected to have a worse otucome than patients who stay on study treatment. Thus, addressing missing data under a MAR assumption estimates a hypothetical estimand and not a treatment policy estimand.</li>
 <li>Different options to handle missing outcome data for reference-based imputation were described <span class="citation" data-cites="carpenter2013">(<a href="references.html#ref-carpenter2013" role="doc-biblioref">Carpenter and Kenward 2013</a>)</span>: e.g.&nbsp;jump to reference (J2R), copy reference (CR), copy increments in reference (CIR)</li>
 </ul>
-<p>Jump to reference J2R assumes that after treatment discontinuation, the patient’s mean outcome distribution is that of a reference group, usually the control group. This is a very extreme assumption, as this implies that any efficacy of the drug vanishes immediately after discontinuation - may be plausible for symptomatic treatments.</p>
-<p>Copy reference CR assumes that the patient’s outcome distribution both before and after treatment discontinuation is the same as the distribution of the reference group. This has a milder effect than J2R: If a treatment-group patient has an outcome that is better than the reference group mean before treatment discontinuation, their imputed values after treatment discontinuation will also be better than the reference group mean.</p>
-<p>Copy increments in reference CIR assumes that after treatment discontinuation, the increments are the same as those from the reference group. This is much milder than J2R and CR and implies that benefit gained from the treatment before discontinuation is not lost.</p>
+<p><strong>Jump to reference</strong> J2R assumes that after treatment discontinuation, the patient’s mean outcome distribution is that of a reference group, usually the control group. This is a very extreme assumption, as this implies that any efficacy of the drug vanishes immediately after discontinuation - may be plausible for symptomatic treatments.</p>
+<p><strong>Copy reference</strong> CR assumes that the patient’s outcome distribution both before and after treatment discontinuation is the same as the distribution of the reference group. This has a milder effect than J2R: If a treatment-group patient has an outcome that is better than the reference group mean before treatment discontinuation, their imputed values after treatment discontinuation will also be better than the reference group mean.</p>
+<p><strong>Copy increments in reference</strong> CIR assumes that after treatment discontinuation, the increments are the same as those from the reference group. This is much milder than J2R and CR and implies that benefit gained from the treatment before discontinuation is not lost.</p>
 <p>The conventional approach to analyse data using these reference based approaches is MI, following the same steps as MI under MAR.</p>
-<p>Software, R: the rbmi package supports reference-based strategies <span class="citation" data-cites="gowerpage2022">(<a href="references.html#ref-gowerpage2022" role="doc-biblioref">Gower-Page and Wolbers 2022</a>)</span></p>
+<p>Software, R: e.g.&nbsp;the rbmi package supports reference-based strategies <span class="citation" data-cites="gowerpage2022">(<a href="references.html#ref-gowerpage2022" role="doc-biblioref">Gower-Page and Wolbers 2022</a>)</span></p>
 </section>
 <section id="delta-based-multiple-imputation" class="level3" data-number="5.5.2">
 <h3 data-number="5.5.2" class="anchored" data-anchor-id="delta-based-multiple-imputation"><span class="header-section-number">5.5.2</span> Delta-based multiple imputation</h3>
@@ -345,7 +346,7 @@ div.csl-indent {
 <h2 data-number="5.6" class="anchored" data-anchor-id="practical-part"><span class="header-section-number">5.6</span> Practical part</h2>
 <ul>
 <li>Take the (<em>all2</em>) <em>high2</em> data set</li>
-<li>Look at the MMRM and at the complete case (CC) analysis (refer to section missingness for the <em>all2</em> data set).</li>
+<li>Look at the MMRM and at the complete case (CC) analysis (refer to section Missing Data for the <em>all2</em> data set).</li>
 <li>Apply additionally LOCF and compare results.</li>
 <li>Try MNAR method reference-based MI with J2R and CIR by using the rbmi package. Compare with the other results.</li>
 </ul>
@@ -361,8 +362,20 @@ div.csl-indent {
 <pre><code>starting httpd help server ... done</code></pre>
 </div>
 </div>
-<p>The workflow is based on 4 core functions: - draws() - fits the imputation models, different methods possible, we will use method_bayes() for MI based on Bayesian posterior parameter draws from MCMC sampling - impute() - creates multiple imputed data sets - analyse() - analyses each of the multiple imputed data sets, default = ancova, other options possible - pool() - combines the results across imputed data sets, for method_bayes (see above) inference is based on Rubin’s rule</p>
-<p>Implemented imputation strategies in rbmi: - Missing at Random (MAR) - Jump to Reference (JR) - Copy Reference (CR) - Copy Increments in Reference (CIR)</p>
+<p>The workflow is based on 4 core functions:</p>
+<ul>
+<li>draws() - fits the imputation models, different methods possible, we will use method_bayes() for MI based on Bayesian posterior parameter draws from MCMC sampling</li>
+<li>impute() - creates multiple imputed data sets</li>
+<li>analyse() - analyses each of the multiple imputed data sets, default = ancova, other options possible</li>
+<li>pool() - combines the results across imputed data sets, for method_bayes (see above) pooling and inference is based on Rubin’s rule</li>
+</ul>
+<p>Implemented imputation strategies in rbmi:</p>
+<ul>
+<li>Missing at Random (MAR)</li>
+<li>Jump to Reference (JR)</li>
+<li>Copy Reference (CR)</li>
+<li>Copy Increments in Reference (CIR)</li>
+</ul>
 <p>I will show how it looks like for the <em>all2</em> data set and you will then explore the methods using the <em>high2</em> data set.</p>
 </section>
 <section id="plenum---solution-for-all2-data-set" class="level3" data-number="5.6.2">
@@ -386,7 +399,7 @@ Confidence level used: 0.95 </code></pre>
 </div>
 </div>
 <ol start="2" type="1">
-<li>MMRM</li>
+<li>MMRM, unstructured covariance</li>
 </ol>
 <p>Table: Adjusted means for the all2 data set with drop-out analysed with MMRM</p>
 <div class="cell">
@@ -433,23 +446,23 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="cell">
 <div class="cell-output-display">
 
-<div id="qrectnkpxy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#qrectnkpxy table {
+<div id="zefwlnqabi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zefwlnqabi table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#qrectnkpxy thead, #qrectnkpxy tbody, #qrectnkpxy tfoot, #qrectnkpxy tr, #qrectnkpxy td, #qrectnkpxy th {
+#zefwlnqabi thead, #zefwlnqabi tbody, #zefwlnqabi tfoot, #zefwlnqabi tr, #zefwlnqabi td, #zefwlnqabi th {
   border-style: none;
 }
 
-#qrectnkpxy p {
+#zefwlnqabi p {
   margin: 0;
   padding: 0;
 }
 
-#qrectnkpxy .gt_table {
+#zefwlnqabi .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -475,12 +488,12 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#qrectnkpxy .gt_caption {
+#zefwlnqabi .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#qrectnkpxy .gt_title {
+#zefwlnqabi .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -492,7 +505,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-bottom-width: 0;
 }
 
-#qrectnkpxy .gt_subtitle {
+#zefwlnqabi .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -504,7 +517,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-top-width: 0;
 }
 
-#qrectnkpxy .gt_heading {
+#zefwlnqabi .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -516,13 +529,13 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#qrectnkpxy .gt_bottom_border {
+#zefwlnqabi .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#qrectnkpxy .gt_col_headings {
+#zefwlnqabi .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -537,7 +550,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#qrectnkpxy .gt_col_heading {
+#zefwlnqabi .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -557,7 +570,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   overflow-x: hidden;
 }
 
-#qrectnkpxy .gt_column_spanner_outer {
+#zefwlnqabi .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -569,15 +582,15 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 4px;
 }
 
-#qrectnkpxy .gt_column_spanner_outer:first-child {
+#zefwlnqabi .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#qrectnkpxy .gt_column_spanner_outer:last-child {
+#zefwlnqabi .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#qrectnkpxy .gt_column_spanner {
+#zefwlnqabi .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -589,11 +602,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   width: 100%;
 }
 
-#qrectnkpxy .gt_spanner_row {
+#zefwlnqabi .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#qrectnkpxy .gt_group_heading {
+#zefwlnqabi .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -619,7 +632,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   text-align: left;
 }
 
-#qrectnkpxy .gt_empty_group_heading {
+#zefwlnqabi .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -634,15 +647,15 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   vertical-align: middle;
 }
 
-#qrectnkpxy .gt_from_md > :first-child {
+#zefwlnqabi .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#qrectnkpxy .gt_from_md > :last-child {
+#zefwlnqabi .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#qrectnkpxy .gt_row {
+#zefwlnqabi .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -661,7 +674,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   overflow-x: hidden;
 }
 
-#qrectnkpxy .gt_stub {
+#zefwlnqabi .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -674,7 +687,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 5px;
 }
 
-#qrectnkpxy .gt_stub_row_group {
+#zefwlnqabi .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -688,15 +701,15 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   vertical-align: top;
 }
 
-#qrectnkpxy .gt_row_group_first td {
+#zefwlnqabi .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#qrectnkpxy .gt_row_group_first th {
+#zefwlnqabi .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#qrectnkpxy .gt_summary_row {
+#zefwlnqabi .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -706,16 +719,16 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 5px;
 }
 
-#qrectnkpxy .gt_first_summary_row {
+#zefwlnqabi .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#qrectnkpxy .gt_first_summary_row.thick {
+#zefwlnqabi .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#qrectnkpxy .gt_last_summary_row {
+#zefwlnqabi .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -725,7 +738,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#qrectnkpxy .gt_grand_summary_row {
+#zefwlnqabi .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -735,7 +748,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 5px;
 }
 
-#qrectnkpxy .gt_first_grand_summary_row {
+#zefwlnqabi .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -745,7 +758,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#qrectnkpxy .gt_last_grand_summary_row_top {
+#zefwlnqabi .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -755,11 +768,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#qrectnkpxy .gt_striped {
+#zefwlnqabi .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#qrectnkpxy .gt_table_body {
+#zefwlnqabi .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -768,7 +781,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#qrectnkpxy .gt_footnotes {
+#zefwlnqabi .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -782,7 +795,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#qrectnkpxy .gt_footnote {
+#zefwlnqabi .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -791,7 +804,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 5px;
 }
 
-#qrectnkpxy .gt_sourcenotes {
+#zefwlnqabi .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -805,7 +818,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#qrectnkpxy .gt_sourcenote {
+#zefwlnqabi .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -813,63 +826,63 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 5px;
 }
 
-#qrectnkpxy .gt_left {
+#zefwlnqabi .gt_left {
   text-align: left;
 }
 
-#qrectnkpxy .gt_center {
+#zefwlnqabi .gt_center {
   text-align: center;
 }
 
-#qrectnkpxy .gt_right {
+#zefwlnqabi .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#qrectnkpxy .gt_font_normal {
+#zefwlnqabi .gt_font_normal {
   font-weight: normal;
 }
 
-#qrectnkpxy .gt_font_bold {
+#zefwlnqabi .gt_font_bold {
   font-weight: bold;
 }
 
-#qrectnkpxy .gt_font_italic {
+#zefwlnqabi .gt_font_italic {
   font-style: italic;
 }
 
-#qrectnkpxy .gt_super {
+#zefwlnqabi .gt_super {
   font-size: 65%;
 }
 
-#qrectnkpxy .gt_footnote_marks {
+#zefwlnqabi .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#qrectnkpxy .gt_asterisk {
+#zefwlnqabi .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#qrectnkpxy .gt_indent_1 {
+#zefwlnqabi .gt_indent_1 {
   text-indent: 5px;
 }
 
-#qrectnkpxy .gt_indent_2 {
+#zefwlnqabi .gt_indent_2 {
   text-indent: 10px;
 }
 
-#qrectnkpxy .gt_indent_3 {
+#zefwlnqabi .gt_indent_3 {
   text-indent: 15px;
 }
 
-#qrectnkpxy .gt_indent_4 {
+#zefwlnqabi .gt_indent_4 {
   text-indent: 20px;
 }
 
-#qrectnkpxy .gt_indent_5 {
+#zefwlnqabi .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -931,50 +944,24 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">072407</span></span>
 <span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>draw_all2<span class="ot">&lt;-</span><span class="fu">draws</span>(<span class="at">data=</span>all2, <span class="at">data_ice =</span> dat_ice, <span class="at">vars=</span>set_mi, <span class="at">method=</span>method, <span class="at">ncores =</span> <span class="dv">1</span>, <span class="at">quiet =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-SAMPLING FOR MODEL 'MMRM' NOW (CHAIN 1).
-Chain 1: 
-Chain 1: Gradient evaluation took 0.000116 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.16 seconds.
-Chain 1: Adjust your expectations accordingly!
-Chain 1: 
-Chain 1: 
-Chain 1: Iteration:   1 / 700 [  0%]  (Warmup)
-Chain 1: Iteration:  70 / 700 [ 10%]  (Warmup)
-Chain 1: Iteration: 140 / 700 [ 20%]  (Warmup)
-Chain 1: Iteration: 201 / 700 [ 28%]  (Sampling)
-Chain 1: Iteration: 270 / 700 [ 38%]  (Sampling)
-Chain 1: Iteration: 340 / 700 [ 48%]  (Sampling)
-Chain 1: Iteration: 410 / 700 [ 58%]  (Sampling)
-Chain 1: Iteration: 480 / 700 [ 68%]  (Sampling)
-Chain 1: Iteration: 550 / 700 [ 78%]  (Sampling)
-Chain 1: Iteration: 620 / 700 [ 88%]  (Sampling)
-Chain 1: Iteration: 690 / 700 [ 98%]  (Sampling)
-Chain 1: Iteration: 700 / 700 [100%]  (Sampling)
-Chain 1: 
-Chain 1:  Elapsed Time: 0.139 seconds (Warm-up)
-Chain 1:                0.223 seconds (Sampling)
-Chain 1:                0.362 seconds (Total)
-Chain 1: </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>imputeObj <span class="ot">&lt;-</span> <span class="fu">impute</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  draw_all2,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">references =</span> <span class="fu">c</span>(<span class="st">"Arm 1"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>, <span class="st">"Arm 2"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>imputed_all2 <span class="ot">&lt;-</span> <span class="fu">extract_imputed_dfs</span>(imputeObj)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>anaObj <span class="ot">&lt;-</span> <span class="fu">analyse</span>(</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  imputeObj,</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">vars =</span> vars_an</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>draw_all2<span class="ot">&lt;-</span><span class="fu">draws</span>(<span class="at">data=</span>all2, <span class="at">data_ice =</span> dat_ice, <span class="at">vars=</span>set_mi, <span class="at">method=</span>method, <span class="at">ncores =</span> <span class="dv">1</span>, <span class="at">quiet =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>imputeObj <span class="ot">&lt;-</span> <span class="fu">impute</span>(</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>  draw_all2,</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">references =</span> <span class="fu">c</span>(<span class="st">"Arm 1"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>, <span class="st">"Arm 2"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>)</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>imputed_all2 <span class="ot">&lt;-</span> <span class="fu">extract_imputed_dfs</span>(imputeObj)</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>anaObj <span class="ot">&lt;-</span> <span class="fu">analyse</span>(</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>  imputeObj,</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">vars =</span> vars_an</span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Table: Estimates from jump to reference J2R imputation</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>poolObj <span class="ot">&lt;-</span> <span class="fu">pool</span>(anaObj)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(poolObj)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>poolObj <span class="ot">&lt;-</span> <span class="fu">pool</span>(anaObj)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(poolObj)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       parameter        est        se        lci        uci         pval
 1     trt_Week 2  -1.189928 1.2864325  -3.780746  1.4008900 3.598958e-01
@@ -992,24 +979,24 @@ Chain 1: </code></pre>
 <li>Change from J2R to CIR Use the additional argument update_strategies in the impute function.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>dat_ice_CIR <span class="ot">&lt;-</span> dat_ice <span class="sc">%&gt;%</span> </span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">strategy =</span> <span class="fu">ifelse</span>(strategy <span class="sc">==</span> <span class="st">"JR"</span>, <span class="st">"CIR"</span>, strategy))</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>imputeObj_CIR <span class="ot">&lt;-</span> <span class="fu">impute</span>(</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  draw_all2,</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">references =</span> <span class="fu">c</span>(<span class="st">"Arm 1"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>, <span class="st">"Arm 2"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>),</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">update_strategy =</span> dat_ice_CIR</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>anaObj_CIR <span class="ot">&lt;-</span> <span class="fu">analyse</span>(</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  imputeObj_CIR,</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">vars =</span> vars_an</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>dat_ice_CIR <span class="ot">&lt;-</span> dat_ice <span class="sc">%&gt;%</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">strategy =</span> <span class="fu">ifelse</span>(strategy <span class="sc">==</span> <span class="st">"JR"</span>, <span class="st">"CIR"</span>, strategy))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>imputeObj_CIR <span class="ot">&lt;-</span> <span class="fu">impute</span>(</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  draw_all2,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">references =</span> <span class="fu">c</span>(<span class="st">"Arm 1"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>, <span class="st">"Arm 2"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>),</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">update_strategy =</span> dat_ice_CIR</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>anaObj_CIR <span class="ot">&lt;-</span> <span class="fu">analyse</span>(</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  imputeObj_CIR,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">vars =</span> vars_an</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Table: Estimates from copy increments in reference CIR imputation</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>poolObj_CIR <span class="ot">&lt;-</span> <span class="fu">pool</span>(anaObj_CIR)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(poolObj_CIR)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>poolObj_CIR <span class="ot">&lt;-</span> <span class="fu">pool</span>(anaObj_CIR)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(poolObj_CIR)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       parameter        est        se        lci        uci         pval
 1     trt_Week 2  -1.189928 1.2864325  -3.780746  1.4008900 3.598958e-01
@@ -1023,107 +1010,50 @@ Chain 1: </code></pre>
 9 lsm_alt_Week 8 -12.255969 1.1568184 -14.598416 -9.9135228 7.351873e-13</code></pre>
 </div>
 </div>
+<p>Now, you can first of all repeat the analysis on the <em>all2</em> data set to see if you can manage it. Or you go directly to the next step and apply methods to the <em>high2</em> data set.</p>
+<p>One starting point for the <em>high2</em> data set as the structure is a little bit different:</p>
+<p>First, fill in missing visits. This was not necessary in the <em>all2</em> data set. This can be done with the expand_locf function of the rbmi package. Note, <em>change</em> is the outcome variable and not <em>chgdrop</em> as in <em>all2</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>high2 <span class="ot">&lt;-</span> high2 <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>high2_expand <span class="ot">&lt;-</span> <span class="fu">expand_locf</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  high2,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">subject =</span> <span class="fu">levels</span>(high2<span class="sc">$</span>subject),  </span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">avisit =</span> <span class="fu">levels</span>(high2<span class="sc">$</span>avisit),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"basval"</span>,<span class="st">"trt"</span>,<span class="st">"group"</span>),</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">c</span>(<span class="st">"subject"</span>),</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"subject"</span>, <span class="st">"avisit"</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="solution-for-high2-data-set" class="level3" data-number="5.6.3">
 <h3 data-number="5.6.3" class="anchored" data-anchor-id="solution-for-high2-data-set"><span class="header-section-number">5.6.3</span> Solution for high2 data set</h3>
 <p>First, fill in missing visits. This was not necessary in the <em>all2</em> data set. Note, <em>change</em> is the outcome variable and not <em>chgdrop</em> as in <em>all2</em></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>high2 <span class="ot">&lt;-</span> high2 <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>high2_expand <span class="ot">&lt;-</span> <span class="fu">expand_locf</span>(</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  high2,</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">subject =</span> <span class="fu">levels</span>(high2<span class="sc">$</span>subject),  </span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">avisit =</span> <span class="fu">levels</span>(high2<span class="sc">$</span>avisit),</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"basval"</span>,<span class="st">"trt"</span>,<span class="st">"group"</span>),</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">c</span>(<span class="st">"subject"</span>),</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"subject"</span>, <span class="st">"avisit"</span>)</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>high2 <span class="ot">&lt;-</span> high2 <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>high2_expand <span class="ot">&lt;-</span> <span class="fu">expand_locf</span>(</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  high2,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">subject =</span> <span class="fu">levels</span>(high2<span class="sc">$</span>subject),  </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">avisit =</span> <span class="fu">levels</span>(high2<span class="sc">$</span>avisit),</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"basval"</span>,<span class="st">"trt"</span>,<span class="st">"group"</span>),</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">c</span>(<span class="st">"subject"</span>),</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"subject"</span>, <span class="st">"avisit"</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol type="1">
-<li>MMRM</li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fit_mmrm <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>avisit <span class="sc">+</span> trt<span class="sc">*</span>avisit <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> high2,</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_mmrm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>mmrm fit
-
-Formula:     change ~ basval * avisit + trt * avisit + us(avisit | subject)
-Data:        high2 (used 830 observations from 200 subjects with maximum 5 
-timepoints)
-Covariance:  unstructured (15 variance parameters)
-Method:      Kenward-Roger
-Vcov Method: Kenward-Roger
-Inference:   REML
-
-Model selection criteria:
-     AIC      BIC   logLik deviance 
-  4779.1   4828.6  -2374.6   4749.1 
-
-Coefficients: 
-                     Estimate Std. Error        df t value Pr(&gt;|t|)    
-(Intercept)           3.33421    1.12651 196.97000   2.960  0.00346 ** 
-basval               -0.27934    0.05962 196.97000  -4.685  5.2e-06 ***
-avisitWeek 2         -0.15400    1.17265 181.53000  -0.131  0.89566    
-avisitWeek 4         -1.00849    1.35934 172.12000  -0.742  0.45916    
-avisitWeek 6         -3.27037    1.53582 166.05000  -2.129  0.03470 *  
-avisitWeek 8         -3.93835    1.65523 140.95000  -2.379  0.01868 *  
-trt2                 -0.04273    0.64969 196.97000  -0.066  0.94763    
-basval:avisitWeek 2  -0.08292    0.06254 181.91000  -1.326  0.18659    
-basval:avisitWeek 4  -0.10700    0.07290 173.67000  -1.468  0.14396    
-basval:avisitWeek 6  -0.01321    0.08198 165.55000  -0.161  0.87216    
-basval:avisitWeek 8   0.01778    0.08902 143.32000   0.200  0.84197    
-avisitWeek 2:trt2    -0.61015    0.69414 181.41000  -0.879  0.38057    
-avisitWeek 4:trt2    -1.41851    0.81728 175.52000  -1.736  0.08438 .  
-avisitWeek 6:trt2    -2.31835    0.91503 165.19000  -2.534  0.01222 *  
-avisitWeek 8:trt2    -2.47738    0.99465 143.57000  -2.491  0.01389 *  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Covariance estimate:
-        Week 1  Week 2  Week 4  Week 6  Week 8
-Week 1 20.9961 17.1332 15.4142 15.3503 15.8717
-Week 2 17.1332 35.2157 25.8380 25.5499 24.3926
-Week 4 15.4142 25.8380 38.8771 33.0523 30.1128
-Week 6 15.3503 25.5499 33.0523 43.7638 39.3236
-Week 8 15.8717 24.3926 30.1128 39.3236 47.7371</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>model_lsmeans <span class="ot">&lt;-</span> emmeans<span class="sc">::</span><span class="fu">emmeans</span>(fit_mmrm, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>model_lsmeans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> trt avisit emmean    SE  df lower.CL upper.CL
- 1   Week 1  -1.61 0.458 197    -2.52   -0.711
- 2   Week 1  -1.66 0.459 197    -2.56   -0.752
- 1   Week 2  -3.24 0.609 191    -4.44   -2.036
- 2   Week 2  -3.89 0.613 193    -5.10   -2.681
- 1   Week 4  -4.52 0.656 182    -5.81   -3.223
- 2   Week 4  -5.98 0.656 182    -7.27   -4.684
- 1   Week 6  -5.12 0.718 168    -6.53   -3.701
- 2   Week 6  -7.48 0.715 166    -8.89   -6.067
- 1   Week 8  -5.24 0.785 149    -6.79   -3.686
- 2   Week 8  -7.76 0.762 139    -9.26   -6.251
-
-Confidence level used: 0.95 </code></pre>
-</div>
-</div>
-<ol start="2" type="1">
 <li>Complete case</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>high2.cc<span class="ot">&lt;-</span> high2 <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(drop<span class="sc">==</span><span class="dv">8</span>)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>fit_cc <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>avisit <span class="sc">+</span> trt<span class="sc">*</span>avisit <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> high2.cc,</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>high2.cc<span class="ot">&lt;-</span> high2 <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(drop<span class="sc">==</span><span class="dv">8</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>fit_cc <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>avisit <span class="sc">+</span> trt<span class="sc">*</span>avisit <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> high2.cc,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_cc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>mmrm fit
 
@@ -1167,8 +1097,8 @@ Week 4 13.3827 22.4388 34.9214 27.3814 25.0059
 Week 6 12.2436 20.5555 27.3814 33.6239 30.2604
 Week 8 13.2340 20.0298 25.0059 30.2604 39.6554</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>model_lsmeans <span class="ot">&lt;-</span> emmeans<span class="sc">::</span><span class="fu">emmeans</span>(fit_cc, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>model_lsmeans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>model_lsmeans <span class="ot">&lt;-</span> emmeans<span class="sc">::</span><span class="fu">emmeans</span>(fit_cc, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>model_lsmeans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> trt avisit emmean    SE  df lower.CL upper.CL
  1   Week 1  -1.91 0.595 127    -3.08   -0.731
@@ -1185,14 +1115,86 @@ Week 8 13.2340 20.0298 25.0059 30.2604 39.6554</code></pre>
 Confidence level used: 0.95 </code></pre>
 </div>
 </div>
+<ol start="2" type="1">
+<li>MMRM</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fit_mmrm <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> change <span class="sc">~</span> basval<span class="sc">*</span>avisit <span class="sc">+</span> trt<span class="sc">*</span>avisit <span class="sc">+</span> <span class="fu">us</span>(avisit <span class="sc">|</span> subject),</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> high2,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">mmrm_control</span>(<span class="at">method =</span> <span class="st">"Kenward-Roger"</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_mmrm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mmrm fit
+
+Formula:     change ~ basval * avisit + trt * avisit + us(avisit | subject)
+Data:        high2 (used 830 observations from 200 subjects with maximum 5 
+timepoints)
+Covariance:  unstructured (15 variance parameters)
+Method:      Kenward-Roger
+Vcov Method: Kenward-Roger
+Inference:   REML
+
+Model selection criteria:
+     AIC      BIC   logLik deviance 
+  4779.1   4828.6  -2374.6   4749.1 
+
+Coefficients: 
+                     Estimate Std. Error        df t value Pr(&gt;|t|)    
+(Intercept)           3.33421    1.12651 196.97000   2.960  0.00346 ** 
+basval               -0.27934    0.05962 196.97000  -4.685  5.2e-06 ***
+avisitWeek 2         -0.15400    1.17265 181.53000  -0.131  0.89566    
+avisitWeek 4         -1.00849    1.35934 172.12000  -0.742  0.45916    
+avisitWeek 6         -3.27037    1.53582 166.05000  -2.129  0.03470 *  
+avisitWeek 8         -3.93835    1.65523 140.95000  -2.379  0.01868 *  
+trt2                 -0.04273    0.64969 196.97000  -0.066  0.94763    
+basval:avisitWeek 2  -0.08292    0.06254 181.91000  -1.326  0.18659    
+basval:avisitWeek 4  -0.10700    0.07290 173.67000  -1.468  0.14396    
+basval:avisitWeek 6  -0.01321    0.08198 165.55000  -0.161  0.87216    
+basval:avisitWeek 8   0.01778    0.08902 143.32000   0.200  0.84197    
+avisitWeek 2:trt2    -0.61015    0.69414 181.41000  -0.879  0.38057    
+avisitWeek 4:trt2    -1.41851    0.81728 175.52000  -1.736  0.08438 .  
+avisitWeek 6:trt2    -2.31835    0.91503 165.19000  -2.534  0.01222 *  
+avisitWeek 8:trt2    -2.47738    0.99465 143.57000  -2.491  0.01389 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Covariance estimate:
+        Week 1  Week 2  Week 4  Week 6  Week 8
+Week 1 20.9961 17.1332 15.4142 15.3503 15.8717
+Week 2 17.1332 35.2157 25.8380 25.5499 24.3926
+Week 4 15.4142 25.8380 38.8771 33.0523 30.1128
+Week 6 15.3503 25.5499 33.0523 43.7638 39.3236
+Week 8 15.8717 24.3926 30.1128 39.3236 47.7371</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>model_lsmeans <span class="ot">&lt;-</span> emmeans<span class="sc">::</span><span class="fu">emmeans</span>(fit_mmrm, <span class="sc">~</span>trt<span class="sc">*</span>avisit, <span class="at">weights =</span> <span class="st">"proportional"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>model_lsmeans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> trt avisit emmean    SE  df lower.CL upper.CL
+ 1   Week 1  -1.61 0.458 197    -2.52   -0.711
+ 2   Week 1  -1.66 0.459 197    -2.56   -0.752
+ 1   Week 2  -3.24 0.609 191    -4.44   -2.036
+ 2   Week 2  -3.89 0.613 193    -5.10   -2.681
+ 1   Week 4  -4.52 0.656 182    -5.81   -3.223
+ 2   Week 4  -5.98 0.656 182    -7.27   -4.684
+ 1   Week 6  -5.12 0.718 168    -6.53   -3.701
+ 2   Week 6  -7.48 0.715 166    -8.89   -6.067
+ 1   Week 8  -5.24 0.785 149    -6.79   -3.686
+ 2   Week 8  -7.76 0.762 139    -9.26   -6.251
+
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
 <ol start="3" type="1">
 <li>LOCF</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>high2.locf<span class="ot">&lt;-</span>high2 <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(week<span class="sc">==</span>drop)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>ancova <span class="ot">&lt;-</span> <span class="fu">aov</span>(change <span class="sc">~</span> basval <span class="sc">+</span> trt, <span class="at">data =</span> high2.locf)</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ancova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>high2.locf<span class="ot">&lt;-</span>high2 <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(week<span class="sc">==</span>drop)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>ancova <span class="ot">&lt;-</span> <span class="fu">aov</span>(change <span class="sc">~</span> basval <span class="sc">+</span> trt, <span class="at">data =</span> high2.locf)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ancova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             Df Sum Sq Mean Sq F value  Pr(&gt;F)   
 basval        1    483   483.3   9.709 0.00211 **
@@ -1201,17 +1203,17 @@ Residuals   197   9805    49.8
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>ancova<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>ancova<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept)      basval        trt2 
   0.3536399  -0.2648315  -2.2086854 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>high2.locf <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(change, group) <span class="sc">%&gt;%</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="at">by =</span> group,</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">statistic =</span> <span class="fu">list</span>(</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>                <span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">"{mean} ({sd})"</span>), </span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">digits =</span> <span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="dv">2</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>high2.locf <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(change, group) <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="at">by =</span> group,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">statistic =</span> <span class="fu">list</span>(</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>                <span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">"{mean} ({sd})"</span>), </span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">digits =</span> <span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="dv">2</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div id="vikgwikfwo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
@@ -1682,76 +1684,51 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <li>J2R</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>set_mi<span class="ot">&lt;-</span><span class="fu">set_vars</span>(</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">subjid =</span> <span class="st">"subject"</span>,</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">visit =</span> <span class="st">"avisit"</span>,</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome =</span> <span class="st">"change"</span>,</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="st">"group"</span>,</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">covariates =</span> <span class="fu">c</span>(<span class="st">"basval * avisit"</span>, <span class="st">"group * avisit"</span>)</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>vars_an<span class="ot">&lt;-</span>set_mi</span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>vars_an<span class="sc">$</span>covariates <span class="ot">&lt;-</span> <span class="st">"basval"</span></span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>dat_ice <span class="ot">&lt;-</span> high2_expand <span class="sc">%&gt;%</span> </span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(subject, avisit) <span class="sc">%&gt;%</span> </span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(change)) <span class="sc">%&gt;%</span> </span>
-<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(subject) <span class="sc">%&gt;%</span> </span>
-<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(subject, avisit) <span class="sc">%&gt;%</span> </span>
-<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">strategy =</span> <span class="st">"JR"</span>)</span>
-<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>method <span class="ot">&lt;-</span> <span class="fu">method_bayes</span>(</span>
-<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">burn_in =</span> <span class="dv">200</span>,</span>
-<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">burn_between =</span> <span class="dv">5</span>,</span>
-<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_samples =</span> <span class="dv">100</span>,</span>
-<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">072407</span></span>
-<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>draw_high2<span class="ot">&lt;-</span><span class="fu">draws</span>(<span class="at">data=</span>high2_expand, <span class="at">data_ice =</span> dat_ice, <span class="at">vars=</span>set_mi, <span class="at">method=</span>method, <span class="at">ncores =</span> <span class="dv">1</span>, <span class="at">quiet =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-SAMPLING FOR MODEL 'MMRM' NOW (CHAIN 1).
-Chain 1: 
-Chain 1: Gradient evaluation took 0.000276 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2.76 seconds.
-Chain 1: Adjust your expectations accordingly!
-Chain 1: 
-Chain 1: 
-Chain 1: Iteration:   1 / 700 [  0%]  (Warmup)
-Chain 1: Iteration:  70 / 700 [ 10%]  (Warmup)
-Chain 1: Iteration: 140 / 700 [ 20%]  (Warmup)
-Chain 1: Iteration: 201 / 700 [ 28%]  (Sampling)
-Chain 1: Iteration: 270 / 700 [ 38%]  (Sampling)
-Chain 1: Iteration: 340 / 700 [ 48%]  (Sampling)
-Chain 1: Iteration: 410 / 700 [ 58%]  (Sampling)
-Chain 1: Iteration: 480 / 700 [ 68%]  (Sampling)
-Chain 1: Iteration: 550 / 700 [ 78%]  (Sampling)
-Chain 1: Iteration: 620 / 700 [ 88%]  (Sampling)
-Chain 1: Iteration: 690 / 700 [ 98%]  (Sampling)
-Chain 1: Iteration: 700 / 700 [100%]  (Sampling)
-Chain 1: 
-Chain 1:  Elapsed Time: 0.838 seconds (Warm-up)
-Chain 1:                1.508 seconds (Sampling)
-Chain 1:                2.346 seconds (Total)
-Chain 1: </code></pre>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>set_mi<span class="ot">&lt;-</span><span class="fu">set_vars</span>(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">subjid =</span> <span class="st">"subject"</span>,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">visit =</span> <span class="st">"avisit"</span>,</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome =</span> <span class="st">"change"</span>,</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="st">"group"</span>,</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">covariates =</span> <span class="fu">c</span>(<span class="st">"basval * avisit"</span>, <span class="st">"group * avisit"</span>)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>vars_an<span class="ot">&lt;-</span>set_mi</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>vars_an<span class="sc">$</span>covariates <span class="ot">&lt;-</span> <span class="st">"basval"</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>dat_ice <span class="ot">&lt;-</span> high2_expand <span class="sc">%&gt;%</span> </span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(subject, avisit) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(change)) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(subject) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(subject, avisit) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">strategy =</span> <span class="st">"JR"</span>)</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>method <span class="ot">&lt;-</span> <span class="fu">method_bayes</span>(</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">burn_in =</span> <span class="dv">200</span>,</span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">burn_between =</span> <span class="dv">5</span>,</span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_samples =</span> <span class="dv">100</span>,</span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">072407</span></span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>draw_high2<span class="ot">&lt;-</span><span class="fu">draws</span>(<span class="at">data=</span>high2_expand, <span class="at">data_ice =</span> dat_ice, <span class="at">vars=</span>set_mi, <span class="at">method=</span>method, <span class="at">ncores =</span> <span class="dv">1</span>, <span class="at">quiet =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a>imputeObj <span class="ot">&lt;-</span> <span class="fu">impute</span>(</span>
+<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a>  draw_high2,</span>
+<span id="cb32-32"><a href="#cb32-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">references =</span> <span class="fu">c</span>(<span class="st">"Arm 1"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>, <span class="st">"Arm 2"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>)</span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-34"><a href="#cb32-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-35"><a href="#cb32-35" aria-hidden="true" tabindex="-1"></a>imputed_high2 <span class="ot">&lt;-</span> <span class="fu">extract_imputed_dfs</span>(imputeObj)</span>
+<span id="cb32-36"><a href="#cb32-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-37"><a href="#cb32-37" aria-hidden="true" tabindex="-1"></a>anaObj <span class="ot">&lt;-</span> <span class="fu">analyse</span>(</span>
+<span id="cb32-38"><a href="#cb32-38" aria-hidden="true" tabindex="-1"></a>  imputeObj,</span>
+<span id="cb32-39"><a href="#cb32-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">vars =</span> vars_an</span>
+<span id="cb32-40"><a href="#cb32-40" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>imputeObj <span class="ot">&lt;-</span> <span class="fu">impute</span>(</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  draw_high2,</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">references =</span> <span class="fu">c</span>(<span class="st">"Arm 1"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>, <span class="st">"Arm 2"</span> <span class="ot">=</span> <span class="st">"Arm 1"</span>)</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>imputed_high2 <span class="ot">&lt;-</span> <span class="fu">extract_imputed_dfs</span>(imputeObj)</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>anaObj <span class="ot">&lt;-</span> <span class="fu">analyse</span>(</span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  imputeObj,</span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">vars =</span> vars_an</span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="co">#For method_bayes() or method_approxbayes() pooling and inference are based on Rubin’s rules.</span></span>
-<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>poolObj <span class="ot">&lt;-</span> <span class="fu">pool</span>(anaObj)</span>
-<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(poolObj)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Table: Estimates from copy jump to reference J2R imputation</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>poolObj <span class="ot">&lt;-</span> <span class="fu">pool</span>(anaObj)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(poolObj)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        parameter         est        se       lci        uci         pval
 1      trt_Week 1 -0.04272539 0.6513099 -1.327240  1.2417894 9.477641e-01

@@ -20,10 +20,7 @@ Datasets used in this course:
 -   Two treatement arms are included: placebo (arm 1) vs. drug (arm 2).
 -   Assessments were taken at baseline and weeks 1, 2, 4, 6, and 8.
 
-There are 3 data sets created from the original data:
--   Data *all2* = Subsample of the large dataset with n=50, visits: weeks 2, 4, 8
--   Data *high2* = Large dataset with n=100, high dropout = 70% (drug), 60% (placebo)
--   Data *low2* = Large dataset with n=100, low dropout = 18%
+There are 3 data sets created from the original data: - Data *all2* = Subsample of the large dataset with n=50, visits: weeks 2, 4, 8 - Data *high2* = Large dataset with n=100, high dropout = 70% (drug), 60% (placebo) - Data *low2* = Large dataset with n=100, low dropout = 18%
 
 We are mainly working with the *all2* data set in the following. There is one application on the *high2* data set. We are not considering the *low2* data set.
 
@@ -142,7 +139,7 @@ all2 %>%
 Figure: Mean change from baseline for each treatment group in the all2 data set with drop-outs
 
 ```{r}
-#| label: fig-mean
+#| label: fig-mean2
 #| fig-cap: "Mean HAMD17 change from baseline by treatment group"
 #| warning: false
 ggplot(data = all2, aes(x = week, y = chgdrop)) +  
@@ -293,11 +290,11 @@ with $$ \rho_{ij}=\rho^{d_{ij}} $$ where $$d_{ij} $$ is the distance between tim
 
 ## Selecting the covariance structure
 
-There are a variety of considerations when selecting the covariance structure: 
+There are a variety of considerations when selecting the covariance structure:
 
-- number of parameters
-- interpretation of the structure
-- model fit
+-   number of parameters
+-   interpretation of the structure
+-   model fit
 
 UN is the most flexible (complex) structure and can fail to run especially if one has many repeated measures. Choose a reasonable covaraiance structure which is the best compromise between model fit and complexity. E.g. use AIC as it penalises more complex models.
 
@@ -318,7 +315,6 @@ all2.w <- all2 %>%
 cor(all2.w[-1]) 
 cov(all2.w[-1])
 ```
-
 
 ## Taking a step back: Consequences of Ignoring Correlation among Longitudinal Data
 
