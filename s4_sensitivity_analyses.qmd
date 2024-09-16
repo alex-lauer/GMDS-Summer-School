@@ -419,3 +419,20 @@ Table: Estimates from copy jump to reference J2R imputation
 poolObj <- pool(anaObj)
 as.data.frame(poolObj)
 ```
+
+Summary of results
+
+Take the figure from the visualization part from day 1 to better understand what we have found here.
+
+Table: Estimates for all methods
+
+|                  | Mean  | Diff  |
+|------------------|:-----:|:-----:|
+|Completers, Arm 1 | -6.96 |       |
+|Completers, Arm 2 | -8.67 | -1.71 |
+|MMRM, Arm 1       | -5.24 |       |
+|MMRM, Arm 2       | -7.76 | -2.52 |
+|LOCF, Arm 1       | -4.22 |       |
+|LOCF, Arm 1       | -6.72 | -2.50 |
+|J2R , Arm 1       | -5.32 |       |
+|J2R , Arm 1       | -7.06 | -1.74 |
