@@ -20,7 +20,11 @@ Datasets used in this course:
 -   Two treatement arms are included: placebo (arm 1) vs. drug (arm 2).
 -   Assessments were taken at baseline and weeks 1, 2, 4, 6, and 8.
 
-There are 3 data sets created from the original data: - Data *all2* = Subsample of the large dataset with n=50, visits: weeks 2, 4, 8 - Data *high2* = Large dataset with n=100, high dropout = 70% (drug), 60% (placebo) - Data *low2* = Large dataset with n=100, low dropout = 18%
+There are 3 data sets created from the original data:
+
+- Data *all2* = Subsample of the large dataset with n=50, visits: weeks 2, 4, 8.
+- Data *high2* = Large dataset with n=100, high dropout = 70% (drug), 60% (placebo).
+- Data *low2* = Large dataset with n=100, low dropout = 18%.
 
 We are mainly working with the *all2* data set in the following. There is one application on the *high2* data set. We are not considering the *low2* data set.
 
