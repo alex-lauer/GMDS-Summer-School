@@ -1,4 +1,14 @@
 # Preface {.unnumbered}
 
+**Authors**
 
+-   Dr. Marietta Kirchner, Institute of Medical Biometry, Heidelberg University
+
+-   Dr. Alexandra Lauer, Boehringer Ingelheim Pharma GmbH & Co. KG
+
+**Published**
+
+```{r}
+Sys.Date()
+```
 
