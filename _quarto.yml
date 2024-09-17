@@ -3,7 +3,6 @@ project:
   output-dir: docs
   render:
     - index.qmd
-    - intro.qmd
     - s1_visualization.qmd
     - s2_inference_continuous.qmd
     - s3_missingness.qmd
