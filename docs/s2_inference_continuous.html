@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Longitudinal Data Modeling - 3&nbsp; Inference from Longitudinal Data</title>
+<title>s2_inference_continuous</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -77,14 +77,11 @@ div.csl-indent {
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./s3_missingness.html" rel="next">
-<link href="./s1_visualization.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -120,139 +117,24 @@ div.csl-indent {
 
 </head>
 
-<body class="nav-sidebar floating">
+<body>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./s2_inference_continuous.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inference from Longitudinal Data</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
-    </div>
-  </nav>
-</header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
-    <div class="sidebar-title mb-0 py-0">
-      <a href="./">Longitudinal Data Modeling</a> 
-    </div>
-      </div>
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Preface</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./s1_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Longitudinal Data Exploration and Visualization</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./s2_inference_continuous.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inference from Longitudinal Data</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./s3_missingness.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./s4_sensitivity_analyses.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sensitivity Analyses</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./s5_inferences_binary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Inferences from binary longitudinal data</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
-  </div>
-</li>
-    </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#categorical-time" id="toc-categorical-time" class="nav-link active" data-scroll-target="#categorical-time"><span class="header-section-number">3.1</span> Categorical Time</a>
-  <ul class="collapse">
-  <li><a href="#unstructured-us" id="toc-unstructured-us" class="nav-link" data-scroll-target="#unstructured-us"><span class="header-section-number">3.1.1</span> Unstructured (US)</a></li>
-  <li><a href="#compound-symmetry-cs" id="toc-compound-symmetry-cs" class="nav-link" data-scroll-target="#compound-symmetry-cs"><span class="header-section-number">3.1.2</span> Compound Symmetry (CS)</a></li>
-  <li><a href="#toeplitz-toep" id="toc-toeplitz-toep" class="nav-link" data-scroll-target="#toeplitz-toep"><span class="header-section-number">3.1.3</span> Toeplitz (TOEP)</a></li>
-  <li><a href="#spatial-power-sp_exp" id="toc-spatial-power-sp_exp" class="nav-link" data-scroll-target="#spatial-power-sp_exp"><span class="header-section-number">3.1.4</span> Spatial Power (SP_EXP)</a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">3.1.5</span> Conclusion</a></li>
-  </ul></li>
-  <li><a href="#continuous-time" id="toc-continuous-time" class="nav-link" data-scroll-target="#continuous-time"><span class="header-section-number">3.2</span> Continuous Time</a></li>
-  <li><a href="#adjusted-ls-means-from-mmrms" id="toc-adjusted-ls-means-from-mmrms" class="nav-link" data-scroll-target="#adjusted-ls-means-from-mmrms"><span class="header-section-number">3.3</span> (Adjusted) LS Means from MMRMs</a>
-  <ul class="collapse">
-  <li><a href="#observed-vs.-balanced-margins" id="toc-observed-vs.-balanced-margins" class="nav-link" data-scroll-target="#observed-vs.-balanced-margins"><span class="header-section-number">3.3.1</span> Observed vs.&nbsp;balanced margins</a></li>
-  <li><a href="#contrasts" id="toc-contrasts" class="nav-link" data-scroll-target="#contrasts"><span class="header-section-number">3.3.2</span> Contrasts</a></li>
-  </ul></li>
-  <li><a href="#fit-diagnostics" id="toc-fit-diagnostics" class="nav-link" data-scroll-target="#fit-diagnostics"><span class="header-section-number">3.4</span> Fit diagnostics</a></li>
-  <li><a href="#baseline-as-a-response-clda-lda" id="toc-baseline-as-a-response-clda-lda" class="nav-link" data-scroll-target="#baseline-as-a-response-clda-lda"><span class="header-section-number">3.5</span> Baseline as a Response (cLDA + LDA)</a></li>
-  <li><a href="#addendum-on-linear-mixed-effect-models" id="toc-addendum-on-linear-mixed-effect-models" class="nav-link" data-scroll-target="#addendum-on-linear-mixed-effect-models"><span class="header-section-number">3.6</span> Addendum on Linear Mixed Effect Models</a></li>
-  </ul>
-</nav>
-    </div>
+        
+    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="s2_inference_continuous.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inference from Longitudinal Data</span></h1>
-</div>
 
 
-
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-</header>
-
-<p>This section will focus on the application of Mixed Model with Repeated Measures (MMRMs). Our main focus will be the modeling of the means of the data. MMRMs are generalizations of standard linear models in the way that data is allowed to be correlated between subsequent measurements from the same subject and exhibit non-constant variability. A nice summary can be found in the user manual for the MIXED Procedure <a href="https://support.sas.com/documentation/cdl/en/statug/63033/HTML/default/viewer.htm#mixed_toc.htm">SAS</a>, or the <a href="https://openpharma.github.io/mmrm/latest-tag/articles/methodological_introduction.html">vignette</a> for the <code>mmrm</code> package <span class="citation" data-cites="mmrm">(<a href="references.html#ref-mmrm" role="doc-biblioref">Sabanes Bove et al. 2024</a>)</span>.</p>
+<section id="inference-from-longitudinal-data" class="level1">
+<h1>Inference from Longitudinal Data</h1>
+<p>This section will focus on the application of Mixed Model with Repeated Measures (MMRMs). Our main focus will be the modeling of the means of the data. MMRMs are generalizations of standard linear models in the way that data is allowed to be correlated between subsequent measurements from the same subject and exhibit non-constant variability. A nice summary can be found in the user manual for the MIXED Procedure <a href="https://support.sas.com/documentation/cdl/en/statug/63033/HTML/default/viewer.htm#mixed_toc.htm">SAS</a>, or the <a href="https://openpharma.github.io/mmrm/latest-tag/articles/methodological_introduction.html">vignette</a> for the <code>mmrm</code> package <span class="citation" data-cites="mmrm">(<a href="#ref-mmrm" role="doc-biblioref">Sabanes Bove et al. 2024</a>)</span>.</p>
 <p>The primary assumptions for MMRMs are:</p>
 <ul>
 <li><p>The data are normally distributed</p></li>
@@ -275,9 +157,9 @@ y = X\beta\,+\,Z\gamma\,+\,\varepsilon\,.
 <p><span class="math display">\[
 y = X\beta\,+\,\varepsilon\,.
 \]</span></p>
-<section id="categorical-time" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="categorical-time"><span class="header-section-number">3.1</span> Categorical Time</h2>
-<p>In the following sections we will use the package <code>mmrm</code> <span class="citation" data-cites="mmrm">(<a href="references.html#ref-mmrm" role="doc-biblioref">Sabanes Bove et al. 2024</a>)</span>. You can start and familiarise yourself with the main function <code>mmrm()</code> using the command</p>
+<section id="categorical-time" class="level2">
+<h2 class="anchored" data-anchor-id="categorical-time">Categorical Time</h2>
+<p>In the following sections we will use the package <code>mmrm</code> <span class="citation" data-cites="mmrm">(<a href="#ref-mmrm" role="doc-biblioref">Sabanes Bove et al. 2024</a>)</span>. You can start and familiarise yourself with the main function <code>mmrm()</code> using the command</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mmrm)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>?mmrm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -294,8 +176,8 @@ y = X\beta\,+\,\varepsilon\,.
 <li><p>Look at the structure of the fit summary and try to extract the estimate of the <span class="math inline">\(R\)</span> matrix.</p></li>
 <li><p>How do other choices of covariance structures influence the estimation?</p></li>
 </ul>
-<section id="unstructured-us" class="level3" data-number="3.1.1">
-<h3 data-number="3.1.1" class="anchored" data-anchor-id="unstructured-us"><span class="header-section-number">3.1.1</span> Unstructured (US)</h3>
+<section id="unstructured-us" class="level3">
+<h3 class="anchored" data-anchor-id="unstructured-us">Unstructured (US)</h3>
 <p>Unstructured corresponds to a saturated variance-covariance matrix and involves the estimation of <span class="math inline">\(m\,(m+1)/2\)</span> variance components, where <span class="math inline">\(m\)</span> is the number of follow-up visits. In our case, we can see that a total of 6 variance parameters were estimated.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>fit_cat_time <span class="ot">&lt;-</span> mmrm<span class="sc">::</span><span class="fu">mmrm</span>(</span>
@@ -388,8 +270,8 @@ Week 8 12.27661 17.66478 27.61271</code></pre>
 </div>
 </div>
 </section>
-<section id="compound-symmetry-cs" class="level3" data-number="3.1.2">
-<h3 data-number="3.1.2" class="anchored" data-anchor-id="compound-symmetry-cs"><span class="header-section-number">3.1.2</span> Compound Symmetry (CS)</h3>
+<section id="compound-symmetry-cs" class="level3">
+<h3 class="anchored" data-anchor-id="compound-symmetry-cs">Compound Symmetry (CS)</h3>
 <p>We can choose different types of covariance structures by modification of the model formula.</p>
 <p>The compound symmetry structure assumes equal variances (diagonal elements are all equal) and equal covariances (off-diagonal elements are all equal). From the model summary we can see that two variance-covariance parameters are estimated.</p>
 <p>This model is the most simple choice of repeated measures variance-covariance modeling. In most cases, it is overly simplistic, but can be a good fallback option in case of model non-convergence (especially when prespecification of analysis methods is required).</p>
@@ -438,8 +320,8 @@ Week 8 15.0832 15.0832 23.1948</code></pre>
 </div>
 </div>
 </section>
-<section id="toeplitz-toep" class="level3" data-number="3.1.3">
-<h3 data-number="3.1.3" class="anchored" data-anchor-id="toeplitz-toep"><span class="header-section-number">3.1.3</span> Toeplitz (TOEP)</h3>
+<section id="toeplitz-toep" class="level3">
+<h3 class="anchored" data-anchor-id="toeplitz-toep">Toeplitz (TOEP)</h3>
 <p>Use of the Toeplitz structure is not a very sensible choice here, as visits are not equally spaced, i.e.&nbsp;the difference between baseline and time1, and time1 and time2 is 2 weeks, respectively, while the difference between time2 and time3 is 4 weeks. Toeplitz thus ignores the differences in time spacing.</p>
 <p>We can see that the covariance estimates for responses at Week 2 (time1) and Week 4 (time2) are the same as the ones for responses at Week 4 (time2) and Week 8 (time3), although their time difference doubles.</p>
 <p>The same line of reasoning for the lack of sensibility of the Toeplitz structure can be applied to the autoregressive structure (AR(1)). The example is not shown here.</p>
@@ -488,8 +370,8 @@ Week 8 12.3576 17.3491 23.6312</code></pre>
 </div>
 </div>
 </section>
-<section id="spatial-power-sp_exp" class="level3" data-number="3.1.4">
-<h3 data-number="3.1.4" class="anchored" data-anchor-id="spatial-power-sp_exp"><span class="header-section-number">3.1.4</span> Spatial Power (SP_EXP)</h3>
+<section id="spatial-power-sp_exp" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-power-sp_exp">Spatial Power (SP_EXP)</h3>
 <p>The choice of the spatial power variance-covariance structure makes sense here, as the visits are not equally spaced. In this case, two parameters are estimated. The first parameter is the variance (diagonal elements) and second one is the time difference between subsequent visits.</p>
 <p>Note that in this example, we need to use the numeric <code>week</code> variable, as spatial power requires the information about the distance of subsequent visits in the estimation of the variance-covariance matrix.</p>
 <p>We can see from the fit summary, that the covariance displayed is a 2 * 2 square matrix. As the distance will be used to derive the corresponding element in that matrix, unit distance is used here.</p>
@@ -537,13 +419,13 @@ Covariance estimate:
 </div>
 </div>
 </section>
-<section id="conclusion" class="level3" data-number="3.1.5">
-<h3 data-number="3.1.5" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">3.1.5</span> Conclusion</h3>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
 <p>While the unstructured variance-covariance matrix provides the highest degree of flexibility, we can see from the AIC and BIC estimates that spatial power in our example provides and even better fit in comparison to the model complexity. Note that this is also true for the Toeplitz structure, but we rejected this approach as the unequal spacing of visits renders this approach nonsensible.</p>
 </section>
 </section>
-<section id="continuous-time" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="continuous-time"><span class="header-section-number">3.2</span> Continuous Time</h2>
+<section id="continuous-time" class="level2">
+<h2 class="anchored" data-anchor-id="continuous-time">Continuous Time</h2>
 <p>Time as continuous effect -&gt; single df for time and trt-by-time interaction</p>
 <p>Modeling: - Need avisit for structure of covariance matrix - Implicit assumption is for the covariance between values for two timepoints to be equal, regardless of the specific timing</p>
 <div class="cell">
@@ -636,8 +518,8 @@ Week 8 47.8394 102.6988 222.5403</code></pre>
 </div>
 </div>
 </section>
-<section id="adjusted-ls-means-from-mmrms" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="adjusted-ls-means-from-mmrms"><span class="header-section-number">3.3</span> (Adjusted) LS Means from MMRMs</h2>
+<section id="adjusted-ls-means-from-mmrms" class="level2">
+<h2 class="anchored" data-anchor-id="adjusted-ls-means-from-mmrms">(Adjusted) LS Means from MMRMs</h2>
 <p>LS Means are means of the dependent variable adjusted for covariates in the statistical model. We can obtain LS Means estimates and contrasts allowing for a treatment comparison using the <code>emmeans</code> package.</p>
 <p><strong>Example</strong>: Calculate the observed (raw) means of changes along with number of patients by treatment group from the dataset <code>all2</code> overall and by visit. Then take the model <code>fit_cat_time</code> and derive the respective LS Means from the model. What do you observe?</p>
 <div class="cell">
@@ -712,8 +594,8 @@ Confidence level used: 0.95 </code></pre>
 Confidence level used: 0.95 </code></pre>
 </div>
 </div>
-<section id="observed-vs.-balanced-margins" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="observed-vs.-balanced-margins"><span class="header-section-number">3.3.1</span> Observed vs.&nbsp;balanced margins</h3>
+<section id="observed-vs.-balanced-margins" class="level3">
+<h3 class="anchored" data-anchor-id="observed-vs.-balanced-margins">Observed vs.&nbsp;balanced margins</h3>
 <p>In the example above we have used the standard option for the weights in the calculation of LS Means. We will delve deeper into the following two options and will try to understand the difference:</p>
 <ul>
 <li><p><code>weights = "equal"</code>: Each stratum induced by covariate levels is assigned the same weight in the calculation of the LS Means. This is the default option.</p></li>
@@ -876,8 +758,8 @@ Confidence level used: 0.95 </code></pre>
 </div>
 <p>The data is no longer balanced across the covariates in the model. The <code>weights = "equal"</code> option is agnostic to this imbalance and assigns all levels equal weights, whereas the <code>weights = "proportional"</code> assigns a weight reflecting the proportional size of the stratum over which the average is taken.</p>
 </section>
-<section id="contrasts" class="level3" data-number="3.3.2">
-<h3 data-number="3.3.2" class="anchored" data-anchor-id="contrasts"><span class="header-section-number">3.3.2</span> Contrasts</h3>
+<section id="contrasts" class="level3">
+<h3 class="anchored" data-anchor-id="contrasts">Contrasts</h3>
 <p>Most of the times, the quantity we are truly interested in when reading out a study, is the contrast between treatment arms. This contrast can be built either based on LS Means at some landmark time point, or as a longitudinal (linear) combination of LS Means from multiple time points.</p>
 <p>We can use the <code>pairs()</code> or the <code>contrast()</code> functions, where the latter provides more flexibility for the calculation of linear combinations from multiple timepoints.</p>
 <div class="cell">
@@ -957,9 +839,9 @@ trt2 Week 8    1    1</code></pre>
 </div>
 </section>
 </section>
-<section id="fit-diagnostics" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="fit-diagnostics"><span class="header-section-number">3.4</span> Fit diagnostics</h2>
-<p>The following section closely follows the content in Chapter 10 in <span class="citation" data-cites="fitzmaurice2011">(<a href="references.html#ref-fitzmaurice2011" role="doc-biblioref">Fitzmaurice 2011</a>)</span>.</p>
+<section id="fit-diagnostics" class="level2">
+<h2 class="anchored" data-anchor-id="fit-diagnostics">Fit diagnostics</h2>
+<p>The following section closely follows the content in Chapter 10 in <span class="citation" data-cites="fitzmaurice2011">(<a href="#ref-fitzmaurice2011" role="doc-biblioref">Fitzmaurice 2011</a>)</span>.</p>
 <p>Our analysis should be concluded with a look into the fit diagnostics, more specifically, the residuals. Residuals are defined by the difference between the true responses and the fitted values from the model:</p>
 <p><span class="math display">\[
 r := y - X\hat\beta\,,
@@ -967,7 +849,7 @@ r := y - X\hat\beta\,,
 <p><span class="math display">\[
 \varepsilon = y - X\beta\,.
 \]</span></p>
-<p>As per our modeling assumptions, <span class="math inline">\(\varepsilon\)</span> should follow a normal distribution with mean zero. The mean of the residuals is zero and therefore identical with the mean of the error term. For the covariance of the residuals however, the variance-covariance matrix of <span class="math inline">\(\varepsilon\)</span> only serves us as an approximation (as suggested by <span class="citation" data-cites="fitzmaurice2011">(<a href="references.html#ref-fitzmaurice2011" role="doc-biblioref">Fitzmaurice 2011</a>)</span> for all ‘practical applications’):</p>
+<p>As per our modeling assumptions, <span class="math inline">\(\varepsilon\)</span> should follow a normal distribution with mean zero. The mean of the residuals is zero and therefore identical with the mean of the error term. For the covariance of the residuals however, the variance-covariance matrix of <span class="math inline">\(\varepsilon\)</span> only serves us as an approximation (as suggested by <span class="citation" data-cites="fitzmaurice2011">(<a href="#ref-fitzmaurice2011" role="doc-biblioref">Fitzmaurice 2011</a>)</span> for all ‘practical applications’):</p>
 <p><span class="math display">\[
 Cov(r) \approx Cov(\varepsilon) = R\,.
 \]</span> This assumption has several implications on the residual diagnostics:</p>
@@ -1029,23 +911,23 @@ r^* =  L^{-1}(y - X\beta)\,.
 <div class="cell">
 <div class="cell-output-display">
 
-<div id="yqmeuopboa" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#yqmeuopboa table {
+<div id="ppkzfudgor" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ppkzfudgor table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#yqmeuopboa thead, #yqmeuopboa tbody, #yqmeuopboa tfoot, #yqmeuopboa tr, #yqmeuopboa td, #yqmeuopboa th {
+#ppkzfudgor thead, #ppkzfudgor tbody, #ppkzfudgor tfoot, #ppkzfudgor tr, #ppkzfudgor td, #ppkzfudgor th {
   border-style: none;
 }
 
-#yqmeuopboa p {
+#ppkzfudgor p {
   margin: 0;
   padding: 0;
 }
 
-#yqmeuopboa .gt_table {
+#ppkzfudgor .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1071,12 +953,12 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-left-color: #D3D3D3;
 }
 
-#yqmeuopboa .gt_caption {
+#ppkzfudgor .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#yqmeuopboa .gt_title {
+#ppkzfudgor .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1088,7 +970,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-bottom-width: 0;
 }
 
-#yqmeuopboa .gt_subtitle {
+#ppkzfudgor .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1100,7 +982,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-top-width: 0;
 }
 
-#yqmeuopboa .gt_heading {
+#ppkzfudgor .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1112,13 +994,13 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-right-color: #D3D3D3;
 }
 
-#yqmeuopboa .gt_bottom_border {
+#ppkzfudgor .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#yqmeuopboa .gt_col_headings {
+#ppkzfudgor .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1133,7 +1015,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-right-color: #D3D3D3;
 }
 
-#yqmeuopboa .gt_col_heading {
+#ppkzfudgor .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1153,7 +1035,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   overflow-x: hidden;
 }
 
-#yqmeuopboa .gt_column_spanner_outer {
+#ppkzfudgor .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1165,15 +1047,15 @@ r^* =  L^{-1}(y - X\beta)\,.
   padding-right: 4px;
 }
 
-#yqmeuopboa .gt_column_spanner_outer:first-child {
+#ppkzfudgor .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#yqmeuopboa .gt_column_spanner_outer:last-child {
+#ppkzfudgor .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#yqmeuopboa .gt_column_spanner {
+#ppkzfudgor .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1185,11 +1067,11 @@ r^* =  L^{-1}(y - X\beta)\,.
   width: 100%;
 }
 
-#yqmeuopboa .gt_spanner_row {
+#ppkzfudgor .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#yqmeuopboa .gt_group_heading {
+#ppkzfudgor .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1215,7 +1097,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   text-align: left;
 }
 
-#yqmeuopboa .gt_empty_group_heading {
+#ppkzfudgor .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1230,15 +1112,15 @@ r^* =  L^{-1}(y - X\beta)\,.
   vertical-align: middle;
 }
 
-#yqmeuopboa .gt_from_md > :first-child {
+#ppkzfudgor .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#yqmeuopboa .gt_from_md > :last-child {
+#ppkzfudgor .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#yqmeuopboa .gt_row {
+#ppkzfudgor .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1257,7 +1139,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   overflow-x: hidden;
 }
 
-#yqmeuopboa .gt_stub {
+#ppkzfudgor .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1270,7 +1152,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   padding-right: 5px;
 }
 
-#yqmeuopboa .gt_stub_row_group {
+#ppkzfudgor .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1284,15 +1166,15 @@ r^* =  L^{-1}(y - X\beta)\,.
   vertical-align: top;
 }
 
-#yqmeuopboa .gt_row_group_first td {
+#ppkzfudgor .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#yqmeuopboa .gt_row_group_first th {
+#ppkzfudgor .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#yqmeuopboa .gt_summary_row {
+#ppkzfudgor .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1302,16 +1184,16 @@ r^* =  L^{-1}(y - X\beta)\,.
   padding-right: 5px;
 }
 
-#yqmeuopboa .gt_first_summary_row {
+#ppkzfudgor .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#yqmeuopboa .gt_first_summary_row.thick {
+#ppkzfudgor .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#yqmeuopboa .gt_last_summary_row {
+#ppkzfudgor .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1321,7 +1203,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-bottom-color: #D3D3D3;
 }
 
-#yqmeuopboa .gt_grand_summary_row {
+#ppkzfudgor .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1331,7 +1213,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   padding-right: 5px;
 }
 
-#yqmeuopboa .gt_first_grand_summary_row {
+#ppkzfudgor .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1341,7 +1223,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-top-color: #D3D3D3;
 }
 
-#yqmeuopboa .gt_last_grand_summary_row_top {
+#ppkzfudgor .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1351,11 +1233,11 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-bottom-color: #D3D3D3;
 }
 
-#yqmeuopboa .gt_striped {
+#ppkzfudgor .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#yqmeuopboa .gt_table_body {
+#ppkzfudgor .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1364,7 +1246,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-bottom-color: #D3D3D3;
 }
 
-#yqmeuopboa .gt_footnotes {
+#ppkzfudgor .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1378,7 +1260,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-right-color: #D3D3D3;
 }
 
-#yqmeuopboa .gt_footnote {
+#ppkzfudgor .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1387,7 +1269,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   padding-right: 5px;
 }
 
-#yqmeuopboa .gt_sourcenotes {
+#ppkzfudgor .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1401,7 +1283,7 @@ r^* =  L^{-1}(y - X\beta)\,.
   border-right-color: #D3D3D3;
 }
 
-#yqmeuopboa .gt_sourcenote {
+#ppkzfudgor .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1409,63 +1291,63 @@ r^* =  L^{-1}(y - X\beta)\,.
   padding-right: 5px;
 }
 
-#yqmeuopboa .gt_left {
+#ppkzfudgor .gt_left {
   text-align: left;
 }
 
-#yqmeuopboa .gt_center {
+#ppkzfudgor .gt_center {
   text-align: center;
 }
 
-#yqmeuopboa .gt_right {
+#ppkzfudgor .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#yqmeuopboa .gt_font_normal {
+#ppkzfudgor .gt_font_normal {
   font-weight: normal;
 }
 
-#yqmeuopboa .gt_font_bold {
+#ppkzfudgor .gt_font_bold {
   font-weight: bold;
 }
 
-#yqmeuopboa .gt_font_italic {
+#ppkzfudgor .gt_font_italic {
   font-style: italic;
 }
 
-#yqmeuopboa .gt_super {
+#ppkzfudgor .gt_super {
   font-size: 65%;
 }
 
-#yqmeuopboa .gt_footnote_marks {
+#ppkzfudgor .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#yqmeuopboa .gt_asterisk {
+#ppkzfudgor .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#yqmeuopboa .gt_indent_1 {
+#ppkzfudgor .gt_indent_1 {
   text-indent: 5px;
 }
 
-#yqmeuopboa .gt_indent_2 {
+#ppkzfudgor .gt_indent_2 {
   text-indent: 10px;
 }
 
-#yqmeuopboa .gt_indent_3 {
+#ppkzfudgor .gt_indent_3 {
   text-indent: 15px;
 }
 
-#yqmeuopboa .gt_indent_4 {
+#ppkzfudgor .gt_indent_4 {
   text-indent: 20px;
 }
 
-#yqmeuopboa .gt_indent_5 {
+#ppkzfudgor .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1530,14 +1412,14 @@ r^* =  L^{-1}(y - X\beta)\,.
 </div>
 </div>
 </section>
-<section id="baseline-as-a-response-clda-lda" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="baseline-as-a-response-clda-lda"><span class="header-section-number">3.5</span> Baseline as a Response (cLDA + LDA)</h2>
+<section id="baseline-as-a-response-clda-lda" class="level2">
+<h2 class="anchored" data-anchor-id="baseline-as-a-response-clda-lda">Baseline as a Response (cLDA + LDA)</h2>
 <p>In the former examples we used baseline severity as a continuous covariate, which is the most common approach. In this case we treat <code>baseval</code> as a <em>fixed effect</em> and used changes from baseline as response variable in our model formula. This approach comes with a couple of caveats:</p>
 <ul>
 <li><p>Only subjects with a non-missing baseline and at least one non-missing follow-up response contribute to the analysis (i.e.&nbsp;at least one non-missing change from baseline value).</p></li>
 <li><p>Only subjects with complete covariate data contribute to the analysis.</p></li>
 </ul>
-<p>Hence, if <code>baseval</code> is missing for a subject, this subject will not be included in our model. <span class="citation" data-cites="liang_zeger">(<a href="references.html#ref-liang_zeger" role="doc-biblioref">Liang and Zeger 2000</a>)</span> introduced the so-called LDA (longitudinal data analysis) and cLDA (constrained longitudinal data analysis) models. The basic idea behind these models is that baseline can be regarded as a response at Time 0, and can therefore be included in the vector of responses.</p>
+<p>Hence, if <code>baseval</code> is missing for a subject, this subject will not be included in our model. <span class="citation" data-cites="liang_zeger">(<a href="#ref-liang_zeger" role="doc-biblioref">Liang and Zeger 2000</a>)</span> introduced the so-called LDA (longitudinal data analysis) and cLDA (constrained longitudinal data analysis) models. The basic idea behind these models is that baseline can be regarded as a response at Time 0, and can therefore be included in the vector of responses.</p>
 <p>In order to fit the model, we need to apply some data wrangling upfront and add baseline to the response column (<code>aval</code>). Note that this step is usually not required when dealing with CDISC compliant datasets, such as ADaM or SDTM.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>base <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">distinct</span>(all2, subject, trt, basval, group, gender) <span class="sc">%&gt;%</span> </span>
@@ -1596,22 +1478,22 @@ r^* =  L^{-1}(y - X\beta)\,.
 </ul>
 <p>Generally, LDA models can be very useful in trials with only very few visits per patient due to the additional response value being included. In longer trials however, it is recommended to refrain from their use for the disadvantages stated above. In this case, a decent data quality is key to avoid missing baseline data (if possible completely) and reduce the degree of missingness with regards to follow-up data as much as possible.</p>
 </section>
-<section id="addendum-on-linear-mixed-effect-models" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="addendum-on-linear-mixed-effect-models"><span class="header-section-number">3.6</span> Addendum on Linear Mixed Effect Models</h2>
+<section id="addendum-on-linear-mixed-effect-models" class="level2">
+<h2 class="anchored" data-anchor-id="addendum-on-linear-mixed-effect-models">Addendum on Linear Mixed Effect Models</h2>
 <p>In this chapter we have dealt with models where the response is modeled as a linear combination of <em>fixed effect</em> parameters <span class="math inline">\(\beta\)</span> and a random error <span class="math inline">\(\varepsilon\)</span></p>
 <p><span class="math display">\[
 y = X\beta\,+\,\varepsilon\,.
 \]</span></p>
 <p>The fixed effects in this model represent the population effects and we used the random error to model the subject-specific influences. Although we used the term mixed model for repeated measures (MMRM), this nomenclature is misleading in the way that our model does not truly deserve the term <em>mixed</em>. A true mixed model would require the involvement of <em>fixed</em> and <em>random</em> effects. The latter have previously been omitted.</p>
-<p>While we will not cover random coefficient models (also known as random slope and intercept models or RS&amp;I models) in depth in this class, we would like to point to couple of useful features. For further reading, one can refer to Chapter 8 in <span class="citation" data-cites="fitzmaurice2011">(<a href="references.html#ref-fitzmaurice2011" role="doc-biblioref">Fitzmaurice 2011</a>)</span>.</p>
+<p>While we will not cover random coefficient models (also known as random slope and intercept models or RS&amp;I models) in depth in this class, we would like to point to couple of useful features. For further reading, one can refer to Chapter 8 in <span class="citation" data-cites="fitzmaurice2011">(<a href="#ref-fitzmaurice2011" role="doc-biblioref">Fitzmaurice 2011</a>)</span>.</p>
 <p>The distinction between <em>fixed</em> and <em>random</em> effects in linear mixed effect models allows for modeling of both between-subject and within-subject variations. In random coefficient models (i.e.&nbsp;MMRMs with a non-trivial random effect) each subject is assumed to have their own (linear) rate of response over time, expressed as random slopes and intercepts.</p>
-<p>“<em>In addition it is not only possible to estimate parameters that describe how the mean response changes in the population of interest, it is also possible to predict how individual response trajectories change over time. For example, linear mixed effects models can be used to obtain predictions of individual growth trajectories over time.</em>” <span class="citation" data-cites="fitzmaurice2011">(<a href="references.html#ref-fitzmaurice2011" role="doc-biblioref">Fitzmaurice 2011</a>)</span></p>
+<p>“<em>In addition it is not only possible to estimate parameters that describe how the mean response changes in the population of interest, it is also possible to predict how individual response trajectories change over time. For example, linear mixed effects models can be used to obtain predictions of individual growth trajectories over time.</em>” <span class="citation" data-cites="fitzmaurice2011">(<a href="#ref-fitzmaurice2011" role="doc-biblioref">Fitzmaurice 2011</a>)</span></p>
 <p>Linear mixed effects models therefore allow for inferences on the individual (subject) basis rather than the entirety of individuals (population).</p>
 <p>Another advantage of linear mixed models is their flexibility with respect to imbalances in longitudinal data. We are no longer bound by the restriction to have (approximately) the same number of observations per subject, i.e.&nbsp;the approximately the same length of follow-up, or even for the visits to be taken at the same times. This feature is especially useful whenever we are dealing with parallel design studies, involving the comparison of interventions with different dosing/ assessment frequencies.</p>
-<p>Note that the <code>mmrm</code> package so far does not allow for fitting of linear mixed effect models, in the sense that an actual <em>random effects</em> term is included in the model formula. For these kind of models, we point to the package <code>lme4</code> <span class="citation" data-cites="lme4">(<a href="references.html#ref-lme4" role="doc-biblioref">Bates et al. 2015</a>)</span>.</p>
+<p>Note that the <code>mmrm</code> package so far does not allow for fitting of linear mixed effect models, in the sense that an actual <em>random effects</em> term is included in the model formula. For these kind of models, we point to the package <code>lme4</code> <span class="citation" data-cites="lme4">(<a href="#ref-lme4" role="doc-biblioref">Bates et al. 2015</a>)</span>.</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-lme4" class="csl-entry" role="listitem">
 Bates, Douglas, Martin Mächler, Ben Bolker, and Steve Walker. 2015. <span>“Fitting Linear Mixed-Effects Models Using <span class="nocase">lme4</span>.”</span> <em>Journal of Statistical Software</em> 67 (1): 1–48. <a href="https://doi.org/10.18637/jss.v067.i01">https://doi.org/10.18637/jss.v067.i01</a>.
 </div>
@@ -1625,6 +1507,7 @@ Liang, Kung-Yee, and Scott L. Zeger. 2000. <span>“Longitudinal Data Analysis o
 Sabanes Bove, Daniel, Liming Li, Julia Dedic, Doug Kelkhoff, Kevin Kunzmann, Brian Matthew Lang, Christian Stock, et al. 2024. <em>Mmrm: Mixed Models for Repeated Measures</em>. <a href="https://openpharma.github.io/mmrm/">https://openpharma.github.io/mmrm/</a>.
 </div>
 </div>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -1861,18 +1744,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="./s1_visualization.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Longitudinal Data Exploration and Visualization</span></span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="./s3_missingness.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Missing Data</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
