@@ -123,8 +123,9 @@ Implemented imputation strategies in rbmi:
 
 I will show how it looks like for the *all2* data set and you will then explore the methods using the *high2* data set.
 
-### Plenum - Solution for all2 data set 
-1. Complete case
+### Plenum - Solution for all2 data set
+
+#### 1. Complete case
 
 ```{r}
 #| echo: false
@@ -147,7 +148,7 @@ Table: Adjusted means for the complete case data set (all2 data with drop-out, s
 model_lsmeans_cc
 ```
 
-2. MMRM, unstructured covariance
+#### 2. MMRM, unstructured covariance
 
 ```{r}
 #| echo: false
@@ -168,7 +169,7 @@ Table: Adjusted means for the all2 data set with drop-out analysed with MMRM
 model_lsmeans_mmrm
 ```
 
-3. LOCF
+#### 3. LOCF
 
 ```{r}
 all2.locf <- all2 %>% filter(!is.na(chgdrop)) %>%
@@ -196,7 +197,8 @@ all2.locf %>% ungroup() %>%
 
 ```
 
-4. J2R imputation
+#### 4. J2R imputation
+
 ```{r}
 #| output: false
 
@@ -252,7 +254,8 @@ poolObj <- pool(anaObj)
 as.data.frame(poolObj)
 ```
 
-5. Change from J2R to CIR
+#### 5. Change from J2R to CIR
+
 Use the additional argument update_strategies in the impute function.
 
 ```{r}
@@ -278,6 +281,28 @@ Table: Estimates from copy increments in reference CIR imputation
 poolObj_CIR <- pool(anaObj_CIR)
 as.data.frame(poolObj_CIR)
 ```
+
+#### Summary of results *all2* data set
+
+Take the figure from the missingness part to better understand what we have found here.
+
+Table: Estimates for all methods
+
+|                  | Mean   | Diff  |
+|------------------|:------:|:-----:|
+|Completers, Arm 1 | -10.17 |       |
+|Completers, Arm 2 | -13.10 | -2.93 |
+|MMRM, Arm 1       | -9.73  |       |
+|MMRM, Arm 2       | -12.62 | -2.06 |
+|LOCF, Arm 1       | -8.20  |       |
+|LOCF, Arm 2       | -11.24 | -3.03 |
+|J2R , Arm 1       | -9.66  |       |
+|J2R , Arm 2       | -11.87 | -2.21 |
+|CIR , Arm 1       | -9.65  |       |
+|CIR , Arm 2       | -12.26 | -2.61 |
+
+
+#### From *all2* to *high2* data set
 
 Now, you can first of all repeat the analysis on the *all2* data set to see if you can manage it. Or you go directly to the next step and apply methods to the *high2* data set.
 
@@ -318,7 +343,7 @@ high2_expand <- expand_locf(
 )
 ```
 
-1. Complete case
+#### 1. Complete case
 
 ```{r}
 high2.cc<- high2 %>% dplyr::filter(drop==8)
@@ -336,7 +361,7 @@ model_lsmeans
 ```
 
 
-2. MMRM
+#### 2. MMRM
 
 ```{r}
 fit_mmrm <- mmrm::mmrm(
@@ -351,7 +376,8 @@ model_lsmeans <- emmeans::emmeans(fit_mmrm, ~trt*avisit, weights = "proportional
 model_lsmeans
 ```
 
-3. LOCF
+#### 3. LOCF
+
 ```{r}
 #| message: false
 high2.locf<-high2 %>% dplyr::filter(week==drop)
@@ -368,7 +394,8 @@ high2.locf %>% ungroup() %>%
               digits = all_continuous() ~ 2 )
 ```
 
-4. J2R
+#### 4. J2R
+
 ```{r}
 #| output: false
 set_mi<-set_vars(
@@ -420,7 +447,7 @@ poolObj <- pool(anaObj)
 as.data.frame(poolObj)
 ```
 
-Summary of results
+#### Summary of results *high2* data set
 
 Take the figure from the visualization part from day 1 to better understand what we have found here.
 
@@ -433,6 +460,6 @@ Table: Estimates for all methods
 |MMRM, Arm 1       | -5.24 |       |
 |MMRM, Arm 2       | -7.76 | -2.52 |
 |LOCF, Arm 1       | -4.22 |       |
-|LOCF, Arm 1       | -6.72 | -2.50 |
+|LOCF, Arm 2       | -6.72 | -2.50 |
 |J2R , Arm 1       | -5.32 |       |
-|J2R , Arm 1       | -7.06 | -1.74 |
+|J2R , Arm 2       | -7.06 | -1.74 |
