@@ -54,7 +54,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -157,8 +176,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="preface" class="level1 unnumbered">
-<h1 class="unnumbered">Preface</h1>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
 <p><strong>Authors</strong></p>
 <ul>
 <li><p>Dr.&nbsp;Marietta Kirchner, Institute of Medical Biometry, Heidelberg University</p></li>
@@ -171,11 +190,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>[1] "2024-09-17"</code></pre>
 </div>
 </div>
+<section id="workshop-structure" class="level2">
+<h2 class="anchored" data-anchor-id="workshop-structure">Workshop Structure</h2>
+<p>This class focuses on the longitudinal modeling of data from Patient Reported Outcomes (PROs). It is meant to be hands-on class with applications in R.</p>
+<p>Content and structure follow the book by <span class="citation" data-cites="mallinckrodt2016">(<a href="#ref-mallinckrodt2016" role="doc-biblioref">Mallinckrodt and Lipkovich 2016</a>)</span>. We would like to extend our warmest gratitude towards Dr.&nbsp;Mallinckrodt for providing the example data for the workshop.</p>
+<p>The following topics will be covered:</p>
+<ul>
+<li><p>Welcome and Introduction (WS session 1)</p></li>
+<li><p>Exploration and visualization of longitudinal data (WS session 1/2)</p></li>
+<li><p>Inferences from longitudinal data (WS session 3 + 4)</p></li>
+<li><p>Assessment of missingness patterns (WS session 5)</p></li>
+<li><p>Sensitivity analyses to assess the impact of missingness (WS session 6)</p></li>
+<li><p>Annex: Inferences from longitudinal binary data (WS session 7)</p></li>
+</ul>
+</section>
+<section id="longitudinal-data" class="level2">
+<h2 class="anchored" data-anchor-id="longitudinal-data">Longitudinal Data</h2>
+<p>This workshop focuses on the analysis of data observed in randomized clinical trials (RCTs). Here, patients have assessments taken at the start of their treatment and then subsequently throughout the course of the trial based on a pre-specified schedule of assessments. The measurement at the start of the treatment is usually referred to as the baseline.</p>
+<p>Researchers can be interested in</p>
+<ol type="1">
+<li><p>the occurrence of a certain event during the course of the trial, e.g.&nbsp;death or a cardiac event, or the time to the occurrence of such an event, or</p></li>
+<li><p>the longitudinal profile from multiple repeated measurements taken, with a focus on either estimates at a landmark visit or across several time points.</p></li>
+</ol>
+<p>The outcomes under point 1 can be handled via a comparison of the percentages of patients with events between treatment arms, or a time-to-event analysis. Both are out of scope of this workshop.</p>
+</section>
+<section id="basics-about-rstudio-pre-read" class="level2">
+<h2 class="anchored" data-anchor-id="basics-about-rstudio-pre-read">Basics about RStudio (pre-read)</h2>
+<p>If you are not used to working with R and RStudio so far, we recommend for you to familiarize yourself with the following useful content:</p>
+<ul>
+<li><p><a href="https://docs.posit.co/ide/user/">RStudio User Guide</a></p></li>
+<li><p><a href="https://rstudio.github.io/cheatsheets/html/rstudio-ide.html">RStudio Cheatsheet</a></p></li>
+<li><p>The following two cheatsheets for <a href="https://rstudio.github.io/cheatsheets/html/data-transformation.html">dplyr</a> (data wrangling) and <a href="https://rstudio.github.io/cheatsheets/html/data-visualization.html">ggplot2</a> (plotting and visualizations)</p></li>
+<li><p>This video about <a href="https://www.youtube.com/watch?v=_f3latmOhew">Quarto</a></p></li>
+</ul>
+
 
 
 </section>
+</section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-mallinckrodt2016" class="csl-entry" role="listitem">
+Mallinckrodt, Craig, and Ilya Lipkovich. 2016. <em>Analyzing Longitudinal Clinical Trial Data</em>. Chapman; Hall/CRC. <a href="https://doi.org/10.1201/9781315186634">https://doi.org/10.1201/9781315186634</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
