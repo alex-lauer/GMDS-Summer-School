@@ -20,7 +20,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -60,6 +79,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -126,12 +147,50 @@ ul.task-list li input[type="checkbox"] {
 <section id="inferences-from-binary-longitudinal-data" class="level1">
 <h1>Inferences from binary longitudinal data</h1>
 <p>In the previous chapters we focused on modeling the means over time from a continuous response vector. In clinical trials we often encounter cases, where our response is however not continuous, but rather discrete. Discrete data can stem from either count data, such that values are taken in (a subset) of the natural numbers, or ordinal data, where values represent distinct categories, or binary data. In the latter case only values 0 and 1 are taken and represent the presence or absence of a clinical status, such as alive or dead at time X, hospitalized or not hospitalized at time X or response or non-response on a specific scale at time X.</p>
-<p>In this case we use <em>generalized linear models</em> for the analysis of discrete longitudinal data.</p>
+<p>Additionally, we can rarely assume a linear relationship between the discrete response variable and the independent variables.</p>
+<p>In this case we use <em>generalized linear models</em> for the analysis of discrete longitudinal data. Generalized linear models (GLMs) apply a suitable link function to deal with the nonlinearity problem and necessitate the choice of an appropriate distributional assumption on the errors.</p>
+<p>GLMs differ from the linear models for continuous data in terms of their interpretation. Modeling approaches include marginal, random effects, and conditional models.</p>
+<section id="marginal-models" class="level2">
+<h2 class="anchored" data-anchor-id="marginal-models">Marginal Models</h2>
+<p>A marginal model for binary data can be written as</p>
+<p><span class="math display">\[
+logit\left(\,\text{E}[\,Y_{i,j}\,|\, X\,]\,\right) = x_{i,j}'\,\beta\,,
+\]</span> where <span class="math inline">\(Y_{i,j}\)</span> is the binary response of subject <span class="math inline">\(i\)</span> at visit <span class="math inline">\(j\)</span>, <span class="math inline">\(X\)</span> is a set of predictor variables and <span class="math inline">\(x_{i,j}\)</span> a covariate vector. Furthermore, the link function <span class="math inline">\(logit(.)\)</span> is used. It is defined as</p>
+<p><span class="math display">\[
+logit(p) := \ln\left(\frac{p}{1-p}\right),\hspace{.1in} p\in(0,1).
+\]</span> The model is called a marginal model, as it uses the marginal distribution of an outcome vector <span class="math inline">\(Y\)</span> given a set of predictor variables <span class="math inline">\(X\)</span>. Models of this type are usually handled via Generalized Estimating Equations (GEEs). In R, the packages <code>gee</code> and <code>geepack</code> can be used.</p>
+</section>
+<section id="random-effect-models" class="level2">
+<h2 class="anchored" data-anchor-id="random-effect-models">Random Effect Models</h2>
+<p>We can add a vector of random effects to the predictor variables in <span class="math inline">\(X\)</span> to obtain</p>
+<p><span class="math display">\[
+logit\left(\,\text{E}[\,Y_{i,j}\,|\, X, b_i\,]\,\right) = x_{i,j}'\,\beta\,+\,z_{i,j}'b_i\,.
+\]</span> This model is often referred to as a generalized linear mixed-effects model. In the random effects model all fixed effects estimates are conditional upon the random effects vector <span class="math inline">\(b_i\)</span>, hence its inclusion on the left-hand side of the equation. In R, the package <code>glmm</code> can be used to fit random effects models for binary data.</p>
+</section>
+<section id="conditional-models" class="level2">
+<h2 class="anchored" data-anchor-id="conditional-models">Conditional Models</h2>
+<p>Conditional models are models of the type</p>
+<p><span class="math display">\[
+logit\left(\,\text{E}[\,Y_{i,j}\,|\, Y_{i,1},\ldots, Y_{i, j-1}, x_{i,j}\,]\,\right) = x_{i,j}'\,\beta\,+\,\alpha\,Y_{i, j-1}.
+\]</span> Here no random effects are added, but expectations are based on earlier observations. As stated by <span class="citation" data-cites="mallinckrodt2016">(<a href="#ref-mallinckrodt2016" role="doc-biblioref">Mallinckrodt and Lipkovich 2016</a>)</span> “In clinical trials, interest is often on an overall, or population average treatment effect, not on a treatment effect associated with specific outcome histories”. This limits the applicability of conditional models in the clinical trials context.</p>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+<p>For an in-depth discussion, refer to Chapter 10 in <span class="citation" data-cites="mallinckrodt2016">(<a href="#ref-mallinckrodt2016" role="doc-biblioref">Mallinckrodt and Lipkovich 2016</a>)</span> or Part III in <span class="citation" data-cites="fitzmaurice2011">(<a href="#ref-fitzmaurice2011" role="doc-biblioref">Fitzmaurice 2011</a>)</span>.</p>
+
 
 
 </section>
+</section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-fitzmaurice2011" class="csl-entry" role="listitem">
+Fitzmaurice, Laird, G. M. 2011. <em>Applied Longitudinal Analysis</em>. Vol. 2. USA: New York, Wiley. <a href="https://doi.org/10.1002/9781119513469">https://doi.org/10.1002/9781119513469</a>.
+</div>
+<div id="ref-mallinckrodt2016" class="csl-entry" role="listitem">
+Mallinckrodt, Craig, and Ilya Lipkovich. 2016. <em>Analyzing Longitudinal Clinical Trial Data</em>. Chapman; Hall/CRC. <a href="https://doi.org/10.1201/9781315186634">https://doi.org/10.1201/9781315186634</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
